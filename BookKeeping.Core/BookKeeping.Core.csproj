@@ -43,6 +43,8 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="AtomicStorage\FileDocumentStore.cs" />
+    <Compile Include="AtomicStorage\IDocumentStore.cs" />
     <Compile Include="ICommand.cs" />
     <Compile Include="ICommandBus.cs" />
     <Compile Include="ICommandHandler.cs" />

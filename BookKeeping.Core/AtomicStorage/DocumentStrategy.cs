@@ -1,11 +1,13 @@
-﻿using ProtoBuf;
-using System;
+﻿using System;
 using System.IO;
+using System.Runtime.Serialization.Formatters.Binary;
 
 namespace BookKeeping.Core.AtomicStorage
 {
-    public sealed class DocumentStrategy : IDocumentStrategy
+    public sealed class DefaultDocumentStrategy : IDocumentStrategy
     {
+        private readonly BinaryFormatter _formatter = new BinaryFormatter();
+
         public TEntity Deserialize<TEntity>(Stream stream)
         {
             var signature = stream.ReadByte();
@@ -13,7 +15,7 @@ namespace BookKeeping.Core.AtomicStorage
             if (signature != 42)
                 throw new InvalidOperationException("Unknown view format");
 
-            return Serializer.Deserialize<TEntity>(stream);
+            return (TEntity)_formatter.Deserialize(stream);
         }
 
         public string GetEntityBucket<TEntity>()
@@ -31,9 +33,8 @@ namespace BookKeeping.Core.AtomicStorage
 
         public void Serialize<TEntity>(TEntity entity, Stream stream)
         {
-            // ProtoBuf must have non-zero files
             stream.WriteByte(42);
-            Serializer.Serialize(stream, entity);
+            _formatter.Serialize(stream, entity);
         }
     }
 }

@@ -7,6 +7,7 @@ namespace BookKeeping.Core
     /// equality and ToString once and for all.
     /// </summary>
     /// <typeparam name="TKey">The type of the key.</typeparam>
+    [Serializable]
     public abstract class IdentityBase<TKey> : IIdentity
     {
         public virtual TKey Id { get; protected set; }

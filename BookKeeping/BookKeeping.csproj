@@ -32,6 +32,7 @@
   <ItemGroup>
     <Reference Include="System" />
     <Reference Include="System.Core" />
+    <Reference Include="System.Runtime.Serialization" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="Microsoft.CSharp" />
@@ -39,14 +40,21 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="ClientBoundedContext.cs" />
     <Compile Include="CommandBus.cs" />
+    <Compile Include="CommandHandlerFactory.cs" />
+    <Compile Include="Context.cs" />
+    <Compile Include="DomainBoundedContext.cs" />
     <Compile Include="Domain\Contracts.cs" />
+    <Compile Include="Domain\Currency.cs" />
+    <Compile Include="Domain\CurrencyAmount.cs" />
+    <Compile Include="Domain\CurrencyExtensions.cs" />
     <Compile Include="Domain\CustomerAggregate\Customer.cs" />
     <Compile Include="Domain\CustomerAggregate\CustomerApplicationService.cs" />
     <Compile Include="Domain\CustomerAggregate\CustomerState.cs" />
+    <Compile Include="Domain\CustomerId.cs" />
     <Compile Include="Domain\IPricingService.cs" />
     <Compile Include="EventBus.cs" />
+    <Compile Include="EventHandlerFactory.cs" />
     <Compile Include="ICommandHandlerFactory.cs" />
     <Compile Include="IEventHandlerFactory.cs" />
     <Compile Include="Projections\CustomerTransactionProjections.cs" />

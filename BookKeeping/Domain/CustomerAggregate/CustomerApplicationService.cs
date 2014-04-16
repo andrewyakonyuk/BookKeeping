@@ -98,8 +98,8 @@ namespace BookKeeping.Domain.CustomerAggregate
 
             foreach (var @event in customer.Changes)
             {
-                var realEvent = System.Convert.ChangeType(@event, @event.GetType());
-                _eventBus.Publish(@event);
+                var realEvent = (dynamic)System.Convert.ChangeType(@event, @event.GetType());
+                _eventBus.Publish(realEvent);
             }
         }
 

@@ -3,26 +3,29 @@ using BookKeeping.Core.AtomicStorage;
 using BookKeeping.Domain;
 using System;
 using System.Collections.Generic;
+using System.Runtime.Serialization;
 
 namespace BookKeeping.Projections
 {
+    [DataContract]
     [Serializable]
-    public class CustomerTransaction
+    public class CustomerTransactionDto
     {
-        public CurrencyAmount Balance;
-        public CurrencyAmount Change;
-        public string Name;
-        public DateTime TimeUtc;
+        public CurrencyAmount Balance { get; set; }
+        public CurrencyAmount Change { get; set; }
+        public string Name { get; set; }
+        public DateTime TimeUtc { get; set; }
     }
 
+    [DataContract]
     [Serializable]
-    public class CustomerTransactions
+    public class CustomerTransactionsDto
     {
-        public IList<CustomerTransaction> Transactions = new List<CustomerTransaction>();
+        public IList<CustomerTransactionDto> Transactions = new List<CustomerTransactionDto>();
 
         public void AddTx(string name, CurrencyAmount change, CurrencyAmount balance, DateTime timeUtc)
         {
-            Transactions.Add(new CustomerTransaction()
+            Transactions.Add(new CustomerTransactionDto
             {
                 Name = name,
                 Balance = balance,
@@ -36,16 +39,16 @@ namespace BookKeeping.Projections
         IEventHandler<CustomerChargeAdded>,
         IEventHandler<CustomerPaymentAdded>
     {
-        private readonly IDocumentWriter<CustomerId, CustomerTransactions> _store;
+        private readonly IDocumentWriter<CustomerId, CustomerTransactionsDto> _store;
 
-        public CustomerTransactionsProjection(IDocumentWriter<CustomerId, CustomerTransactions> store)
+        public CustomerTransactionsProjection(IDocumentWriter<CustomerId, CustomerTransactionsDto> store)
         {
             _store = store;
         }
 
         public void When(CustomerCreated e)
         {
-            _store.Add(e.Id, new CustomerTransactions());
+            _store.Add(e.Id, new CustomerTransactionsDto());
         }
 
         public void When(CustomerChargeAdded e)

@@ -12,11 +12,11 @@
             <ResourceDictionary.MergedDictionaries>
                 <ResourceDictionary Source="pack://application:,,,/MahApps.Metro;component/Styles/Fonts.xaml" />
                 <ResourceDictionary Source="pack://application:,,,/MahApps.Metro;component/Styles/Controls.xaml" />
-                <!--<ResourceDictionary>
-                    <DataTemplate DataType="{x:Type viewmodels:TableViewModel}">
-                        <views:TableView></views:TableView>
+                <ResourceDictionary>
+                    <DataTemplate DataType="{x:Type viewmodels:CustomerTransactionsViewModel}">
+                        <views:CustomerTransactions></views:CustomerTransactions>
                     </DataTemplate>
-                </ResourceDictionary>-->
+                </ResourceDictionary>
             </ResourceDictionary.MergedDictionaries>
         </ResourceDictionary>
     </Window.Resources>
