@@ -18,11 +18,6 @@ namespace BookKeeping.App
 
             System.Threading.Thread.CurrentThread.CurrentUICulture = new System.Globalization.CultureInfo("ru-RU"); ;
 
-
-            Context.Current.CommandBus.Send(new CreateCustomer { Id = new CustomerId(12), Name = "Lokad", Currency = Currency.Eur });
-            Context.Current.CommandBus.Send(new RenameCustomer { Id = new CustomerId(12), NewName = "Lokad SAS" });
-            Context.Current.CommandBus.Send(new ChargeCustomer { Id = new CustomerId(12), Amount = 20m.Eur(), Name = "Forecasting" });
-
             MainWindow window = new MainWindow();
             var viewModel = new MainWindowViewModel()
             {
@@ -34,10 +29,6 @@ namespace BookKeeping.App
             {
                 window.Close();
             };
-
-
-          
-
             window.Show();
         }
     }

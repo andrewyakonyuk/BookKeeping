@@ -9,6 +9,7 @@ using System.Linq;
 using System.Windows.Data;
 using BookKeeping.Core.AtomicStorage;
 using System.Collections.Generic;
+using System.Windows.Input;
 
 namespace BookKeeping.App.ViewModels
 {
@@ -18,13 +19,29 @@ namespace BookKeeping.App.ViewModels
 
         public MainWindowViewModel()
         {
-            var reader = Context.Current.ViewDocs.GetReader<CustomerId, CustomerTransactionsDto>();
-            var transactions = reader.Get(new CustomerId(12));
-            var ctx = new CustomerTransactionsViewModel();
-            ctx.Source = transactions.HasValue ? transactions.Value.Transactions : new List<CustomerTransactionDto>();
-            Workspaces.Add(ctx);
-            SetActiveWorkspace(ctx);
+            Workspaces.Add(new WorkspaceViewModel
+            {
+                DisplayName = "Some workspace"
+            });
+
+            OpenCustomerTransactions = new DelegateCommand(_ =>
+            {
+                bool isExist;
+                var viewModel = CreateOrGetExistWorkspace<CustomerTransactionsViewModel>(out isExist);
+                if (!isExist)
+                {
+                    var reader = Context.Current.ViewDocs.GetReader<CustomerId, CustomerTransactionsDto>();
+                    var transactions = reader.Get(new CustomerId(12));
+                    viewModel.DisplayName = "Customer transitions";
+                    viewModel.Source = Source = transactions.Convert(t => t.Transactions, () => new List<CustomerTransactionDto>());
+                    SetActiveWorkspace(viewModel);
+                }
+            });
         }
+
+        public ICommand OpenCustomerTransactions { get; set; }
+
+        public ICommand CloseTabItem { get; set; }
 
         #region Workspaces
 
@@ -52,7 +69,7 @@ namespace BookKeeping.App.ViewModels
                 collectionView.MoveCurrentTo(workspace);
         }
 
-        private TViewModel CreateOrGetExistWorkspace<TViewModel>()
+        private TViewModel CreateOrGetExistWorkspace<TViewModel>(out bool isExist)
             where TViewModel : WorkspaceViewModel, new()
         {
             TViewModel viewModel = Workspaces.OfType<TViewModel>().FirstOrDefault();
@@ -60,7 +77,10 @@ namespace BookKeeping.App.ViewModels
             {
                 viewModel = new TViewModel();
                 Workspaces.Add(viewModel);
+                isExist = false;
+                return viewModel;
             }
+            isExist = true;
             return viewModel;
         }
 

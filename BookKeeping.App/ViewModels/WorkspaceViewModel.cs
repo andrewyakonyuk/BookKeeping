@@ -7,7 +7,7 @@ namespace BookKeeping.App.ViewModels
     {
         private string _displayName = string.Empty;
 
-        protected WorkspaceViewModel()
+        public WorkspaceViewModel()
         {
             CloseCommand = new DelegateCommand(o => OnRequestClose(new RoutedEventArgs()));
         }

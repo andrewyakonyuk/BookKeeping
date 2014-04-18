@@ -48,7 +48,7 @@
     <Style TargetType="{x:Type DataGridColumnHeader}">
         <Setter Property="Background">
             <Setter.Value>
-                <SolidColorBrush Color="{DynamicResource AccentColor}"></SolidColorBrush>
+                <SolidColorBrush Color="#CC119EDA"></SolidColorBrush>
             </Setter.Value>
         </Setter>
         <Setter Property="Padding" Value="3,5"></Setter>

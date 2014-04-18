@@ -8,18 +8,15 @@
              d:DesignHeight="300" d:DesignWidth="300" >
     <UserControl.Resources>
         <ResourceDictionary>
-            <ResourceDictionary.MergedDictionaries>
-                <ResourceDictionary Source="pack://application:,,,/BookKeeping.App;component/Resources/DataGrid.xaml" />
-            </ResourceDictionary.MergedDictionaries>
+            
         </ResourceDictionary>
     </UserControl.Resources>
-    <DataGrid ItemsSource="{Binding Path=Source}" IsReadOnly="False" Style="{StaticResource DataTable}" 
-                  Background="{DynamicResource WhiteColorBrush}" Foreground="{DynamicResource Foreground}" AutoGenerateColumns="False">
+    <DataGrid ItemsSource="{Binding Path=Source}" IsReadOnly="True" Style="{DynamicResource AzureDataGrid}" AutoGenerateColumns="False">
         <DataGrid.Columns>
-            <DataGridTextColumn Binding="{Binding Name}" Header="Name" Width="200"></DataGridTextColumn>
-            <DataGridTextColumn Binding="{Binding Change}" Header="Change" Width="200"></DataGridTextColumn>
-            <DataGridTextColumn Binding="{Binding Balance}" Header="Balance" Width="200"></DataGridTextColumn>
-            <DataGridTextColumn Binding="{Binding TimeUtc}" Header="Time UTC" Width="200"></DataGridTextColumn>
+            <DataGridTextColumn Binding="{Binding Name}" Header="Name" Width="*" MaxWidth="200" MinWidth="100"></DataGridTextColumn>
+            <DataGridTextColumn Binding="{Binding Change}" Header="Change" Width="*" MaxWidth="200" MinWidth="100"></DataGridTextColumn>
+            <DataGridTextColumn Binding="{Binding Balance}" Header="Balance" Width="*" MaxWidth="200" MinWidth="100"></DataGridTextColumn>
+            <DataGridTextColumn Binding="{Binding TimeUtc}" Header="Time UTC" Width="*" MaxWidth="200" MinWidth="100"></DataGridTextColumn>
         </DataGrid.Columns>
     </DataGrid>
 </UserControl>

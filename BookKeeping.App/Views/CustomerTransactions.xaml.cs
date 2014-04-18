@@ -23,10 +23,5 @@ namespace BookKeeping.App.Views
         {
             InitializeComponent();
         }
-
-        private void DataGrid_AutoGeneratingColumn(object sender, DataGridAutoGeneratingColumnEventArgs e)
-        {
-
-        }
     }
 }
