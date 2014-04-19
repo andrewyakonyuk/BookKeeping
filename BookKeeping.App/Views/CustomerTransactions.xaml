@@ -4,19 +4,34 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              mc:Ignorable="d" 
+             xmlns:gl="clr-namespace:System.Globalization;assembly=mscorlib"
              xmlns:viewmodels="clr-namespace:BookKeeping.App.ViewModels"
-             d:DesignHeight="300" d:DesignWidth="300" >
+             xmlns:p="clr-namespace:BookKeeping.App.Properties"
+             d:DesignHeight="300" d:DesignWidth="600" >
     <UserControl.Resources>
         <ResourceDictionary>
             
         </ResourceDictionary>
     </UserControl.Resources>
     <DataGrid ItemsSource="{Binding Path=Source}" IsReadOnly="True" Style="{DynamicResource AzureDataGrid}" AutoGenerateColumns="False">
+        <DataGrid.ContextMenu>
+            <ContextMenu>
+                    <MenuItem Command="Undo" Header="{x:Static p:Resources.Undo}"></MenuItem>
+                    <MenuItem Command="Redo" Header="{x:Static p:Resources.Redo}"></MenuItem>
+                    <Separator></Separator>
+                    <MenuItem Command="Cut" Header="{x:Static p:Resources.Cut}"></MenuItem>
+                    <MenuItem Command="Copy" Header="{x:Static p:Resources.Copy}"></MenuItem>
+                    <MenuItem Command="Paste" Header="{x:Static p:Resources.Paste}"></MenuItem>
+                    <Separator></Separator>
+                <MenuItem Command="SelectAll" Header="{x:Static p:Resources.Select_All}"></MenuItem>
+            </ContextMenu>
+        </DataGrid.ContextMenu>
         <DataGrid.Columns>
-            <DataGridTextColumn Binding="{Binding Name}" Header="Name" Width="*" MaxWidth="200" MinWidth="100"></DataGridTextColumn>
-            <DataGridTextColumn Binding="{Binding Change}" Header="Change" Width="*" MaxWidth="200" MinWidth="100"></DataGridTextColumn>
-            <DataGridTextColumn Binding="{Binding Balance}" Header="Balance" Width="*" MaxWidth="200" MinWidth="100"></DataGridTextColumn>
-            <DataGridTextColumn Binding="{Binding TimeUtc}" Header="Time UTC" Width="*" MaxWidth="200" MinWidth="100"></DataGridTextColumn>
+            <DataGridTextColumn Header="{x:Static p:Resources.Title}" Binding="{Binding Name}" Width="*" MaxWidth="200" MinWidth="100"/>
+            <DataGridTextColumn Binding="{Binding Change}" Header="{x:Static p:Resources.Charge}" Width="*" MaxWidth="200" MinWidth="100"></DataGridTextColumn>
+            <DataGridTextColumn Binding="{Binding Balance}" Header="{x:Static p:Resources.Balance}" Width="*" MaxWidth="200" MinWidth="100"></DataGridTextColumn>
+            <DataGridTextColumn Header="{x:Static p:Resources.Time_Utc}" Width="*" MaxWidth="200" MinWidth="100" Binding="{Binding Path=TimeUtc, StringFormat='dd MMMM yyy, hh:mm:ss', ConverterCulture={x:Static gl:CultureInfo.CurrentUICulture}}">
+            </DataGridTextColumn>
         </DataGrid.Columns>
     </DataGrid>
 </UserControl>

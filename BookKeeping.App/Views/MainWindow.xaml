@@ -6,13 +6,13 @@
         xmlns:viewmodels="clr-namespace:BookKeeping.App.ViewModels"
         xmlns:extension="clr-namespace:BookKeeping.App.XamlExtensions"
         xmlns:p="clr-namespace:BookKeeping.App.Properties"
-        Title="{Binding Path=DisplayName}" Height="800" Width="1000"
+        Title="{Binding Path=DisplayName}" Height="400" Width="800"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
                        xmlns:Controls="clr-namespace:MahApps.Metro.Controls;assembly=MahApps.Metro"
                       xmlns:System="clr-namespace:System;assembly=mscorlib"
         mc:Ignorable="d"
-        d:DesignHeight="300" d:DesignWidth="300"
+        d:DesignHeight="400" d:DesignWidth="500"
         d:DataContext="{Binding viewmodels:MainWindowViewModel}"
                         WindowStartupLocation="CenterScreen"
                       Style="{DynamicResource VSWindowStyleKey}">
@@ -35,7 +35,7 @@
         <Menu DockPanel.Dock="Top"
               SnapsToDevicePixels="True"
               Margin="2,0,0,0">
-            <MenuItem Header="ROCKETS">
+            <MenuItem Header="{x:Static p:Resources.File}">
                 <MenuItem Header="Rocket slot 1">
                     <MenuItem Header="Fire slot" Command="{Binding OpenCustomerTransactions}"/>
                     <Separator />
@@ -43,24 +43,22 @@
                     <MenuItem Header="Report damage to control room" />
                 </MenuItem>
                 <MenuItem Header="Rocket slot 2">
-                    <MenuItem Header="damaged .. being repaired"
-                              IsEnabled="False" />
+                    <MenuItem Header="damaged .. being repaired" IsEnabled="False" />
                 </MenuItem>
+                <Separator></Separator>
+                <MenuItem Header="{x:Static p:Resources.Exit}" Command="{Binding Exit}"></MenuItem>
             </MenuItem>
-            <MenuItem Header="NAVIGATION">
-                <MenuItem Header="Left engine">
-                    <MenuItem Header="Full speed ahead" />
-                    <MenuItem Header="2/3 speed" />
-                    <MenuItem Header="1/3 speed" />
-                    <MenuItem Header="Stop engine" />
-                </MenuItem>
-                <MenuItem Header="Right engine">
-                    <MenuItem Header="Full speed ahead" />
-                    <MenuItem Header="2/3 speed" />
-                    <MenuItem Header="1/3 speed" />
-                    <MenuItem Header="Stop engine" />
-                </MenuItem>
+            <MenuItem Header="{x:Static p:Resources.Edit}">
+                <MenuItem Command="Undo" Header="{x:Static p:Resources.Undo}"></MenuItem>
+                <MenuItem Command="Redo" Header="{x:Static p:Resources.Redo}"></MenuItem>
+                <Separator></Separator>
+                <MenuItem Command="Cut" Header="{x:Static p:Resources.Cut}"></MenuItem>
+                <MenuItem Command="Copy" Header="{x:Static p:Resources.Copy}"></MenuItem>
+                <MenuItem Command="Paste" Header="{x:Static p:Resources.Paste}"></MenuItem>
+                <Separator></Separator>
+                <MenuItem Command="SelectAll" Header="{x:Static p:Resources.Select_All}"></MenuItem>
             </MenuItem>
+            
         </Menu>
         <TextBlock DockPanel.Dock="Left"
                    Foreground="{StaticResource Foreground}"

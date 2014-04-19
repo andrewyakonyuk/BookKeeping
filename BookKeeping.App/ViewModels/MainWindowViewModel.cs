@@ -10,6 +10,8 @@ using System.Windows.Data;
 using BookKeeping.Core.AtomicStorage;
 using System.Collections.Generic;
 using System.Windows.Input;
+using BookKeeping.App.Views;
+using BookKeeping.Domain.CustomerAggregate;
 
 namespace BookKeeping.App.ViewModels
 {
@@ -33,15 +35,19 @@ namespace BookKeeping.App.ViewModels
                     var reader = Context.Current.ViewDocs.GetReader<CustomerId, CustomerTransactionsDto>();
                     var transactions = reader.Get(new CustomerId(12));
                     viewModel.DisplayName = "Customer transitions";
-                    viewModel.Source = Source = transactions.Convert(t => t.Transactions, () => new List<CustomerTransactionDto>());
-                    SetActiveWorkspace(viewModel);
+                    viewModel.Source = transactions.Convert(t => t.Transactions,
+                        () => new List<CustomerTransactionDto>());
                 }
+                SetActiveWorkspace(viewModel);
             });
+            Exit = ApplicationCommands.Close;
         }
 
         public ICommand OpenCustomerTransactions { get; set; }
 
         public ICommand CloseTabItem { get; set; }
+
+        public ICommand Exit { get; set; }
 
         #region Workspaces
 

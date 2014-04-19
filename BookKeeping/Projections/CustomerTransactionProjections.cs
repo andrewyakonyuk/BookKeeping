@@ -1,6 +1,7 @@
 ﻿using BookKeeping.Core;
 using BookKeeping.Core.AtomicStorage;
 using BookKeeping.Domain;
+using BookKeeping.Domain.CustomerAggregate;
 using System;
 using System.Collections.Generic;
 using System.Runtime.Serialization;

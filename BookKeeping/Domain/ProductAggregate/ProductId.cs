@@ -1,0 +1,20 @@
+﻿using BookKeeping.Core;
+using System;
+
+namespace BookKeeping.Domain.ProductAggregate
+{
+    public sealed class ProductId : IdentityBase<Guid>, IIdentity
+    {
+        public const string Tag = "product";
+
+        public override string GetTag()
+        {
+            return Tag;
+        }
+
+        public override string ToString()
+        {
+            return string.Format("product-{0}", Id);
+        }
+    }
+}

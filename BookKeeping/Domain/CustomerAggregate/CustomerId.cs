@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-namespace BookKeeping.Domain
+namespace BookKeeping.Domain.CustomerAggregate
 {
     /// <summary>
     /// This is a customer identity. It is just a class that makes it explicit,

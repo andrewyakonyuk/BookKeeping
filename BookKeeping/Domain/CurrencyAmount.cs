@@ -33,8 +33,10 @@ namespace BookKeeping.Domain
 
         public override int GetHashCode()
         {
-            //TODO: should impl
-            return base.GetHashCode();
+            unchecked
+            {
+                return (int)Amount * 356 + Currency.GetHashCode();
+            }
         }
 
         public static bool operator ==(CurrencyAmount left, CurrencyAmount right)

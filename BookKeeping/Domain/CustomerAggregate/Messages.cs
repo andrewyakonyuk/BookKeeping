@@ -1,7 +1,10 @@
 ﻿using BookKeeping.Core;
 using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
 
-namespace BookKeeping.Domain
+namespace BookKeeping.Domain.CustomerAggregate
 {
     // This file contains contracts for the sample domain. You can percieve these
     // classes and value objects as the foundation of the language, that is used
@@ -18,9 +21,9 @@ namespace BookKeeping.Domain
     // value objects
     // event and command contracts
 
-    
 
- 
+
+
 
 
 
