@@ -12,6 +12,11 @@ namespace BookKeeping.Core
     {
         public virtual TKey Id { get; protected set; }
 
+        protected IdentityBase(TKey id)
+        {
+            Id = id;
+        }
+
         public string GetId()
         {
             return Id.ToString();

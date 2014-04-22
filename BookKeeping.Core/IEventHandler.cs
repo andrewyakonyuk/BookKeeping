@@ -2,6 +2,6 @@
 {
     public interface IEventHandler<TEvent> where TEvent : IEvent
     {
-        void When(TEvent handle);
+        void When(TEvent e);
     }
 }

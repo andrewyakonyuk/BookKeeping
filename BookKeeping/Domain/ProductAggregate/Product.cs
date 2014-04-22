@@ -22,8 +22,7 @@ namespace BookKeeping.Domain.ProductAggregate
             _changes.Add(e);
         }
 
-        public void Create(ProductId id, string title, string barcode, string itemNo, CurrencyAmount price,
-            double stock, string uom, string manufacturer, double vat, DateTime utc)
+        public void Create(ProductId id, string title, string itemNo, CurrencyAmount price, double stock, DateTime utc)
         {
             if (id == null)
                 throw new ArgumentNullException("id");
@@ -36,14 +35,81 @@ namespace BookKeeping.Domain.ProductAggregate
             {
                 Id = id,
                 Title = title,
-                Barcode = barcode,
                 ItemNo = itemNo,
                 Price = price,
                 Stock = stock,
-                UOM = uom,
-                Manufacturer = manufacturer,
-                VAT = vat,
                 Created = utc
+            });
+        }
+
+        public void UpdateStock(double quantity, string reason, DateTime utc)
+        {
+            Apply(new ProductStockUpdated
+            {
+                Id = _state.Id,
+                Quantity = quantity,
+                Reason = reason,
+                Updated = utc
+            });
+        }
+
+        public void Rename(string title, DateTime utc)
+        {
+            Apply(new ProductRenamed
+            {
+                Id = _state.Id,
+                NewTitle = title,
+                Renamed = utc
+            });
+        }
+
+        public void ChangeBarcode(string barcode, DateTime utc)
+        {
+            Apply(new ProductBarcodeChanged
+            {
+                Id = _state.Id,
+                NewBarcode = barcode,
+                Changed = utc
+            });
+        }
+
+        public void ChangeItemNo(string itemNo, DateTime utc)
+        {
+            Apply(new ProductItemNoChanged
+            {
+                Id = _state.Id,
+                NewItemNo = itemNo,
+                Changed = utc
+            });
+        }
+
+        public void ChangePrice(CurrencyAmount price, DateTime utc)
+        {
+            Apply(new ProductPriceChanged
+            {
+                Id = _state.Id,
+                NewPrice = price,
+                Changed = utc
+            });
+        }
+
+        public void ChangeUOM(string uom, DateTime utc)
+        {
+            Apply(new ProductUOMChanged
+            {
+                Id = _state.Id,
+                NewUOM = uom,
+                Changed = utc
+            });
+        }
+
+        public void ChangeVAT(double vat, DateTime utc)
+        {
+            Apply(new ProductVATChanged
+            {
+                Id = _state.Id,
+                NewVAT = vat,
+                Changed = utc
             });
         }
 

@@ -22,7 +22,7 @@ namespace BookKeeping.Projections
     [Serializable]
     public class CustomerTransactionsDto
     {
-        public IList<CustomerTransactionDto> Transactions = new List<CustomerTransactionDto>();
+        public IList<CustomerTransactionDto> Transactions = new System.Collections.ObjectModel.ObservableCollection<CustomerTransactionDto>();
 
         public void AddTx(string name, CurrencyAmount change, CurrencyAmount balance, DateTime timeUtc)
         {

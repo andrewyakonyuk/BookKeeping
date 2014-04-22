@@ -1,9 +1,17 @@
 ﻿using BookKeeping.Core;
+using System;
 
 namespace BookKeeping.Domain.OrderAggregate
 {
+    [Serializable]
     public sealed class OrderId : IdentityBase<long>, IIdentity
     {
+        public OrderId(long id)
+            : base(id)
+        {
+
+        }
+
         public const string Tag = "order";
 
         public override string GetTag()

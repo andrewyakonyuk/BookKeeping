@@ -8,6 +8,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using BookKeeping.Domain.ProductAggregate;
 
 namespace BookKeeping
 {
@@ -18,11 +19,13 @@ namespace BookKeeping
         public static IEnumerable<object> Projections(IDocumentStore docs)
         {
             yield return new CustomerTransactionsProjection(docs.GetWriter<CustomerId, CustomerTransactionsDto>());
+            yield return new ProductsProjection(docs.GetWriter<unit, ProductListDto>());
         }
 
         public static IEnumerable<object> EntityApplicationServices(IDocumentStore docs, IEventStore store, IEventBus eventBus)
         {
             yield return new CustomerApplicationService(store, eventBus, new PricingService());
+            yield return new ProductApplicationService(store, eventBus);
             //var unique = new UserIndexService(docs.GetReader<byte, UserIndexLookup>());
             //var passwords = new PasswordGenerator();
 

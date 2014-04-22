@@ -16,10 +16,7 @@ namespace BookKeeping.Domain.CustomerAggregate
     {
         public const string Tag = "customer";
 
-        public CustomerId(long id)
-        {
-            Id = id;
-        }
+        public CustomerId(long id) : base(id) { }
 
         public override string ToString()
         {

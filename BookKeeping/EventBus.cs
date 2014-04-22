@@ -1,4 +1,5 @@
 ﻿using BookKeeping.Core;
+using System.Collections.Generic;
 
 namespace BookKeeping
 {

@@ -2,7 +2,9 @@
 using BookKeeping.App.Views;
 using BookKeeping.Core.AtomicStorage;
 using BookKeeping.Domain;
+using BookKeeping.Domain.ProductAggregate;
 using BookKeeping.Projections;
+using System;
 using System.Windows;
 
 namespace BookKeeping.App
@@ -16,13 +18,12 @@ namespace BookKeeping.App
         {
             base.OnStartup(e);
 
-            System.Threading.Thread.CurrentThread.CurrentUICulture = new System.Globalization.CultureInfo("ru-RU"); ;
+            System.Threading.Thread.CurrentThread.CurrentUICulture = System.Globalization.CultureInfo.CurrentCulture; //new System.Globalization.CultureInfo("uk-Ua");
+
+            var context = Context.Current;
 
             MainWindow window = new MainWindow();
-            var viewModel = new MainWindowViewModel()
-            {
-                DisplayName = "Main window"
-            };
+            var viewModel = new MainWindowViewModel();
             window.DataContext = viewModel;
 
             viewModel.RequestClose += (sender, args) =>

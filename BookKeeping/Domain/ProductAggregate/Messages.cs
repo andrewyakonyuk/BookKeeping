@@ -11,17 +11,13 @@ namespace BookKeeping.Domain.ProductAggregate
     {
         public ProductId Id { get; set; }
         public string Title { get; set; }
-        public string Barcode { get; set; }
         public string ItemNo { get; set; }
         public CurrencyAmount Price { get; set; }
         public double Stock { get; set; }
-        public string UOM { get; set; }
-        public string Manufacturer { get; set; }
-        public double VAT { get; set; }
 
         public override string ToString()
         {
-            return string.Format("Create {0} named '{1}' with barcode {2}, item no. {3}, price {4}, stock {5}", Id, Title, Barcode, ItemNo, Price, Stock);
+            return string.Format("Create {0} named '{1}' with item no. {2}, price {3}, stock {4}", Id, Title, ItemNo, Price, Stock);
         }
     }
 
@@ -30,18 +26,14 @@ namespace BookKeeping.Domain.ProductAggregate
     {
         public ProductId Id { get; set; }
         public string Title { get; set; }
-        public string Barcode { get; set; }
         public string ItemNo { get; set; }
         public CurrencyAmount Price { get; set; }
         public double Stock { get; set; }
-        public string UOM { get; set; }
-        public string Manufacturer { get; set; }
-        public double VAT { get; set; }
         public DateTime Created { get; set; }
 
         public override string ToString()
         {
-            return string.Format("{0} created named '{1}' with barcode {2}, item no. {3}, price {4}, stock {5}", Id, Title, Barcode, ItemNo, Price, Stock);
+            return string.Format("{0} created named '{1}' with item no. {2}, price {3}, stock {4}", Id, Title, ItemNo, Price, Stock);
         }
     }
 
@@ -159,7 +151,7 @@ namespace BookKeeping.Domain.ProductAggregate
         }
     }
 
-    public sealed class ProductPriceChanged : ICommand<ProductId>
+    public sealed class ProductPriceChanged : IEvent<ProductId>
     {
         public ProductId Id { get; set; }
         public CurrencyAmount NewPrice { get; set; }
@@ -184,7 +176,7 @@ namespace BookKeeping.Domain.ProductAggregate
     }
 
     [Serializable]
-    public sealed class ProductUOMChanged : ICommand<ProductId>
+    public sealed class ProductUOMChanged : IEvent<ProductId>
     {
         public ProductId Id { get; set; }
         public string NewUOM { get; set; }
@@ -209,7 +201,7 @@ namespace BookKeeping.Domain.ProductAggregate
     }
 
     [Serializable]
-    public sealed class ProductVATChanged : ICommand<ProductId>
+    public sealed class ProductVATChanged : IEvent<ProductId>
     {
         public ProductId Id { get; set; }
         public double NewVAT { get; set; }
