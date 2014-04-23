@@ -1,28 +1,32 @@
-﻿using BookKeeping.Core;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+﻿using System;
 
 namespace BookKeeping.Domain.ProductAggregate
 {
     public class Product
     {
-        public readonly IList<IEvent> _changes = new List<IEvent>();
-        private readonly ProductState _state;
+        public ProductId Id { get; protected set; }
 
-        public Product(IEnumerable<IEvent> events)
+        public string Title { get; set; }
+
+        public string Barcode { get; set; }
+
+        public string ItemNo { get; set; }
+
+        public CurrencyAmount Price { get; set; }
+
+        public double Stock { get; protected set; }
+
+        public string UOM { get; set; }
+
+        public double VAT { get; set; }
+
+        [Obsolete("Only for NHibernate", true)]
+        protected Product()
         {
-            _state = new ProductState(events);
+
         }
 
-        private void Apply(IEvent e)
-        {
-            _state.Mutate(e);
-            _changes.Add(e);
-        }
-
-        public void Create(ProductId id, string title, string itemNo, CurrencyAmount price, double stock, DateTime utc)
+        public Product(ProductId id, string title, string itemNo, CurrencyAmount price, double stock)
         {
             if (id == null)
                 throw new ArgumentNullException("id");
@@ -31,88 +35,16 @@ namespace BookKeeping.Domain.ProductAggregate
             if (price.Amount < 0)
                 throw new ArgumentException("Price should be prositive", "price");
 
-            Apply(new ProductCreated
-            {
-                Id = id,
-                Title = title,
-                ItemNo = itemNo,
-                Price = price,
-                Stock = stock,
-                Created = utc
-            });
+            Id = id;
+            Title = title;
+            ItemNo = itemNo;
+            Price = price;
+            Stock = stock;
         }
 
-        public void UpdateStock(double quantity, string reason, DateTime utc)
+        public void UpdateStock(double quantity, string reason)
         {
-            Apply(new ProductStockUpdated
-            {
-                Id = _state.Id,
-                Quantity = quantity,
-                Reason = reason,
-                Updated = utc
-            });
+            Stock += quantity;
         }
-
-        public void Rename(string title, DateTime utc)
-        {
-            Apply(new ProductRenamed
-            {
-                Id = _state.Id,
-                NewTitle = title,
-                Renamed = utc
-            });
-        }
-
-        public void ChangeBarcode(string barcode, DateTime utc)
-        {
-            Apply(new ProductBarcodeChanged
-            {
-                Id = _state.Id,
-                NewBarcode = barcode,
-                Changed = utc
-            });
-        }
-
-        public void ChangeItemNo(string itemNo, DateTime utc)
-        {
-            Apply(new ProductItemNoChanged
-            {
-                Id = _state.Id,
-                NewItemNo = itemNo,
-                Changed = utc
-            });
-        }
-
-        public void ChangePrice(CurrencyAmount price, DateTime utc)
-        {
-            Apply(new ProductPriceChanged
-            {
-                Id = _state.Id,
-                NewPrice = price,
-                Changed = utc
-            });
-        }
-
-        public void ChangeUOM(string uom, DateTime utc)
-        {
-            Apply(new ProductUOMChanged
-            {
-                Id = _state.Id,
-                NewUOM = uom,
-                Changed = utc
-            });
-        }
-
-        public void ChangeVAT(double vat, DateTime utc)
-        {
-            Apply(new ProductVATChanged
-            {
-                Id = _state.Id,
-                NewVAT = vat,
-                Changed = utc
-            });
-        }
-
-        public IList<IEvent> Changes { get { return _changes; } }
     }
 }

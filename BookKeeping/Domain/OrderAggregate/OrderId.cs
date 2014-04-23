@@ -1,4 +1,5 @@
 ﻿using BookKeeping.Core;
+using BookKeeping.Infrastructure.Domain;
 using System;
 
 namespace BookKeeping.Domain.OrderAggregate

@@ -1,0 +1,122 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="12.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{4F9712E7-3CC7-4656-B3E5-72E393A1CDF0}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>BookKeeping.Infrastructure</RootNamespace>
+    <AssemblyName>BookKeeping.Infrastructure</AssemblyName>
+    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <TargetFrameworkProfile>
+    </TargetFrameworkProfile>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="FluentNHibernate">
+      <HintPath>..\packages\FluentNHibernate.1.4.0.0\lib\net35\FluentNHibernate.dll</HintPath>
+    </Reference>
+    <Reference Include="Iesi.Collections">
+      <HintPath>..\packages\Iesi.Collections.3.2.0.4000\lib\Net35\Iesi.Collections.dll</HintPath>
+    </Reference>
+    <Reference Include="NHibernate">
+      <HintPath>..\packages\NHibernate.3.3.3.4001\lib\Net35\NHibernate.dll</HintPath>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Domain\Commands\CommandBuilder.cs" />
+    <Compile Include="Domain\Commands\ICommand.cs" />
+    <Compile Include="Domain\Commands\ICommandBuilder.cs" />
+    <Compile Include="Domain\Commands\ICommandContext.cs" />
+    <Compile Include="Domain\Commands\ICommandFactory.cs" />
+    <Compile Include="Domain\Comparers\EntityEqualityComparer.cs" />
+    <Compile Include="Domain\Comparers\EntityEqualityComparer`1.cs" />
+    <Compile Include="Domain\Criteria\AllEntities.cs" />
+    <Compile Include="Domain\Criteria\FindById.cs" />
+    <Compile Include="Domain\Extensions\QueryBuilderExtensions.cs" />
+    <Compile Include="Domain\Extensions\QueryForExtensions.cs" />
+    <Compile Include="Domain\ICriterion.cs" />
+    <Compile Include="Domain\IdentityBase.cs" />
+    <Compile Include="Domain\IEntity.cs" />
+    <Compile Include="Domain\IEntityComponent.cs" />
+    <Compile Include="Domain\IIdentity.cs" />
+    <Compile Include="Domain\ILinqProvider.cs" />
+    <Compile Include="Domain\IQuery.cs" />
+    <Compile Include="Domain\IQueryBuilder.cs" />
+    <Compile Include="Domain\IQueryFactory.cs" />
+    <Compile Include="Domain\IQueryFor.cs" />
+    <Compile Include="Domain\IRepository.cs" />
+    <Compile Include="Domain\IUnitOfWork.cs" />
+    <Compile Include="Domain\IUnitOfWorkFactory.cs" />
+    <Compile Include="Domain\QueryFor.cs" />
+    <Compile Include="Domain\Sorting\SortOrder.cs" />
+    <Compile Include="Domain\Sorting\SortOrderExtensions.cs" />
+    <Compile Include="Domain\TreeNode.cs" />
+    <Compile Include="Maybe.cs" />
+    <Compile Include="NHibernate\AutomappingConfiguration.cs" />
+    <Compile Include="NHibernate\Conventions\ColumnNameUpperCaseConvention.cs" />
+    <Compile Include="NHibernate\Conventions\CustomManyToManyTableNameConvention.cs" />
+    <Compile Include="NHibernate\Conventions\EntityMapConvention.cs" />
+    <Compile Include="NHibernate\Conventions\ForeignKeyColumnNameConvention.cs" />
+    <Compile Include="NHibernate\Conventions\ForeignKeyConstraintNameConvention.cs" />
+    <Compile Include="NHibernate\Conventions\HasManyConvention.cs" />
+    <Compile Include="NHibernate\Conventions\NameConventions.cs" />
+    <Compile Include="NHibernate\Conventions\PrimaryKeyConvention.cs" />
+    <Compile Include="NHibernate\INHibernateInitializer.cs" />
+    <Compile Include="NHibernate\ISessionProvider.cs" />
+    <Compile Include="NHibernate\LinqQueryBase`2.cs" />
+    <Compile Include="NHibernate\LinqQueryBase`3.cs" />
+    <Compile Include="NHibernate\Mappings\BaseMap.cs" />
+    <Compile Include="NHibernate\Mappings\TreeNodeMap.cs" />
+    <Compile Include="NHibernate\NHibernateLinqProvider.cs" />
+    <Compile Include="NHibernate\NHibernateRepository.cs" />
+    <Compile Include="NHibernate\NHibernateRepositoryBase.cs" />
+    <Compile Include="NHibernate\NHibernateUnitOfWork.cs" />
+    <Compile Include="NHibernate\NHibernateUnitOfWorkFactory.cs" />
+    <Compile Include="NHibernate\PerRequestSessionProvider.cs" />
+    <Compile Include="NHibernate\SessionProvider.cs" />
+    <Compile Include="NHibernate\SessionQueryBase.cs" />
+    <Compile Include="NHibernate\StaticSessionProvider.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="SystemObserver.cs" />
+    <Compile Include="unit.cs" />
+  </ItemGroup>
+  <ItemGroup />
+  <ItemGroup>
+    <None Include="packages.config" />
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>

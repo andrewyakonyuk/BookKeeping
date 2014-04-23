@@ -1,4 +1,5 @@
 ﻿using BookKeeping.Core;
+using BookKeeping.Domain.ProductAggregate;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -6,23 +7,37 @@ using System.Text;
 
 namespace BookKeeping.Domain.OrderAggregate
 {
-    public sealed class Order
+    public class Order
     {
-        public readonly IList<IEvent> _changes = new List<IEvent>();
+        readonly List<OrderLine> _orderLines = new List<OrderLine>();
 
-        private readonly OrderState _state;
-
-        public Order(IEnumerable<IEvent> events)
+        public Order()
         {
-            _state = new OrderState(events);
+
         }
 
-        private void Apply(IEvent e)
+        public IEnumerable<OrderLine> Lines { get { return _orderLines; } }
+
+        public CurrencyAmount Total { get; protected set; }
+
+        public CurrencyAmount TotalWithVat { get; protected set; }
+
+        public void AddLine(OrderLine line)
         {
-            _state.Mutate(e);
-            _changes.Add(e);
+            Total = new CurrencyAmount(Total.Amount + (line.Amount.Amount * (decimal)line.Quantity), Total.Currency);
         }
 
-        public IList<IEvent> Changes { get { return _changes; } }
+        public void AddLine(Product product, double quantity)
+        {
+            var line = new OrderLine
+            {
+                Id = _orderLines.Count + 1,
+                ItemNo = product.ItemNo,
+                Title = product.Title,
+                Quantity = quantity
+            };
+            _orderLines.Add(line);
+            Total = new CurrencyAmount(Total.Amount + (product.Price.Amount * (decimal)quantity), product.Price.Currency);
+        }
     }
 }

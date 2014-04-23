@@ -1,8 +1,8 @@
-﻿
-namespace BookKeeping.Domain.OrderAggregate
+﻿namespace BookKeeping.Domain.OrderAggregate
 {
-    public sealed class OrderLine
+    public  class OrderLine
     {
+
         public int Id { get; set; }
         public string ItemNo { get; set; }
         public string Title { get; set; }

@@ -7,12 +7,10 @@ using System.ComponentModel;
 using System.Diagnostics.Contracts;
 using System.Linq;
 using System.Windows.Data;
-using BookKeeping.Core.AtomicStorage;
 using System.Collections.Generic;
 using System.Windows.Input;
 using BookKeeping.App.Views;
 using BookKeeping.Domain.CustomerAggregate;
-using BookKeeping.Core;
 using ICommand = System.Windows.Input.ICommand;
 using BookKeeping.Domain.ProductAggregate;
 
@@ -50,22 +48,22 @@ namespace BookKeeping.App.ViewModels
             int counter = 1;
             AddProduct = new DelegateCommand(_ =>
             {
-                Context.Current.CommandBus.Send(new CreateProduct
-                {
-                    Id = new ProductId(Guid.NewGuid()),
-                    Title = "Some title" + counter,
-                    ItemNo = string.Format("art {0:00000}", counter),
-                    Price = new CurrencyAmount(counter * 14, Currency.Eur),
-                    Stock = 34 * counter - 15 / counter
-                });
-                var workspacesView = CollectionViewSource.GetDefaultView(Workspaces);
-                var collectionView =  (ListCollectionView)CollectionViewSource.GetDefaultView(((ViewModelBase)workspacesView.CurrentItem).Source);
-                 var reader = Context.Current.ViewDocs.GetReader<unit, ProductListDto>();
-                    var productList = reader.Get(unit.it);
-                    collectionView.AddNewItem(productList.Convert(t => t.Products,
-                            () => new List<ProductDto>()).LastOrDefault());
-                    collectionView.MoveCurrentToLast();
-                counter++;
+                //Context.Current.CommandBus.Send(new CreateProduct
+                //{
+                //    Id = new ProductId(Guid.NewGuid()),
+                //    Title = "Some title" + counter,
+                //    ItemNo = string.Format("art {0:00000}", counter),
+                //    Price = new CurrencyAmount(counter * 14, Currency.Eur),
+                //    Stock = 34 * counter - 15 / counter
+                //});
+                //var workspacesView = CollectionViewSource.GetDefaultView(Workspaces);
+                //var collectionView =  (ListCollectionView)CollectionViewSource.GetDefaultView(((ViewModelBase)workspacesView.CurrentItem).Source);
+                // var reader = Context.Current.ViewDocs.GetReader<unit, ProductListDto>();
+                //    var productList = reader.Get(unit.it);
+                //    collectionView.AddNewItem(productList.Convert(t => t.Products,
+                //            () => new List<ProductDto>()).LastOrDefault());
+                //    collectionView.MoveCurrentToLast();
+                //counter++;
             }, _ =>
             {
                 var collectionView = CollectionViewSource.GetDefaultView(Workspaces);

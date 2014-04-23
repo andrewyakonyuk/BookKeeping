@@ -1,87 +1,64 @@
-﻿using BookKeeping.Core;
-using System;
-using System.Collections.Generic;
+﻿using System;
 
 namespace BookKeeping.Domain.CustomerAggregate
 {
-    /// <summary>
-    /// <para>Implementation of customer aggregate. In production it is loaded and
-    /// operated by an <see cref="CustomerApplicationService"/>, which loads it from
-    /// the event storage and calls appropriate methods, passing needed arguments in.</para>
-    /// <para>In test environments (e.g. in unit tests), this aggregate can be
-    /// instantiated directly.</para>
-    /// </summary>
+
     public class Customer
     {
-        /// <summary> List of uncommitted changes </summary>
-        public readonly IList<IEvent> Changes = new List<IEvent>();
+        public string Name { get; protected set; }
 
-        /// <summary>
-        /// Aggregate state, which is separate from this class in order to ensure,
-        /// that we modify it ONLY by passing events.
-        /// </summary>
-        private readonly CustomerState _state;
+        public bool Created { get; protected set; }
 
-        public Customer(IEnumerable<IEvent> events)
+        public CustomerId Id { get; protected set; }
+
+        public bool ConsumptionLocked { get; protected set; }
+
+        public bool ManualBilling { get; protected set; }
+
+        public Currency Currency { get; protected set; }
+
+        public CurrencyAmount Balance { get; protected set; }
+
+        public int MaxTransactionId { get; protected set; }
+
+        [Obsolete("Only for NHibernate", true)]
+        protected Customer()
         {
-            _state = new CustomerState(events);
+
         }
 
-        private void Apply(IEvent e)
+        public Customer(CustomerId id, string name, Currency currency, IPricingService service)
         {
-            // pass each event to modify current in-memory state
-            _state.Mutate(e);
-            // append event to change list for further persistence
-            Changes.Add(e);
-        }
-
-        public void Create(CustomerId id, string name, Currency currency, IPricingService service, DateTime utc)
-        {
-            if (_state.Created)
-                throw new InvalidOperationException("Customer was already created");
-            Apply(new CustomerCreated
-            {
-                Created = utc,
-                Name = name,
-                Id = id,
-                Currency = currency
-            });
+            Name = name;
+            Currency = currency;
+            Id = id;
+            Created = true;
 
             var bonus = service.GetWelcomeBonus(currency);
             if (bonus.Amount > 0)
-                AddPayment("Welcome bonus", bonus, utc);
+                AddPayment("Welcome bonus", bonus, DateTime.UtcNow);
         }
 
         public void Rename(string name, DateTime dateTime)
         {
-            if (_state.Name == name)
+            if (string.Equals(Name, name, StringComparison.CurrentCulture))
                 return;
-            Apply(new CustomerRenamed
-            {
-                Name = name,
-                Id = _state.Id,
-                OldName = _state.Name,
-                Renamed = dateTime
-            });
+            Name = name;
         }
 
         public void LockCustomer(string reason)
         {
-            if (_state.ConsumptionLocked)
+            if (ConsumptionLocked)
                 return;
 
-            Apply(new CustomerLocked
-            {
-                Id = _state.Id,
-                Reason = reason
-            });
+            ConsumptionLocked = true;
         }
 
         public void LockForAccountOverdraft(string comment, IPricingService service)
         {
-            if (_state.ManualBilling) return;
-            var threshold = service.GetOverdraftThreshold(_state.Currency);
-            if (_state.Balance < threshold)
+            if (ManualBilling) return;
+            var threshold = service.GetOverdraftThreshold(Currency);
+            if (Balance < threshold)
             {
                 LockCustomer("Overdraft. " + comment);
             }
@@ -89,30 +66,20 @@ namespace BookKeeping.Domain.CustomerAggregate
 
         public void AddPayment(string name, CurrencyAmount amount, DateTime utc)
         {
-            Apply(new CustomerPaymentAdded()
-            {
-                Id = _state.Id,
-                Payment = amount,
-                NewBalance = _state.Balance + amount,
-                PaymentName = name,
-                Transaction = _state.MaxTransactionId + 1,
-                TimeUtc = utc
-            });
+            if (Currency == Currency.None)
+                throw new InvalidOperationException("Customer currency was not assigned!");
+
+            Balance = Balance + amount;
+            MaxTransactionId = MaxTransactionId + 1;
         }
 
         public void Charge(string name, CurrencyAmount amount, DateTime time)
         {
-            if (_state.Currency == Currency.None)
+            if (Currency == Currency.None)
                 throw new InvalidOperationException("Customer currency was not assigned!");
-            Apply(new CustomerChargeAdded()
-            {
-                Id = _state.Id,
-                Charge = amount,
-                NewBalance = _state.Balance - amount,
-                ChargeName = name,
-                Transaction = _state.MaxTransactionId + 1,
-                TimeUtc = time
-            });
+
+            Balance = Balance - amount;
+            MaxTransactionId = MaxTransactionId + 1;
         }
     }
 }

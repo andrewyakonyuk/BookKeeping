@@ -1,5 +1,4 @@
 ﻿using BookKeeping.Core;
-using BookKeeping.Core.AtomicStorage;
 using BookKeeping.Domain;
 using BookKeeping.Domain.CustomerAggregate;
 using System;
@@ -36,30 +35,4 @@ namespace BookKeeping.Projections
         }
     }
 
-    public class CustomerTransactionsProjection : IEventHandler<CustomerCreated>,
-        IEventHandler<CustomerChargeAdded>,
-        IEventHandler<CustomerPaymentAdded>
-    {
-        private readonly IDocumentWriter<CustomerId, CustomerTransactionsDto> _store;
-
-        public CustomerTransactionsProjection(IDocumentWriter<CustomerId, CustomerTransactionsDto> store)
-        {
-            _store = store;
-        }
-
-        public void When(CustomerCreated e)
-        {
-            _store.Add(e.Id, new CustomerTransactionsDto());
-        }
-
-        public void When(CustomerChargeAdded e)
-        {
-            _store.UpdateOrThrow(e.Id, v => v.AddTx(e.ChargeName, -e.Charge, e.NewBalance, e.TimeUtc));
-        }
-
-        public void When(CustomerPaymentAdded e)
-        {
-            _store.UpdateOrThrow(e.Id, v => v.AddTx(e.PaymentName, e.Payment, e.NewBalance, e.TimeUtc));
-        }
-    }
 }

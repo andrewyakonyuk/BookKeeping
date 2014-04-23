@@ -1,6 +1,5 @@
 ﻿using BookKeeping.App.ViewModels;
 using BookKeeping.App.Views;
-using BookKeeping.Core.AtomicStorage;
 using BookKeeping.Domain;
 using BookKeeping.Domain.ProductAggregate;
 using BookKeeping.Projections;
@@ -19,8 +18,6 @@ namespace BookKeeping.App
             base.OnStartup(e);
 
             System.Threading.Thread.CurrentThread.CurrentUICulture = System.Globalization.CultureInfo.CurrentCulture; //new System.Globalization.CultureInfo("uk-Ua");
-
-            var context = Context.Current;
 
             MainWindow window = new MainWindow();
             var viewModel = new MainWindowViewModel();

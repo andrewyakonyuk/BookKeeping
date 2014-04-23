@@ -4,7 +4,6 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using BookKeeping.Core.AtomicStorage;
 
 namespace BookKeeping.App.ViewModels
 {
@@ -12,11 +11,11 @@ namespace BookKeeping.App.ViewModels
     {
         public CustomerTransactionsViewModel()
         {
-            var reader = Context.Current.ViewDocs.GetReader<CustomerId, CustomerTransactionsDto>();
-            var transactions = reader.Get(new CustomerId(12));
             DisplayName = "Customer transitions";
-            Source = transactions.Convert(t => t.Transactions,
-                () => new List<CustomerTransactionDto>());
+
+            //var reader = Context.Current.ViewDocs.GetReader<CustomerId, CustomerTransactionsDto>();
+            //var transactions = reader.Get(new CustomerId(12));
+            Source = new System.Collections.ObjectModel.ObservableCollection<CustomerTransactionDto>();
         }
     }
 }

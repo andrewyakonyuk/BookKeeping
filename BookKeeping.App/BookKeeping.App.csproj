@@ -207,10 +207,6 @@
     <Resource Include="Resources\Entypo.ttf" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\BookKeeping.Core\BookKeeping.Core.csproj">
-      <Project>{25165f2f-30cf-48e7-a26d-0bae31581547}</Project>
-      <Name>BookKeeping.Core</Name>
-    </ProjectReference>
     <ProjectReference Include="..\BookKeeping\BookKeeping.csproj">
       <Project>{8a0777e5-a87c-407d-afe9-3371117d0c36}</Project>
       <Name>BookKeeping</Name>

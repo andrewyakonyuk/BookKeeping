@@ -1,10 +1,8 @@
-﻿using BookKeeping.Core;
-using BookKeeping.Projections;
+﻿using BookKeeping.Projections;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using BookKeeping.Core.AtomicStorage;
 using ICommand  = System.Windows.Input.ICommand;
 using System.Windows.Data;
 using System.Windows.Controls;
@@ -29,10 +27,11 @@ namespace BookKeeping.App.ViewModels
 
             DisplayName = BookKeeping.App.Properties.Resources.Product_List;
 
-            var reader = Context.Current.ViewDocs.GetReader<unit, ProductListDto>();
+           // var reader = Context.Current.ViewDocs.GetReader<unit, ProductListDto>();
 
-            var productList = new ObservableCollection<ProductDto>((reader.Get(unit.it).Convert(t => t.Products,
-                () => new List<ProductDto>())));
+            //var productList = new ObservableCollection<ProductDto>((reader.Get(unit.it).Convert(t => t.Products,
+            //    () => new List<ProductDto>())));
+            var productList = new ObservableCollection<ProductDto>();
             productList.CollectionChanged += productList_CollectionChanged;
             Source = productList;
         }
@@ -40,7 +39,6 @@ namespace BookKeeping.App.ViewModels
 
         void productList_CollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
         {
-            var a = 5;
         }
 
         public string SearchText

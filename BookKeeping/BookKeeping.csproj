@@ -57,44 +57,21 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="CommandBus.cs" />
-    <Compile Include="CommandHandlerFactory.cs" />
-    <Compile Include="Context.cs" />
-    <Compile Include="DomainBoundedContext.cs" />
     <Compile Include="Domain\Currency.cs" />
     <Compile Include="Domain\CurrencyAmount.cs" />
     <Compile Include="Domain\CurrencyExtensions.cs" />
     <Compile Include="Domain\CustomerAggregate\Customer.cs" />
-    <Compile Include="Domain\CustomerAggregate\CustomerApplicationService.cs" />
-    <Compile Include="Domain\CustomerAggregate\CustomerState.cs" />
     <Compile Include="Domain\CustomerAggregate\CustomerId.cs" />
-    <Compile Include="Domain\CustomerAggregate\Messages.cs" />
     <Compile Include="Domain\IPricingService.cs" />
-    <Compile Include="Domain\OrderAggregate\Messages.cs" />
     <Compile Include="Domain\OrderAggregate\Order.cs" />
-    <Compile Include="Domain\OrderAggregate\OrderApplicationService.cs" />
     <Compile Include="Domain\OrderAggregate\OrderId.cs" />
     <Compile Include="Domain\OrderAggregate\OrderLine.cs" />
-    <Compile Include="Domain\OrderAggregate\OrderState.cs" />
-    <Compile Include="Domain\ProductAggregate\Messages.cs" />
     <Compile Include="Domain\ProductAggregate\Product.cs" />
-    <Compile Include="Domain\ProductAggregate\ProductApplicationService.cs" />
-    <Compile Include="Domain\ProductAggregate\ProductState.cs" />
     <Compile Include="Domain\ProductAggregate\ProductId.cs" />
-    <Compile Include="EventBus.cs" />
-    <Compile Include="EventHandlerFactory.cs" />
-    <Compile Include="ICommandHandlerFactory.cs" />
-    <Compile Include="IEventHandlerFactory.cs" />
     <Compile Include="NotificationObject.cs" />
     <Compile Include="Projections\CustomerTransactionProjections.cs" />
     <Compile Include="Projections\ProductsProjection.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\BookKeeping.Core\BookKeeping.Core.csproj">
-      <Project>{25165f2f-30cf-48e7-a26d-0bae31581547}</Project>
-      <Name>BookKeeping.Core</Name>
-    </ProjectReference>
   </ItemGroup>
   <ItemGroup>
     <BootstrapperPackage Include=".NETFramework,Version=v4.0">
@@ -117,6 +94,12 @@
       <ProductName>Установщик Windows 3.1</ProductName>
       <Install>true</Install>
     </BootstrapperPackage>
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\BookKeeping.Infrastructure\BookKeeping.Infrastructure.csproj">
+      <Project>{4f9712e7-3cc7-4656-b3e5-72e393a1cdf0}</Project>
+      <Name>BookKeeping.Infrastructure</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

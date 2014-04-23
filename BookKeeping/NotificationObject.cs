@@ -7,8 +7,6 @@ using System.Runtime.Serialization;
 
 namespace BookKeeping
 {
-    [DataContract]
-    [Serializable]
     public abstract class NotificationObject : INotifyPropertyChanged, INotifyPropertyChanging
     {
         #region Реализация интерфейса INotifyPropertyChanged
