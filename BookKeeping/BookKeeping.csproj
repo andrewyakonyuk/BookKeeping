@@ -85,6 +85,7 @@
     <Compile Include="EventHandlerFactory.cs" />
     <Compile Include="ICommandHandlerFactory.cs" />
     <Compile Include="IEventHandlerFactory.cs" />
+    <Compile Include="NotificationObject.cs" />
     <Compile Include="Projections\CustomerTransactionProjections.cs" />
     <Compile Include="Projections\ProductsProjection.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

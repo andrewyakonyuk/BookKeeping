@@ -9,6 +9,8 @@ using ICommand  = System.Windows.Input.ICommand;
 using System.Windows.Data;
 using System.Windows.Controls;
 using System.Collections;
+using System.Collections.ObjectModel;
+using System.Collections.Specialized;
 
 namespace BookKeeping.App.ViewModels
 {
@@ -22,16 +24,23 @@ namespace BookKeeping.App.ViewModels
 
         public ProductListViewModel()
         {
-            ShowProductDetail = true;
-
             SearchButtonCmd = new DelegateCommand(_ => DoSearch(SearchText), _ => true);
             EditProductCmd = new DelegateCommand(_ => ShowProductDetail = !ShowProductDetail, _ => SelectedItems.Count == 1);
 
-            var reader = Context.Current.ViewDocs.GetReader<unit, ProductListDto>();
-            var productList = reader.Get(unit.it);
             DisplayName = BookKeeping.App.Properties.Resources.Product_List;
-            Source = productList.Convert(t => t.Products,
-                () => new List<ProductDto>());
+
+            var reader = Context.Current.ViewDocs.GetReader<unit, ProductListDto>();
+
+            var productList = new ObservableCollection<ProductDto>((reader.Get(unit.it).Convert(t => t.Products,
+                () => new List<ProductDto>())));
+            productList.CollectionChanged += productList_CollectionChanged;
+            Source = productList;
+        }
+
+
+        void productList_CollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
+        {
+            var a = 5;
         }
 
         public string SearchText
@@ -50,6 +59,12 @@ namespace BookKeeping.App.ViewModels
             get { return _showFindPopup; }
             set
             {
+                if (!value && CollectionView.IsEditingItem)
+                {
+                    CollectionView.CommitEdit();
+                    if (CollectionView.NeedsRefresh)
+                        CollectionView.Refresh();
+                }
                 OnPropertyChanging(() => ShowFindPopup);
                 _showFindPopup = value;
                 OnPropertyChanged(() => ShowFindPopup);
@@ -61,6 +76,10 @@ namespace BookKeeping.App.ViewModels
             get { return _selectedItem; }
             set
             {
+                if (ShowProductDetail)
+                {
+                    var currentItem = CollectionView.CurrentItem;
+                }
                 ShowProductDetail = false;
                 OnPropertyChanging(() => SelectedItem);
                 _selectedItem = value;
