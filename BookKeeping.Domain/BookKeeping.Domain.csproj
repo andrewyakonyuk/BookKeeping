@@ -1,0 +1,156 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="12.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{0CAB6296-3D0D-4281-9BD0-C4C0C76AD9E5}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>BookKeeping.Domain</RootNamespace>
+    <AssemblyName>BookKeeping.Domain</AssemblyName>
+    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <TargetFrameworkProfile />
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="Autofac">
+      <HintPath>..\packages\Autofac.3.3.1\lib\net40\Autofac.dll</HintPath>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="InformationExtractors\IProductInformationExtractor.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Services\IPermissionProvider.cs" />
+    <Compile Include="Services\IPermissionService.cs" />
+    <Compile Include="Models\Country.cs" />
+    <Compile Include="Models\CountryRegion.cs" />
+    <Compile Include="Models\Currency.cs" />
+    <Compile Include="Models\CurrencySymbolPlacement.cs" />
+    <Compile Include="Models\CustomProperty.cs" />
+    <Compile Include="Models\CustomPropertyCollection.cs" />
+    <Compile Include="Models\ICopyable`1.cs" />
+    <Compile Include="Models\ISortable.cs" />
+    <Compile Include="Models\Order.cs" />
+    <Compile Include="Models\OrderLine.cs" />
+    <Compile Include="Models\OrderLineCollection.cs" />
+    <Compile Include="Models\OrderStatus.cs" />
+    <Compile Include="Models\OriginalUnitPrice.cs" />
+    <Compile Include="Models\OriginalUnitPriceCollection.cs" />
+    <Compile Include="Models\PaymentInformation.cs" />
+    <Compile Include="Models\PaymentMethod.cs" />
+    <Compile Include="Models\PaymentMethodSetting.cs" />
+    <Compile Include="Models\PaymentState.cs" />
+    <Compile Include="Models\Price.cs" />
+    <Compile Include="Models\PriceCollection.cs" />
+    <Compile Include="Models\PriceWithoutVat.cs" />
+    <Compile Include="Models\ProductSnapshot.cs" />
+    <Compile Include="Models\ServicePrice.cs" />
+    <Compile Include="Models\ServicePriceCollection.cs" />
+    <Compile Include="Models\ShipmentInformation.cs" />
+    <Compile Include="Models\ShippingMethod.cs" />
+    <Compile Include="Models\Store.cs" />
+    <Compile Include="Models\TransactionInformation.cs" />
+    <Compile Include="Models\VatGroup.cs" />
+    <Compile Include="Models\VatRate.cs" />
+    <Compile Include="Notifications\CountryEventHandler.cs" />
+    <Compile Include="Notifications\CountryRegionEventHandler.cs" />
+    <Compile Include="Notifications\CurrencyEventHandler.cs" />
+    <Compile Include="Notifications\NotificationCenter.cs" />
+    <Compile Include="Notifications\OrderEventHandler.cs" />
+    <Compile Include="Notifications\OrderLinesEventHandler.cs" />
+    <Compile Include="Notifications\OrderPropertiesEventHandler.cs" />
+    <Compile Include="Notifications\OrderStatusEventHandler.cs" />
+    <Compile Include="Notifications\PaymentMethodEventHandler.cs" />
+    <Compile Include="Notifications\ShippingMethodEventHandler.cs" />
+    <Compile Include="Notifications\StoreEventHandler.cs" />
+    <Compile Include="Notifications\VatGroupEventHandler.cs" />
+    <Compile Include="Services\PermissionService.cs" />
+    <Compile Include="PriceCalculators\IOrderCalculator.cs" />
+    <Compile Include="PriceCalculators\IPaymentCalculator.cs" />
+    <Compile Include="PriceCalculators\IProductCalculator.cs" />
+    <Compile Include="PriceCalculators\IShippingCalculator.cs" />
+    <Compile Include="PriceCalculators\OrderCalculator.cs" />
+    <Compile Include="PriceCalculators\PaymentCalculator.cs" />
+    <Compile Include="PriceCalculators\ProductCalculator.cs" />
+    <Compile Include="PriceCalculators\ShippingCalculator.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Repositories\ICountryRegionRepository.cs" />
+    <Compile Include="Repositories\ICountryRepository.cs" />
+    <Compile Include="Repositories\ICurrencyRepository.cs" />
+    <Compile Include="Repositories\IOrderRepository.cs" />
+    <Compile Include="Repositories\IOrderStatusRepository.cs" />
+    <Compile Include="Repositories\IPaymentMethodRepository.cs" />
+    <Compile Include="Repositories\IPermissionRepository.cs" />
+    <Compile Include="Repositories\IProductRepository.cs" />
+    <Compile Include="Repositories\IShippingMethodRepository.cs" />
+    <Compile Include="Repositories\IStoreRepository.cs" />
+    <Compile Include="Repositories\IVatGroupRepository.cs" />
+    <Compile Include="Services\CountryRegionService.cs" />
+    <Compile Include="Services\CountryService.cs" />
+    <Compile Include="Services\CurrencyService.cs" />
+    <Compile Include="Services\GeneralPermissionType.cs" />
+    <Compile Include="Services\ICountryRegionService.cs" />
+    <Compile Include="Services\ICountryService.cs" />
+    <Compile Include="Services\ICurrencyService.cs" />
+    <Compile Include="Services\IOrderService.cs" />
+    <Compile Include="Services\IOrderStatusService.cs" />
+    <Compile Include="Services\IPaymentMethodService.cs" />
+    <Compile Include="Services\IProductService.cs" />
+    <Compile Include="Services\IShippingMethodService.cs" />
+    <Compile Include="Services\IStoreService.cs" />
+    <Compile Include="Services\IVatGroupService.cs" />
+    <Compile Include="Services\OrderService.cs" />
+    <Compile Include="Services\OrderStatusService.cs" />
+    <Compile Include="Services\PaymentMethodService.cs" />
+    <Compile Include="Services\Permissions.cs" />
+    <Compile Include="Services\ProductService.cs" />
+    <Compile Include="Services\ShippingMethodService.cs" />
+    <Compile Include="Services\StoreService.cs" />
+    <Compile Include="Services\StoreSpecificPermissionType.cs" />
+    <Compile Include="Services\VatGroupService.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\BookKeeping.Infrastructure\BookKeeping.Infrastructure.csproj">
+      <Project>{4f9712e7-3cc7-4656-b3e5-72e393a1cdf0}</Project>
+      <Name>BookKeeping.Infrastructure</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="packages.config" />
+  </ItemGroup>
+  <ItemGroup />
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>

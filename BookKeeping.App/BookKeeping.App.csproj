@@ -34,6 +34,9 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="Autofac">
+      <HintPath>..\packages\Autofac.3.3.1\lib\net40\Autofac.dll</HintPath>
+    </Reference>
     <Reference Include="MahApps.Metro">
       <HintPath>..\packages\MahApps.Metro.0.13.1.0\lib\net40\MahApps.Metro.dll</HintPath>
     </Reference>
@@ -207,6 +210,14 @@
     <Resource Include="Resources\Entypo.ttf" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\BookKeeping.Domain\BookKeeping.Domain.csproj">
+      <Project>{0cab6296-3d0d-4281-9bd0-c4c0c76ad9e5}</Project>
+      <Name>BookKeeping.Domain</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\BookKeeping.Infrastructure\BookKeeping.Infrastructure.csproj">
+      <Project>{4f9712e7-3cc7-4656-b3e5-72e393a1cdf0}</Project>
+      <Name>BookKeeping.Infrastructure</Name>
+    </ProjectReference>
     <ProjectReference Include="..\BookKeeping\BookKeeping.csproj">
       <Project>{8a0777e5-a87c-407d-afe9-3371117d0c36}</Project>
       <Name>BookKeeping</Name>

@@ -30,8 +30,12 @@
     <DefineConstants>TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <RunCodeAnalysis>true</RunCodeAnalysis>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="Autofac">
+      <HintPath>..\packages\Autofac.3.3.1\lib\net40\Autofac.dll</HintPath>
+    </Reference>
     <Reference Include="FluentNHibernate">
       <HintPath>..\packages\FluentNHibernate.1.4.0.0\lib\net35\FluentNHibernate.dll</HintPath>
     </Reference>
@@ -43,6 +47,7 @@
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
+    <Reference Include="System.Runtime.Caching" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="Microsoft.CSharp" />
@@ -50,6 +55,13 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Caching\CacheService.cs" />
+    <Compile Include="Caching\ICacheService.cs" />
+    <Compile Include="Dependency\DependencyContainer.cs" />
+    <Compile Include="Dependency\DependencyResolver.cs" />
+    <Compile Include="Dependency\DependencyResolverExtensions.cs" />
+    <Compile Include="Dependency\IDependencyResolver.cs" />
+    <Compile Include="Dependency\SuppressDependencyAttribute.cs" />
     <Compile Include="Domain\Commands\CommandBuilder.cs" />
     <Compile Include="Domain\Commands\ICommand.cs" />
     <Compile Include="Domain\Commands\ICommandBuilder.cs" />
@@ -78,6 +90,13 @@
     <Compile Include="Domain\Sorting\SortOrder.cs" />
     <Compile Include="Domain\Sorting\SortOrderExtensions.cs" />
     <Compile Include="Domain\TreeNode.cs" />
+    <Compile Include="Extensions\AssemblyExtensions.cs" />
+    <Compile Include="Extensions\AttributeExtensions.cs" />
+    <Compile Include="Extensions\StringExtensions.cs" />
+    <Compile Include="ICopyable`1.cs" />
+    <Compile Include="Logging\ILoggingProvider.cs" />
+    <Compile Include="Logging\ILoggingService.cs" />
+    <Compile Include="Logging\LoggingService.cs" />
     <Compile Include="Maybe.cs" />
     <Compile Include="NHibernate\AutomappingConfiguration.cs" />
     <Compile Include="NHibernate\Conventions\ColumnNameUpperCaseConvention.cs" />
@@ -107,7 +126,6 @@
     <Compile Include="SystemObserver.cs" />
     <Compile Include="unit.cs" />
   </ItemGroup>
-  <ItemGroup />
   <ItemGroup>
     <None Include="packages.config" />
   </ItemGroup>

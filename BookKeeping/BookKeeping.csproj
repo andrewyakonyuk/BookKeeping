@@ -47,6 +47,9 @@
     <CodeAnalysisRuleSet>AllRules.ruleset</CodeAnalysisRuleSet>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="Autofac">
+      <HintPath>..\packages\Autofac.3.3.1\lib\net40\Autofac.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Runtime.Serialization" />
@@ -60,14 +63,11 @@
     <Compile Include="Domain\Currency.cs" />
     <Compile Include="Domain\CurrencyAmount.cs" />
     <Compile Include="Domain\CurrencyExtensions.cs" />
-    <Compile Include="Domain\CustomerAggregate\Customer.cs" />
-    <Compile Include="Domain\CustomerAggregate\CustomerId.cs" />
+    <Compile Include="Domain\Customer.cs" />
+    <Compile Include="Domain\CustomerId.cs" />
     <Compile Include="Domain\IPricingService.cs" />
-    <Compile Include="Domain\OrderAggregate\Order.cs" />
-    <Compile Include="Domain\OrderAggregate\OrderId.cs" />
-    <Compile Include="Domain\OrderAggregate\OrderLine.cs" />
-    <Compile Include="Domain\ProductAggregate\Product.cs" />
-    <Compile Include="Domain\ProductAggregate\ProductId.cs" />
+    <Compile Include="Domain\Product.cs" />
+    <Compile Include="Domain\ProductId.cs" />
     <Compile Include="NotificationObject.cs" />
     <Compile Include="Projections\CustomerTransactionProjections.cs" />
     <Compile Include="Projections\ProductsProjection.cs" />
@@ -96,10 +96,17 @@
     </BootstrapperPackage>
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\BookKeeping.Domain\BookKeeping.Domain.csproj">
+      <Project>{0cab6296-3d0d-4281-9bd0-c4c0c76ad9e5}</Project>
+      <Name>BookKeeping.Domain</Name>
+    </ProjectReference>
     <ProjectReference Include="..\BookKeeping.Infrastructure\BookKeeping.Infrastructure.csproj">
       <Project>{4f9712e7-3cc7-4656-b3e5-72e393a1cdf0}</Project>
       <Name>BookKeeping.Infrastructure</Name>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="packages.config" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
