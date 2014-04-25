@@ -1,6 +1,7 @@
-﻿namespace BookKeeping.Domain.Models
+﻿using BookKeeping.Infrastructure.Domain;
+namespace BookKeeping.Domain.Models
 {
-    public class PaymentMethodSetting
+    public class PaymentMethodSetting: IEntity
     {
         public long Id { get; set; }
 

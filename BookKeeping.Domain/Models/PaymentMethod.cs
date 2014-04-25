@@ -5,10 +5,11 @@ using BookKeeping.Domain.PriceCalculators;
 using BookKeeping.Domain.Repositories;
 using BookKeeping.Domain.Services;
 using BookKeeping.Infrastructure.Dependency;
+using BookKeeping.Infrastructure.Domain;
 
 namespace BookKeeping.Domain.Models
 {
-    public class PaymentMethod : ISortable
+    public class PaymentMethod : ISortable, IEntity
     {
         public long Id
         {

@@ -7,12 +7,13 @@ using BookKeeping.Domain.PriceCalculators;
 using BookKeeping.Domain.Repositories;
 using BookKeeping.Domain.Services;
 using BookKeeping.Infrastructure.Dependency;
+using BookKeeping.Infrastructure.Domain;
 
 namespace BookKeeping.Domain.Models
 {
-    public class Order : ICopyable<Order>
+    public class Order : ICopyable<Order>, IEntity
     {
-        public Guid Id
+        public long Id
         {
             get;
             set;
@@ -24,7 +25,7 @@ namespace BookKeeping.Domain.Models
             set;
         }
 
-        public Guid? CopiedFromOrderId
+        public long? CopiedFromOrderId
         {
             get;
             set;
@@ -197,7 +198,7 @@ namespace BookKeeping.Domain.Models
         public void Save()
         {
             Store store = StoreService.Instance.Get(this.StoreId);
-            if (this.Id == Guid.Empty)
+            if (this.Id == 0)
             {
                 this.DateCreated = DateTime.Now;
                 this.CartNumber = store.CartNumberPrefix + store.GetNextOrderNumber(false);
@@ -385,7 +386,7 @@ namespace BookKeeping.Domain.Models
         private void CompareAndNotifyBeforeSave(Order orderToCompare)
         {
             Contract.Requires<ArgumentNullException>(orderToCompare != null, "orderToCompare");
-            if (orderToCompare.Id == Guid.Empty)
+            if (orderToCompare.Id == 0)
             {
                 NotificationCenter.Order.OnCreating(this);
             }
@@ -503,7 +504,7 @@ namespace BookKeeping.Domain.Models
         private void CompareAndNotifyAfterSave(Order orderToCompare)
         {
             Contract.Requires<ArgumentNullException>(orderToCompare != null, "orderToCompare");
-            if (orderToCompare.Id == Guid.Empty)
+            if (orderToCompare.Id == 0)
             {
                 NotificationCenter.Order.OnCreated(this);
             }
@@ -617,7 +618,7 @@ namespace BookKeeping.Domain.Models
             return new Order
             {
                 StoreId = this.StoreId,
-                CopiedFromOrderId = new Guid?(this.Id),
+                CopiedFromOrderId = new long?(this.Id),
                 CurrencyId = this.CurrencyId,
                 OrderStatusId = this.OrderStatusId,
                 VatGroupId = this.VatGroupId,

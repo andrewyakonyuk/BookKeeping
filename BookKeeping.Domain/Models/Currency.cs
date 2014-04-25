@@ -5,11 +5,12 @@ using BookKeeping.Domain.Notifications;
 using BookKeeping.Domain.Repositories;
 using BookKeeping.Domain.Services;
 using BookKeeping.Infrastructure.Dependency;
+using BookKeeping.Infrastructure.Domain;
 using BookKeeping.Infrastructure.Logging;
 
 namespace BookKeeping.Domain.Models
 {
-    public class Currency : ISortable
+    public class Currency : ISortable, IEntity
     {
         public long Id
         {

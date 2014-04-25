@@ -32,17 +32,12 @@ namespace BookKeeping.Domain.Services
             NotificationCenter.Order.Deleted += new OrderEventHandler(this.Order_Deleted);
         }
 
-        public Guid? GetOrderId(long storeId, string cartNumber)
+        public long? GetOrderId(long storeId, string cartNumber)
         {
             return this._repository.GetOrderId(storeId, cartNumber);
         }
 
-        public XElement GetAllFinalizedAsXml(long storeId)
-        {
-            return this._repository.GetAllFinalizedAsXml(storeId);
-        }
-
-        public Order Get(long storeId, Guid orderId)
+        public Order Get(long storeId, long orderId)
         {
             List<Order> cachedList = this.GetCachedList(storeId);
             Order order = cachedList.SingleOrDefault((Order i) => i.Id == orderId);
@@ -64,31 +59,31 @@ namespace BookKeeping.Domain.Services
             return order;
         }
 
-        public IEnumerable<Order> Get(long storeId, IEnumerable<Guid> orderIds)
+        public IEnumerable<Order> Get(long storeId, IEnumerable<long> orderIds)
         {
             List<Order> orders = new List<Order>();
             if (orderIds != null)
             {
-                orderIds = orderIds.ToList<Guid>();
+                orderIds = orderIds.ToList();
                 List<Order> cachedOrders = this.GetCachedList(storeId);
                 orders.AddRange(
                     from orderId in orderIds
                     select cachedOrders.SingleOrDefault((Order i) => i.Id == orderId) into order
                     where order != null
                     select order);
-                List<Guid> list = (
+                List<long> list = (
                     from orderId in orderIds
                     where orders.All((Order o) => o.Id != orderId)
-                    select orderId).ToList<Guid>();
-                if (list.Any<Guid>())
+                    select orderId).ToList();
+                if (list.Any<long>())
                 {
                     lock (this._cacheLock)
                     {
                         list = (
                             from orderId in orderIds
                             where orders.All((Order o) => o.Id != orderId)
-                            select orderId).ToList<Guid>();
-                        if (list.Any<Guid>())
+                            select orderId).ToList();
+                        if (list.Any<long>())
                         {
                             List<Order> collection = this._repository.Get(storeId, list).ToList<Order>();
                             cachedOrders.AddRange(collection);

@@ -4,10 +4,11 @@ using BookKeeping.Domain.Notifications;
 using BookKeeping.Domain.Repositories;
 using BookKeeping.Domain.Services;
 using BookKeeping.Infrastructure.Dependency;
+using BookKeeping.Infrastructure.Domain;
 
 namespace BookKeeping.Domain.Models
 {
-    public class Store : ISortable
+    public class Store : ISortable, IEntity
     {
         public long Id
         {

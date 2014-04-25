@@ -7,13 +7,11 @@ namespace BookKeeping.Domain.Services
 {
     public interface IOrderService
     {
-        Guid? GetOrderId(long storeId, string cartNumber);
+        long? GetOrderId(long storeId, string cartNumber);
 
-        XElement GetAllFinalizedAsXml(long storeId);
+        Order Get(long storeId, long orderId);
 
-        Order Get(long storeId, Guid orderId);
-
-        IEnumerable<Order> Get(long storeId, IEnumerable<Guid> orderIds);
+        IEnumerable<Order> Get(long storeId, IEnumerable<long> orderIds);
 
         Tuple<IEnumerable<Order>, long> Search(long storeId, long orderStatusId, string orderNumber, string firstName, string lastName, PaymentState? paymentState, DateTime? startDate, DateTime? endDate, bool? isFinalized, long page, long itemsPerPage);
     }

@@ -3,11 +3,12 @@ using BookKeeping.Domain.Notifications;
 using BookKeeping.Domain.Repositories;
 using BookKeeping.Domain.Services;
 using BookKeeping.Infrastructure.Dependency;
+using BookKeeping.Infrastructure.Domain;
 using BookKeeping.Infrastructure.Logging;
 
 namespace BookKeeping.Domain.Models
 {
-    public class Country : ISortable
+    public class Country : ISortable, IEntity
     {
         public long Id
         {

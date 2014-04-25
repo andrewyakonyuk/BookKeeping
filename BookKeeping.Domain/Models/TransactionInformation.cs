@@ -60,7 +60,13 @@
         public override bool Equals(object obj)
         {
             TransactionInformation transactionInformation = obj as TransactionInformation;
-            return transactionInformation != null && (this.TransactionId == transactionInformation.TransactionId && this.PaymentState == transactionInformation.PaymentState && this.PaymentType == transactionInformation.PaymentType && this.PaymentIdentifier == transactionInformation.PaymentIdentifier && this.TransactionFee.Equals(transactionInformation.TransactionFee)) && this.AmountAuthorized.Equals(transactionInformation.AmountAuthorized);
+            return transactionInformation != null
+                && (this.TransactionId == transactionInformation.TransactionId 
+                && this.PaymentState == transactionInformation.PaymentState
+                && this.PaymentType == transactionInformation.PaymentType 
+                && this.PaymentIdentifier == transactionInformation.PaymentIdentifier
+                && this.TransactionFee.Equals(transactionInformation.TransactionFee))
+                && this.AmountAuthorized.Equals(transactionInformation.AmountAuthorized);
         }
 
         public override int GetHashCode()

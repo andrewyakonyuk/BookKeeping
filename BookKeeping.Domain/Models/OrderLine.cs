@@ -1,9 +1,10 @@
 ﻿using System;
 using System.Diagnostics.Contracts;
+using BookKeeping.Infrastructure.Domain;
 
 namespace BookKeeping.Domain.Models
 {
-    public class OrderLine : ICopyable<OrderLine>
+    public class OrderLine : ICopyable<OrderLine>, IEntity
     {
         public long Id
         {
