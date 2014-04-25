@@ -1,6 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
+using BookKeeping.Domain.Models;
 using BookKeeping.Domain.Notifications;
 using BookKeeping.Domain.Repositories;
 using BookKeeping.Infrastructure.Caching;
@@ -10,10 +10,10 @@ namespace BookKeeping.Domain.Services
 {
     public class ShippingMethodService : IShippingMethodService
     {
-        private readonly object _cacheLock = new object();
         private const string CacheKey = "ShippingMethods";
         private readonly IShippingMethodRepository _repository;
         private readonly ICacheService _cacheService;
+        private readonly object _cacheLock = new object();
 
         public static IShippingMethodService Instance
         {
@@ -30,69 +30,73 @@ namespace BookKeeping.Domain.Services
             NotificationCenter.ShippingMethod.Created += new ShippingMethodEventHandler(this.ShippingMethodCreated);
         }
 
-        public IEnumerable<BookKeeping.Domain.Models.ShippingMethod> GetAll(long storeId)
+        public IEnumerable<ShippingMethod> GetAll(long storeId)
         {
-            return (IEnumerable<BookKeeping.Domain.Models.ShippingMethod>)Enumerable.OrderBy<BookKeeping.Domain.Models.ShippingMethod, int>(Enumerable.Where<BookKeeping.Domain.Models.ShippingMethod>((IEnumerable<BookKeeping.Domain.Models.ShippingMethod>)this.GetCachedList(storeId), (Func<BookKeeping.Domain.Models.ShippingMethod, bool>)(i => !i.IsDeleted)), (Func<BookKeeping.Domain.Models.ShippingMethod, int>)(i => i.Sort));
+            return
+                from i in this.GetCachedList(storeId)
+                where !i.IsDeleted
+                orderby i.Sort
+                select i;
         }
 
-        public IEnumerable<BookKeeping.Domain.Models.ShippingMethod> GetAllAllowedIn(long storeId, long countryId, long? countryRegionId = null)
+        public IEnumerable<ShippingMethod> GetAllAllowedIn(long storeId, long countryId, long? countryRegionId = null)
         {
-            return (IEnumerable<BookKeeping.Domain.Models.ShippingMethod>)Enumerable.ToList<BookKeeping.Domain.Models.ShippingMethod>(Enumerable.Where<BookKeeping.Domain.Models.ShippingMethod>(this.GetAll(storeId), (Func<BookKeeping.Domain.Models.ShippingMethod, bool>)(sm =>
-            {
-                if (!sm.AllowedInFollowingCountries.Contains(countryId))
-                    return false;
-                if (countryRegionId.HasValue)
-                    return sm.AllowedInFollowingCountryRegions.Contains(countryRegionId.Value);
-                else
-                    return true;
-            })));
+            return (
+                from sm in this.GetAll(storeId)
+                where sm.AllowedInFollowingCountries.Contains(countryId) && (!countryRegionId.HasValue || sm.AllowedInFollowingCountryRegions.Contains(countryRegionId.Value))
+                select sm).ToList<ShippingMethod>();
         }
 
-        public BookKeeping.Domain.Models.ShippingMethod Get(long storeId, long shippingMethodId)
+        public ShippingMethod Get(long storeId, long shippingMethodId)
         {
-            List<BookKeeping.Domain.Models.ShippingMethod> cachedList = this.GetCachedList(storeId);
-            BookKeeping.Domain.Models.ShippingMethod shippingMethod = Enumerable.SingleOrDefault<BookKeeping.Domain.Models.ShippingMethod>((IEnumerable<BookKeeping.Domain.Models.ShippingMethod>)cachedList, (Func<BookKeeping.Domain.Models.ShippingMethod, bool>)(i => i.Id == shippingMethodId));
+            List<ShippingMethod> cachedList = this.GetCachedList(storeId);
+            ShippingMethod shippingMethod = cachedList.SingleOrDefault((ShippingMethod i) => i.Id == shippingMethodId);
             if (shippingMethod == null)
             {
                 lock (this._cacheLock)
                 {
-                    shippingMethod = Enumerable.SingleOrDefault<BookKeeping.Domain.Models.ShippingMethod>((IEnumerable<BookKeeping.Domain.Models.ShippingMethod>)cachedList, (Func<BookKeeping.Domain.Models.ShippingMethod, bool>)(i => i.Id == shippingMethodId));
+                    shippingMethod = cachedList.SingleOrDefault((ShippingMethod i) => i.Id == shippingMethodId);
                     if (shippingMethod == null)
                     {
                         shippingMethod = this._repository.Get(storeId, shippingMethodId);
                         if (shippingMethod != null)
+                        {
                             cachedList.Add(shippingMethod);
+                        }
                     }
                 }
             }
             return shippingMethod;
         }
 
-        private void ShippingMethodCreated(BookKeeping.Domain.Models.ShippingMethod shippingMethod)
+        private void ShippingMethodCreated(ShippingMethod shippingMethod)
         {
-            List<BookKeeping.Domain.Models.ShippingMethod> cachedList = this.GetCachedList(shippingMethod.StoreId);
-            if (Enumerable.Any<BookKeeping.Domain.Models.ShippingMethod>((IEnumerable<BookKeeping.Domain.Models.ShippingMethod>)cachedList, (Func<BookKeeping.Domain.Models.ShippingMethod, bool>)(sm => sm.Id == shippingMethod.Id)))
+            List<ShippingMethod> cachedList = this.GetCachedList(shippingMethod.StoreId);
+            if (cachedList.Any((ShippingMethod sm) => sm.Id == shippingMethod.Id))
+            {
                 return;
+            }
             lock (this._cacheLock)
             {
-                if (!Enumerable.All<BookKeeping.Domain.Models.ShippingMethod>((IEnumerable<BookKeeping.Domain.Models.ShippingMethod>)cachedList, (Func<BookKeeping.Domain.Models.ShippingMethod, bool>)(sm => sm.Id != shippingMethod.Id)))
-                    return;
-                cachedList.Add(shippingMethod);
+                if (cachedList.All((ShippingMethod sm) => sm.Id != shippingMethod.Id))
+                {
+                    cachedList.Add(shippingMethod);
+                }
             }
         }
 
-        private List<BookKeeping.Domain.Models.ShippingMethod> GetCachedList(long storeId)
+        private List<ShippingMethod> GetCachedList(long storeId)
         {
-            List<BookKeeping.Domain.Models.ShippingMethod> list = this._cacheService.GetCacheValue<List<BookKeeping.Domain.Models.ShippingMethod>>("ShippingMethods-" + (object)storeId);
+            List<ShippingMethod> list = this._cacheService.GetCacheValue<List<ShippingMethod>>("ShippingMethods-" + storeId);
             if (list == null)
             {
                 lock (this._cacheLock)
                 {
-                    list = this._cacheService.GetCacheValue<List<BookKeeping.Domain.Models.ShippingMethod>>("ShippingMethods-" + (object)storeId);
+                    list = this._cacheService.GetCacheValue<List<ShippingMethod>>("ShippingMethods-" + storeId);
                     if (list == null)
                     {
-                        list = Enumerable.ToList<BookKeeping.Domain.Models.ShippingMethod>(this._repository.GetAll(storeId));
-                        this._cacheService.SetCacheValue("ShippingMethods-" + (object)storeId, (object)list);
+                        list = this._repository.GetAll(storeId).ToList<ShippingMethod>();
+                        this._cacheService.SetCacheValue("ShippingMethods-" + storeId, list);
                     }
                 }
             }

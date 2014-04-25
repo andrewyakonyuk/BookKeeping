@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using BookKeeping.Domain.Notifications;
 using BookKeeping.Domain.PriceCalculators;
@@ -11,48 +10,120 @@ namespace BookKeeping.Domain.Models
 {
     public class PaymentMethod : ISortable
     {
-        public long Id { get; set; }
+        public long Id
+        {
+            get;
+            set;
+        }
 
-        public long StoreId { get; set; }
+        public long StoreId
+        {
+            get;
+            set;
+        }
 
-        public string Name { get; set; }
+        public string Name
+        {
+            get;
+            set;
+        }
 
-        public string Alias { get; set; }
+        public string Alias
+        {
+            get;
+            set;
+        }
 
-        public string ImageIdentifier { get; set; }
+        public string ImageIdentifier
+        {
+            get;
+            set;
+        }
 
-        public string PaymentProviderAlias { get; set; }
+        public string PaymentProviderAlias
+        {
+            get;
+            set;
+        }
 
-        public long? VatGroupId { get; set; }
+        public long? VatGroupId
+        {
+            get;
+            set;
+        }
 
-        public string Sku { get; set; }
+        public string Sku
+        {
+            get;
+            set;
+        }
 
-        public bool AllowsCapturingOfPayment { get; set; }
+        public bool AllowsCapturingOfPayment
+        {
+            get;
+            set;
+        }
 
-        public bool AllowsCancellationOfPayment { get; set; }
+        public bool AllowsCancellationOfPayment
+        {
+            get;
+            set;
+        }
 
-        public bool AllowsRetrievalOfPaymentStatus { get; set; }
+        public bool AllowsRetrievalOfPaymentStatus
+        {
+            get;
+            set;
+        }
 
-        public bool AllowsRefundOfPayment { get; set; }
+        public bool AllowsRefundOfPayment
+        {
+            get;
+            set;
+        }
 
-        public int Sort { get; set; }
+        public int Sort
+        {
+            get;
+            set;
+        }
 
-        public bool IsDeleted { get; set; }
+        public bool IsDeleted
+        {
+            get;
+            set;
+        }
 
-        public IList<PaymentMethodSetting> Settings { get; set; }
+        public IList<PaymentMethodSetting> Settings
+        {
+            get;
+            set;
+        }
 
-        public ServicePriceCollection OriginalPrices { get; set; }
+        public ServicePriceCollection OriginalPrices
+        {
+            get;
+            set;
+        }
 
-        public IList<long> AllowedInFollowingCountries { get; set; }
+        public IList<long> AllowedInFollowingCountries
+        {
+            get;
+            set;
+        }
 
-        public IList<long> AllowedInFollowingCountryRegions { get; set; }
+        public IList<long> AllowedInFollowingCountryRegions
+        {
+            get;
+            set;
+        }
 
         public PaymentMethod()
         {
-            this.Settings = (IList<PaymentMethodSetting>)new List<PaymentMethodSetting>();
+            this.Settings = new List<PaymentMethodSetting>();
             this.OriginalPrices = new ServicePriceCollection();
-            this.AllowedInFollowingCountries = (IList<long>)new List<long>();
-            this.AllowedInFollowingCountryRegions = (IList<long>)new List<long>();
+            this.AllowedInFollowingCountries = new List<long>();
+            this.AllowedInFollowingCountryRegions = new List<long>();
             this.Sort = -1;
         }
 
@@ -61,7 +132,7 @@ namespace BookKeeping.Domain.Models
         {
             this.StoreId = storeId;
             this.Name = name;
-            this.Alias = name;//TODO:StringExtensions.ToCamelCase(name);
+            this.Alias = name.ToCamelCase();
         }
 
         public void Save()
@@ -70,78 +141,59 @@ namespace BookKeeping.Domain.Models
             if (!flag)
             {
                 PaymentMethod paymentMethod = DependencyResolver.Current.GetService<IPaymentMethodRepository>().Get(this.StoreId, this.Id);
-                foreach (long num in Enumerable.Where<long>((IEnumerable<long>)paymentMethod.AllowedInFollowingCountries, (Func<long, bool>)(i => !this.AllowedInFollowingCountries.Contains(i))))
+                foreach (var countryId in from i in paymentMethod.AllowedInFollowingCountries
+                                          where !this.AllowedInFollowingCountries.Contains(i)
+                                          select i)
                 {
-                    long countryId = num;
                     Country country = CountryService.Instance.Get(this.StoreId, countryId);
-                    long? defaultPaymentMethodId = country.DefaultPaymentMethodId;
-                    long id = this.Id;
-                    if ((defaultPaymentMethodId.GetValueOrDefault() != id ? 0 : (defaultPaymentMethodId.HasValue ? 1 : 0)) != 0)
+                    if (country.DefaultPaymentMethodId == this.Id)
                     {
-                        country.DefaultPaymentMethodId = new long?();
+                        country.DefaultPaymentMethodId = null;
                         country.Save();
                     }
-                    this.OriginalPrices.RemoveAll((Predicate<ServicePrice>)(p =>
-                    {
-                        long? local_0 = p.CountryId;
-                        long local_1 = countryId;
-                        if (local_0.GetValueOrDefault() == local_1)
-                            return local_0.HasValue;
-                        else
-                            return false;
-                    }));
+                    this.OriginalPrices.RemoveAll((ServicePrice p) => p.CountryId == countryId);
                 }
-                foreach (long num in Enumerable.Where<long>((IEnumerable<long>)paymentMethod.AllowedInFollowingCountryRegions, (Func<long, bool>)(i => !this.AllowedInFollowingCountryRegions.Contains(i))))
+                foreach (var countryRegionId in from i in paymentMethod.AllowedInFollowingCountryRegions
+                                                where !this.AllowedInFollowingCountryRegions.Contains(i)
+                                                select i)
                 {
-                    long countryRegionId = num;
                     CountryRegion countryRegion = CountryRegionService.Instance.Get(this.StoreId, countryRegionId);
-                    long? defaultPaymentMethodId = countryRegion.DefaultPaymentMethodId;
-                    long id = this.Id;
-                    if ((defaultPaymentMethodId.GetValueOrDefault() != id ? 0 : (defaultPaymentMethodId.HasValue ? 1 : 0)) != 0)
+                    if (countryRegion.DefaultPaymentMethodId == this.Id)
                     {
-                        countryRegion.DefaultPaymentMethodId = new long?();
+                        countryRegion.DefaultPaymentMethodId = null;
                         countryRegion.Save();
                     }
-                    this.OriginalPrices.RemoveAll((Predicate<ServicePrice>)(p =>
-                    {
-                        long? local_0 = p.CountryRegionId;
-                        long local_1 = countryRegionId;
-                        if (local_0.GetValueOrDefault() == local_1)
-                            return local_0.HasValue;
-                        else
-                            return false;
-                    }));
+                    this.OriginalPrices.RemoveAll((ServicePrice p) => p.CountryRegionId == countryRegionId);
                 }
             }
-            IPaymentMethodRepository methodRepository = DependencyResolver.Current.GetService<IPaymentMethodRepository>();
+            IPaymentMethodRepository paymentMethodRepository = DependencyResolver.Current.GetService<IPaymentMethodRepository>();
             if (this.Sort == -1)
-                this.Sort = methodRepository.GetHighestSortValue(this.StoreId) + 1;
-            methodRepository.Save(this);
-            if (!flag)
-                return;
-            NotificationCenter.PaymentMethod.OnCreated(this);
+            {
+                this.Sort = paymentMethodRepository.GetHighestSortValue(this.StoreId) + 1;
+            }
+            paymentMethodRepository.Save(this);
+            if (flag)
+            {
+                NotificationCenter.PaymentMethod.OnCreated(this);
+            }
         }
 
         public bool Delete()
         {
             foreach (Country country in CountryService.Instance.GetAll(this.StoreId))
             {
-                long? defaultPaymentMethodId = country.DefaultPaymentMethodId;
-                long id = this.Id;
-                if ((defaultPaymentMethodId.GetValueOrDefault() != id ? 0 : (defaultPaymentMethodId.HasValue ? 1 : 0)) != 0)
+                if (country.DefaultPaymentMethodId == this.Id)
                 {
-                    country.DefaultPaymentMethodId = new long?();
+                    country.DefaultPaymentMethodId = null;
                     country.Save();
                 }
             }
-            foreach (CountryRegion countryRegion in CountryRegionService.Instance.GetAll(this.StoreId, new long?()))
+            foreach (CountryRegion country in CountryRegionService.Instance.GetAll(this.StoreId, null))
             {
-                long? defaultPaymentMethodId = countryRegion.DefaultPaymentMethodId;
-                long id = this.Id;
-                if ((defaultPaymentMethodId.GetValueOrDefault() != id ? 0 : (defaultPaymentMethodId.HasValue ? 1 : 0)) != 0)
+                if (country.DefaultPaymentMethodId == this.Id)
                 {
-                    countryRegion.DefaultPaymentMethodId = new long?();
-                    countryRegion.Save();
+                    country.DefaultPaymentMethodId = null;
+                    country.Save();
                 }
             }
             this.IsDeleted = true;
@@ -152,15 +204,32 @@ namespace BookKeeping.Domain.Models
 
         public bool IsAllowedInRegion(long countryId, long? countryRegionId)
         {
-            bool flag = false;
+            bool result = false;
             if (!this.IsDeleted && this.AllowedInFollowingCountries.Contains(countryId))
-                flag = !countryRegionId.HasValue || this.AllowedInFollowingCountryRegions.Contains(countryRegionId.Value);
-            return flag;
+            {
+                result = (!countryRegionId.HasValue || this.AllowedInFollowingCountryRegions.Contains(countryRegionId.Value));
+            }
+            return result;
         }
 
-        public Decimal GetOriginalPrice(long currencyId, long countryId, long? countryRegionId)
+        public decimal GetOriginalPrice(long currencyId, long countryId, long? countryRegionId)
         {
-            return this.OriginalPrices.GetPrice(currencyId, new long?(countryId), countryRegionId) ?? this.OriginalPrices.GetPrice(currencyId, new long?(countryId), new long?()) ?? this.OriginalPrices.GetPrice(currencyId, new long?(), new long?()) ?? new Decimal(0);
+            decimal? price = this.OriginalPrices.GetPrice(currencyId, new long?(countryId), countryRegionId);
+            if (price.HasValue)
+            {
+                return price.GetValueOrDefault();
+            }
+            decimal? price2 = this.OriginalPrices.GetPrice(currencyId, new long?(countryId), null);
+            if (price2.HasValue)
+            {
+                return price2.GetValueOrDefault();
+            }
+            decimal? price3 = this.OriginalPrices.GetPrice(currencyId, null, null);
+            if (!price3.HasValue)
+            {
+                return 0m;
+            }
+            return price3.GetValueOrDefault();
         }
 
         public IEnumerable<Price> CalculatePrices(Order order)
@@ -177,21 +246,22 @@ namespace BookKeeping.Domain.Models
 
         public IDictionary<string, string> GetMergedSettings(long? languageId)
         {
-            Dictionary<string, string> dictionary = Enumerable.ToDictionary<PaymentMethodSetting, string, string>(Enumerable.Where<PaymentMethodSetting>((IEnumerable<PaymentMethodSetting>)this.Settings, (Func<PaymentMethodSetting, bool>)(s => !s.LanguageId.HasValue)), (Func<PaymentMethodSetting, string>)(s => s.Key), (Func<PaymentMethodSetting, string>)(s => s.Value));
+            Dictionary<string, string> dictionary = (
+                from s in this.Settings
+                where !s.LanguageId.HasValue
+                select s).ToDictionary((PaymentMethodSetting s) => s.Key, (PaymentMethodSetting s) => s.Value);
             if (languageId.HasValue)
             {
-                foreach (KeyValuePair<string, string> keyValuePair in Enumerable.ToDictionary<PaymentMethodSetting, string, string>(Enumerable.Where<PaymentMethodSetting>((IEnumerable<PaymentMethodSetting>)this.Settings, (Func<PaymentMethodSetting, bool>)(s =>
+                Dictionary<string, string> dictionary2 = (
+                    from s in this.Settings
+                    where s.LanguageId == languageId
+                    select s).ToDictionary((PaymentMethodSetting kvp) => kvp.Key, (PaymentMethodSetting kvp) => kvp.Value);
+                foreach (KeyValuePair<string, string> current in dictionary2)
                 {
-                    long? local_0 = s.LanguageId;
-                    long? local_1 = languageId;
-                    if (local_0.GetValueOrDefault() == local_1.GetValueOrDefault())
-                        return local_0.HasValue == local_1.HasValue;
-                    else
-                        return false;
-                })), (Func<PaymentMethodSetting, string>)(kvp => kvp.Key), (Func<PaymentMethodSetting, string>)(kvp => kvp.Value)))
-                    dictionary[keyValuePair.Key] = keyValuePair.Value;
+                    dictionary[current.Key] = current.Value;
+                }
             }
-            return (IDictionary<string, string>)dictionary;
+            return dictionary;
         }
     }
 }

@@ -46,9 +46,9 @@
     <Compile Include="InformationExtractors\IProductInformationExtractor.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="Models\Country.cs" />
     <Compile Include="Services\IPermissionProvider.cs" />
     <Compile Include="Services\IPermissionService.cs" />
-    <Compile Include="Models\Country.cs" />
     <Compile Include="Models\CountryRegion.cs" />
     <Compile Include="Models\Currency.cs" />
     <Compile Include="Models\CurrencySymbolPlacement.cs" />

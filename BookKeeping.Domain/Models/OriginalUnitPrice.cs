@@ -1,14 +1,20 @@
-﻿using System;
-
-namespace BookKeeping.Domain.Models
+﻿namespace BookKeeping.Domain.Models
 {
     public class OriginalUnitPrice : ICopyable<OriginalUnitPrice>
     {
-        public Decimal Value { get; set; }
+        public decimal Value
+        {
+            get;
+            set;
+        }
 
-        public long CurrencyId { get; set; }
+        public long CurrencyId
+        {
+            get;
+            set;
+        }
 
-        public OriginalUnitPrice(Decimal value, long currencyId)
+        public OriginalUnitPrice(decimal value, long currencyId)
         {
             this.Value = value;
             this.CurrencyId = currencyId;
@@ -22,10 +28,7 @@ namespace BookKeeping.Domain.Models
         public override bool Equals(object obj)
         {
             OriginalUnitPrice originalUnitPrice = obj as OriginalUnitPrice;
-            if (originalUnitPrice == null || !(this.Value == originalUnitPrice.Value))
-                return false;
-            else
-                return this.CurrencyId == originalUnitPrice.CurrencyId;
+            return originalUnitPrice != null && this.Value == originalUnitPrice.Value && this.CurrencyId == originalUnitPrice.CurrencyId;
         }
 
         public override int GetHashCode()

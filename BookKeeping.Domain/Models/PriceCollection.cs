@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 
 namespace BookKeeping.Domain.Models
@@ -8,13 +7,15 @@ namespace BookKeeping.Domain.Models
     {
         public Price Get(long currencyId)
         {
-            return Enumerable.SingleOrDefault<Price>((IEnumerable<Price>)this, (Func<Price, bool>)(ol => ol.CurrencyId == currencyId));
+            return this.SingleOrDefault((Price ol) => ol.CurrencyId == currencyId);
         }
 
         public PriceCollection Copy()
         {
             PriceCollection priceCollection = new PriceCollection();
-            priceCollection.AddRange(Enumerable.Select<Price, Price>((IEnumerable<Price>)this, (Func<Price, Price>)(price => price.Copy())));
+            priceCollection.AddRange(
+                from price in this
+                select price.Copy());
             return priceCollection;
         }
 
@@ -22,10 +23,14 @@ namespace BookKeeping.Domain.Models
         {
             PriceCollection priceCollection = obj as PriceCollection;
             if (priceCollection == null)
+            {
                 return false;
-            bool flag = this.Count == priceCollection.Count;
+            }
+            bool flag = base.Count == priceCollection.Count;
             if (flag)
-                flag = !Enumerable.Any<Price>((IEnumerable<Price>)this, (Func<Price, bool>)(p => Enumerable.All<Price>((IEnumerable<Price>)priceCollection, (Func<Price, bool>)(cp => !cp.Equals((object)p)))));
+            {
+                flag = !this.Any((Price p) => priceCollection.All((Price cp) => !cp.Equals(p)));
+            }
             return flag;
         }
 

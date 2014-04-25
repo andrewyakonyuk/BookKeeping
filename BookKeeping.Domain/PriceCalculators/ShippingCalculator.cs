@@ -29,10 +29,12 @@ namespace BookKeeping.Domain.PriceCalculators
         {
             Contract.Requires<ArgumentNullException>(shippingMethod != null, "shippingMethod");
             Contract.Requires<ArgumentNullException>(order != null, "order");
-            return (IEnumerable<Price>)Enumerable.ToList<Price>(Enumerable.Select<BookKeeping.Domain.Models.Currency, Price>(this.CurrencyService.GetAll(shippingMethod.StoreId), (Func<BookKeeping.Domain.Models.Currency, Price>)(currency => new Price(this.CalculatePrice(shippingMethod, currency, order), order.ShipmentInformation.VatRate, currency))));
+            return (
+                from currency in this.CurrencyService.GetAll(shippingMethod.StoreId)
+                select new Price(this.CalculatePrice(shippingMethod, currency, order), order.ShipmentInformation.VatRate, currency)).ToList<Price>();
         }
 
-        protected virtual Decimal CalculatePrice(ShippingMethod shippingMethod, BookKeeping.Domain.Models.Currency currency, Order order)
+        protected virtual decimal CalculatePrice(ShippingMethod shippingMethod, Currency currency, Order order)
         {
             Contract.Requires<ArgumentNullException>(shippingMethod != null, "shippingMethod");
             Contract.Requires<ArgumentNullException>(currency != null, "currency");
@@ -44,20 +46,24 @@ namespace BookKeeping.Domain.PriceCalculators
         {
             Contract.Requires<ArgumentNullException>(shippingMethod != null, "shippingMethod");
             Contract.Requires<ArgumentNullException>(fallbackVatRate != null, "fallbackVatRate");
-            VatRate vatRate = fallbackVatRate;
+            VatRate result = fallbackVatRate;
             if (shippingMethod.VatGroupId.HasValue)
-                vatRate = this.VatGroupService.Get(shippingMethod.StoreId, shippingMethod.VatGroupId.Value).GetVatRate(countryId, countryRegionId);
-            return vatRate;
+            {
+                result = this.VatGroupService.Get(shippingMethod.StoreId, shippingMethod.VatGroupId.Value).GetVatRate(countryId, countryRegionId);
+            }
+            return result;
         }
 
         public IEnumerable<Price> CalculatePrices(ShippingMethod shippingMethod, long countryId, long? countryRegionId, VatRate vatRate)
         {
             Contract.Requires<ArgumentNullException>(shippingMethod != null, "shippingMethod");
             Contract.Requires<ArgumentNullException>(vatRate != null, "vatRate");
-            return (IEnumerable<Price>)Enumerable.ToList<Price>(Enumerable.Select<BookKeeping.Domain.Models.Currency, Price>(this.CurrencyService.GetAll(shippingMethod.StoreId), (Func<BookKeeping.Domain.Models.Currency, Price>)(currency => new Price(this.CalculatePrice(shippingMethod, currency, countryId, countryRegionId), vatRate, currency))));
+            return (
+                from currency in this.CurrencyService.GetAll(shippingMethod.StoreId)
+                select new Price(this.CalculatePrice(shippingMethod, currency, countryId, countryRegionId), vatRate, currency)).ToList<Price>();
         }
 
-        protected virtual Decimal CalculatePrice(ShippingMethod shippingMethod, BookKeeping.Domain.Models.Currency currency, long countryId, long? countryRegionId)
+        protected virtual decimal CalculatePrice(ShippingMethod shippingMethod, Currency currency, long countryId, long? countryRegionId)
         {
             Contract.Requires<ArgumentNullException>(shippingMethod != null, "shippingMethod");
             Contract.Requires<ArgumentNullException>(currency != null, "currency");

@@ -5,47 +5,131 @@ namespace BookKeeping.Domain.Models
 {
     public class OrderLine : ICopyable<OrderLine>
     {
-        public long Id { get; set; }
+        public long Id
+        {
+            get;
+            set;
+        }
 
-        public string Sku { get; set; }
+        public string Sku
+        {
+            get;
+            set;
+        }
 
-        public string Name { get; set; }
+        public string Name
+        {
+            get;
+            set;
+        }
 
-        public string ProductIdentifier { get; set; }
+        public string ProductIdentifier
+        {
+            get;
+            set;
+        }
 
-        public Decimal Quantity { get; set; }
+        public decimal Quantity
+        {
+            get;
+            set;
+        }
 
-        public long? VatGroupId { get; set; }
+        public long? VatGroupId
+        {
+            get;
+            set;
+        }
 
-        public long? LanguageId { get; set; }
+        public long? LanguageId
+        {
+            get;
+            set;
+        }
 
-        public string BundleIdentifier { get; set; }
+        public string BundleIdentifier
+        {
+            get;
+            set;
+        }
 
-        public long? CopiedFromOrderLineId { get; set; }
+        public long? CopiedFromOrderLineId
+        {
+            get;
+            set;
+        }
 
-        public OrderLineCollection OrderLines { get; set; }
+        public OrderLineCollection OrderLines
+        {
+            get;
+            set;
+        }
 
-        public CustomPropertyCollection Properties { get; set; }
+        public CustomPropertyCollection Properties
+        {
+            get;
+            set;
+        }
 
-        public OriginalUnitPriceCollection OriginalUnitPrices { get; set; }
+        public OriginalUnitPriceCollection OriginalUnitPrices
+        {
+            get;
+            set;
+        }
 
-        public VatRate VatRate { get; set; }
+        public VatRate VatRate
+        {
+            get;
+            set;
+        }
 
-        public PriceCollection UnitPrices { get; set; }
+        public PriceCollection UnitPrices
+        {
+            get;
+            set;
+        }
 
-        public Price UnitPrice { get; set; }
+        public Price UnitPrice
+        {
+            get;
+            set;
+        }
 
-        public PriceCollection TotalPrices { get; set; }
+        public PriceCollection TotalPrices
+        {
+            get;
+            set;
+        }
 
-        public Price TotalPrice { get; set; }
+        public Price TotalPrice
+        {
+            get;
+            set;
+        }
 
-        public PriceCollection BundleUnitPrices { get; set; }
+        public PriceCollection BundleUnitPrices
+        {
+            get;
+            set;
+        }
 
-        public Price BundleUnitPrice { get; set; }
+        public Price BundleUnitPrice
+        {
+            get;
+            set;
+        }
 
-        public PriceCollection BundleTotalPrices { get; set; }
+        public PriceCollection BundleTotalPrices
+        {
+            get;
+            set;
+        }
 
-        public Price BundleTotalPrice { get; set; }
+        public Price BundleTotalPrice
+        {
+            get;
+            set;
+        }
 
         public OrderLine()
         {
@@ -67,7 +151,7 @@ namespace BookKeeping.Domain.Models
             : this()
         {
             Contract.Requires<ArgumentNullException>(productSnapshot != null, "productSnapshot");
-            this.Sku = !string.IsNullOrEmpty(productSnapshot.Sku) ? productSnapshot.Sku : productSnapshot.ProductIdentifier;
+            this.Sku = ((!string.IsNullOrEmpty(productSnapshot.Sku)) ? productSnapshot.Sku : productSnapshot.ProductIdentifier);
             this.Name = productSnapshot.Name;
             this.ProductIdentifier = productSnapshot.ProductIdentifier;
             this.VatGroupId = productSnapshot.VatGroupId;
@@ -76,14 +160,14 @@ namespace BookKeeping.Domain.Models
             this.OriginalUnitPrices = productSnapshot.OriginalUnitPrices.Copy();
         }
 
-        public void ChangeQuantity(Decimal quantity)
+        public void ChangeQuantity(decimal quantity)
         {
             this.Quantity = quantity;
         }
 
         public OrderLine Copy()
         {
-            return new OrderLine()
+            return new OrderLine
             {
                 Sku = this.Sku,
                 Name = this.Name,
@@ -110,18 +194,7 @@ namespace BookKeeping.Domain.Models
         public override bool Equals(object obj)
         {
             OrderLine orderLine = obj as OrderLine;
-            if (orderLine == null || this.Id != orderLine.Id || (!(this.Sku == orderLine.Sku) || !(this.Name == orderLine.Name)) || (!(this.ProductIdentifier == orderLine.ProductIdentifier) || !(this.Quantity == orderLine.Quantity)))
-                return false;
-            long? vatGroupId1 = this.VatGroupId;
-            long? vatGroupId2 = orderLine.VatGroupId;
-            if ((vatGroupId1.GetValueOrDefault() != vatGroupId2.GetValueOrDefault() ? 0 : (vatGroupId1.HasValue == vatGroupId2.HasValue ? 1 : 0)) != 0)
-            {
-                long? languageId1 = this.LanguageId;
-                long? languageId2 = orderLine.LanguageId;
-                if ((languageId1.GetValueOrDefault() != languageId2.GetValueOrDefault() ? 0 : (languageId1.HasValue == languageId2.HasValue ? 1 : 0)) != 0 && this.BundleIdentifier == orderLine.BundleIdentifier && (this.OrderLines.Equals((object)orderLine.OrderLines) && this.Properties.Equals((object)orderLine.Properties)) && (this.OriginalUnitPrices.Equals((object)orderLine.OriginalUnitPrices) && this.VatRate.Equals((object)orderLine.VatRate) && (this.UnitPrices.Equals((object)orderLine.UnitPrices) && this.UnitPrice.Equals((object)orderLine.UnitPrice))) && (this.TotalPrices.Equals((object)orderLine.TotalPrices) && this.TotalPrice.Equals((object)orderLine.TotalPrice) && (this.BundleUnitPrices.Equals((object)orderLine.BundleUnitPrices) && this.BundleUnitPrice.Equals((object)orderLine.BundleUnitPrice)) && this.BundleTotalPrices.Equals((object)orderLine.BundleTotalPrices)))
-                    return this.BundleTotalPrice.Equals((object)orderLine.BundleTotalPrice);
-            }
-            return false;
+            return orderLine != null && (this.Id == orderLine.Id && this.Sku == orderLine.Sku && this.Name == orderLine.Name && this.ProductIdentifier == orderLine.ProductIdentifier && this.Quantity == orderLine.Quantity && this.VatGroupId == orderLine.VatGroupId && this.LanguageId == orderLine.LanguageId && this.BundleIdentifier == orderLine.BundleIdentifier && this.OrderLines.Equals(orderLine.OrderLines) && this.Properties.Equals(orderLine.Properties) && this.OriginalUnitPrices.Equals(orderLine.OriginalUnitPrices) && this.VatRate.Equals(orderLine.VatRate) && this.UnitPrices.Equals(orderLine.UnitPrices) && this.UnitPrice.Equals(orderLine.UnitPrice) && this.TotalPrices.Equals(orderLine.TotalPrices) && this.TotalPrice.Equals(orderLine.TotalPrice) && this.BundleUnitPrices.Equals(orderLine.BundleUnitPrices) && this.BundleUnitPrice.Equals(orderLine.BundleUnitPrice) && this.BundleTotalPrices.Equals(orderLine.BundleTotalPrices)) && this.BundleTotalPrice.Equals(orderLine.BundleTotalPrice);
         }
 
         public override int GetHashCode()

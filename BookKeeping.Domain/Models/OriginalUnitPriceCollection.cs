@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 
 namespace BookKeeping.Domain.Models
@@ -8,19 +7,25 @@ namespace BookKeeping.Domain.Models
     {
         public OriginalUnitPriceCollection Copy()
         {
-            OriginalUnitPriceCollection unitPriceCollection = new OriginalUnitPriceCollection();
-            unitPriceCollection.AddRange(Enumerable.Select<OriginalUnitPrice, OriginalUnitPrice>((IEnumerable<OriginalUnitPrice>)this, (Func<OriginalUnitPrice, OriginalUnitPrice>)(originalUnitPrice => originalUnitPrice.Copy())));
-            return unitPriceCollection;
+            OriginalUnitPriceCollection originalUnitPriceCollection = new OriginalUnitPriceCollection();
+            originalUnitPriceCollection.AddRange(
+                from originalUnitPrice in this
+                select originalUnitPrice.Copy());
+            return originalUnitPriceCollection;
         }
 
         public override bool Equals(object obj)
         {
             OriginalUnitPriceCollection originalUnitPriceCollection = obj as OriginalUnitPriceCollection;
             if (originalUnitPriceCollection == null)
+            {
                 return false;
-            bool flag = this.Count == originalUnitPriceCollection.Count;
+            }
+            bool flag = base.Count == originalUnitPriceCollection.Count;
             if (flag)
-                flag = !Enumerable.Any<OriginalUnitPrice>((IEnumerable<OriginalUnitPrice>)this, (Func<OriginalUnitPrice, bool>)(p => Enumerable.All<OriginalUnitPrice>((IEnumerable<OriginalUnitPrice>)originalUnitPriceCollection, (Func<OriginalUnitPrice, bool>)(cp => !cp.Equals((object)p)))));
+            {
+                flag = !this.Any((OriginalUnitPrice p) => originalUnitPriceCollection.All((OriginalUnitPrice cp) => !cp.Equals(p)));
+            }
             return flag;
         }
 

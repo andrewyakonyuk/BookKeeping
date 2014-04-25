@@ -2,23 +2,59 @@
 {
     public class PaymentInformation : ICopyable<PaymentInformation>
     {
-        public long CountryId { get; set; }
+        public long CountryId
+        {
+            get;
+            set;
+        }
 
-        public long? CountryRegionId { get; set; }
+        public long? CountryRegionId
+        {
+            get;
+            set;
+        }
 
-        public long? PaymentMethodId { get; set; }
+        public long? PaymentMethodId
+        {
+            get;
+            set;
+        }
 
-        public string FirstName { get; set; }
+        public string FirstName
+        {
+            get;
+            set;
+        }
 
-        public string LastName { get; set; }
+        public string LastName
+        {
+            get;
+            set;
+        }
 
-        public string Email { get; set; }
+        public string Email
+        {
+            get;
+            set;
+        }
 
-        public VatRate VatRate { get; set; }
+        public VatRate VatRate
+        {
+            get;
+            set;
+        }
 
-        public PriceCollection TotalPrices { get; set; }
+        public PriceCollection TotalPrices
+        {
+            get;
+            set;
+        }
 
-        public Price TotalPrice { get; set; }
+        public Price TotalPrice
+        {
+            get;
+            set;
+        }
 
         public PaymentInformation()
         {
@@ -35,7 +71,7 @@
 
         public PaymentInformation Copy()
         {
-            return new PaymentInformation()
+            return new PaymentInformation
             {
                 CountryId = this.CountryId,
                 CountryRegionId = this.CountryRegionId,
@@ -52,18 +88,7 @@
         public override bool Equals(object obj)
         {
             PaymentInformation paymentInformation = obj as PaymentInformation;
-            if (paymentInformation == null || this.CountryId != paymentInformation.CountryId)
-                return false;
-            long? countryRegionId1 = this.CountryRegionId;
-            long? countryRegionId2 = paymentInformation.CountryRegionId;
-            if ((countryRegionId1.GetValueOrDefault() != countryRegionId2.GetValueOrDefault() ? 0 : (countryRegionId1.HasValue == countryRegionId2.HasValue ? 1 : 0)) != 0)
-            {
-                long? paymentMethodId1 = this.PaymentMethodId;
-                long? paymentMethodId2 = paymentInformation.PaymentMethodId;
-                if ((paymentMethodId1.GetValueOrDefault() != paymentMethodId2.GetValueOrDefault() ? 0 : (paymentMethodId1.HasValue == paymentMethodId2.HasValue ? 1 : 0)) != 0 && this.FirstName == paymentInformation.FirstName && (this.LastName == paymentInformation.LastName && this.Email == paymentInformation.Email) && (this.VatRate.Equals((object)paymentInformation.VatRate) && this.TotalPrices.Equals((object)paymentInformation.TotalPrices)))
-                    return this.TotalPrice.Equals((object)paymentInformation.TotalPrice);
-            }
-            return false;
+            return paymentInformation != null && (this.CountryId == paymentInformation.CountryId && this.CountryRegionId == paymentInformation.CountryRegionId && this.PaymentMethodId == paymentInformation.PaymentMethodId && this.FirstName == paymentInformation.FirstName && this.LastName == paymentInformation.LastName && this.Email == paymentInformation.Email && this.VatRate.Equals(paymentInformation.VatRate) && this.TotalPrices.Equals(paymentInformation.TotalPrices)) && this.TotalPrice.Equals(paymentInformation.TotalPrice);
         }
 
         public override int GetHashCode()

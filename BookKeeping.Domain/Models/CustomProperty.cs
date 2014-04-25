@@ -2,13 +2,29 @@
 {
     public class CustomProperty : ICopyable<CustomProperty>
     {
-        public string Alias { get; set; }
+        public string Alias
+        {
+            get;
+            set;
+        }
 
-        public string Value { get; set; }
+        public string Value
+        {
+            get;
+            set;
+        }
 
-        public bool ServerSideOnly { get; set; }
+        public bool ServerSideOnly
+        {
+            get;
+            set;
+        }
 
-        public bool IsReadOnly { get; set; }
+        public bool IsReadOnly
+        {
+            get;
+            set;
+        }
 
         public CustomProperty()
         {
@@ -23,7 +39,7 @@
 
         public CustomProperty Copy()
         {
-            return new CustomProperty()
+            return new CustomProperty
             {
                 Alias = this.Alias,
                 Value = this.Value,
@@ -40,10 +56,7 @@
         public override bool Equals(object obj)
         {
             CustomProperty customProperty = obj as CustomProperty;
-            if (customProperty == null || !(this.Alias == customProperty.Alias) || (!(this.Value == customProperty.Value) || this.ServerSideOnly != customProperty.ServerSideOnly))
-                return false;
-            else
-                return this.IsReadOnly == customProperty.IsReadOnly;
+            return customProperty != null && (this.Alias == customProperty.Alias && this.Value == customProperty.Value && this.ServerSideOnly == customProperty.ServerSideOnly) && this.IsReadOnly == customProperty.IsReadOnly;
         }
 
         public override int GetHashCode()

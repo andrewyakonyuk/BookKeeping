@@ -12,10 +12,10 @@ namespace BookKeeping.Domain.Services
 {
     public class OrderService : IOrderService
     {
-        private readonly object _cacheLock = new object();
         private const string CacheKey = "Orders";
         private readonly IOrderRepository _repository;
         private readonly ICacheService _cacheService;
+        private readonly object _cacheLock = new object();
 
         public static IOrderService Instance
         {
@@ -42,102 +42,117 @@ namespace BookKeeping.Domain.Services
             return this._repository.GetAllFinalizedAsXml(storeId);
         }
 
-        public BookKeeping.Domain.Models.Order Get(long storeId, Guid orderId)
+        public Order Get(long storeId, Guid orderId)
         {
-            List<BookKeeping.Domain.Models.Order> cachedList = this.GetCachedList(storeId);
-            BookKeeping.Domain.Models.Order order = Enumerable.SingleOrDefault<BookKeeping.Domain.Models.Order>((IEnumerable<BookKeeping.Domain.Models.Order>)cachedList, (Func<BookKeeping.Domain.Models.Order, bool>)(i => i.Id == orderId));
+            List<Order> cachedList = this.GetCachedList(storeId);
+            Order order = cachedList.SingleOrDefault((Order i) => i.Id == orderId);
             if (order == null)
             {
                 lock (this._cacheLock)
                 {
-                    order = Enumerable.SingleOrDefault<BookKeeping.Domain.Models.Order>((IEnumerable<BookKeeping.Domain.Models.Order>)cachedList, (Func<BookKeeping.Domain.Models.Order, bool>)(i => i.Id == orderId));
+                    order = cachedList.SingleOrDefault((Order i) => i.Id == orderId);
                     if (order == null)
                     {
                         order = this._repository.Get(storeId, orderId);
                         if (order != null)
+                        {
                             cachedList.Add(order);
+                        }
                     }
                 }
             }
             return order;
         }
 
-        public IEnumerable<BookKeeping.Domain.Models.Order> Get(long storeId, IEnumerable<Guid> orderIds)
+        public IEnumerable<Order> Get(long storeId, IEnumerable<Guid> orderIds)
         {
-            List<BookKeeping.Domain.Models.Order> orders = new List<BookKeeping.Domain.Models.Order>();
+            List<Order> orders = new List<Order>();
             if (orderIds != null)
             {
-                orderIds = (IEnumerable<Guid>)Enumerable.ToList<Guid>(orderIds);
-                List<BookKeeping.Domain.Models.Order> cachedOrders = this.GetCachedList(storeId);
-                orders.AddRange(Enumerable.Where<BookKeeping.Domain.Models.Order>(Enumerable.Select<Guid, BookKeeping.Domain.Models.Order>(orderIds, (Func<Guid, BookKeeping.Domain.Models.Order>)(orderId => Enumerable.SingleOrDefault<BookKeeping.Domain.Models.Order>((IEnumerable<BookKeeping.Domain.Models.Order>)cachedOrders, (Func<BookKeeping.Domain.Models.Order, bool>)(i => i.Id == orderId)))), (Func<BookKeeping.Domain.Models.Order, bool>)(order => order != null)));
-                if (Enumerable.Any<Guid>((IEnumerable<Guid>)Enumerable.ToList<Guid>(Enumerable.Where<Guid>(orderIds, (Func<Guid, bool>)(orderId => Enumerable.All<BookKeeping.Domain.Models.Order>((IEnumerable<BookKeeping.Domain.Models.Order>)orders, (Func<BookKeeping.Domain.Models.Order, bool>)(o => o.Id != orderId)))))))
+                orderIds = orderIds.ToList<Guid>();
+                List<Order> cachedOrders = this.GetCachedList(storeId);
+                orders.AddRange(
+                    from orderId in orderIds
+                    select cachedOrders.SingleOrDefault((Order i) => i.Id == orderId) into order
+                    where order != null
+                    select order);
+                List<Guid> list = (
+                    from orderId in orderIds
+                    where orders.All((Order o) => o.Id != orderId)
+                    select orderId).ToList<Guid>();
+                if (list.Any<Guid>())
                 {
                     lock (this._cacheLock)
                     {
-                        List<Guid> local_0_1 = Enumerable.ToList<Guid>(Enumerable.Where<Guid>(orderIds, (Func<Guid, bool>)(orderId => Enumerable.All<BookKeeping.Domain.Models.Order>((IEnumerable<BookKeeping.Domain.Models.Order>)orders, (Func<BookKeeping.Domain.Models.Order, bool>)(o => o.Id != orderId)))));
-                        if (Enumerable.Any<Guid>((IEnumerable<Guid>)local_0_1))
+                        list = (
+                            from orderId in orderIds
+                            where orders.All((Order o) => o.Id != orderId)
+                            select orderId).ToList<Guid>();
+                        if (list.Any<Guid>())
                         {
-                            List<BookKeeping.Domain.Models.Order> local_1 = Enumerable.ToList<BookKeeping.Domain.Models.Order>(this._repository.Get(storeId, (IEnumerable<Guid>)local_0_1));
-                            cachedOrders.AddRange((IEnumerable<BookKeeping.Domain.Models.Order>)local_1);
-                            orders.AddRange((IEnumerable<BookKeeping.Domain.Models.Order>)local_1);
+                            List<Order> collection = this._repository.Get(storeId, list).ToList<Order>();
+                            cachedOrders.AddRange(collection);
+                            orders.AddRange(collection);
                         }
                     }
                 }
             }
-            return (IEnumerable<BookKeeping.Domain.Models.Order>)orders;
+            return orders;
         }
 
-        public Tuple<IEnumerable<BookKeeping.Domain.Models.Order>, long> Search(long storeId, long orderStatusId, string orderNumber, string firstName, string lastName, PaymentState? paymentState, DateTime? startDate, DateTime? endDate, bool? isFinalized, long page, long itemsPerPage)
+        public Tuple<IEnumerable<Order>, long> Search(long storeId, long orderStatusId, string orderNumber, string firstName, string lastName, PaymentState? paymentState, DateTime? startDate, DateTime? endDate, bool? isFinalized, long page, long itemsPerPage)
         {
-            List<BookKeeping.Domain.Models.Order> list = new List<BookKeeping.Domain.Models.Order>();
-            Tuple<IEnumerable<BookKeeping.Domain.Models.Order>, long> tuple = this._repository.Search(storeId, orderStatusId, orderNumber, firstName, lastName, paymentState, startDate, endDate, isFinalized, page, itemsPerPage);
-            List<BookKeeping.Domain.Models.Order> cachedList = this.GetCachedList(storeId);
-            foreach (BookKeeping.Domain.Models.Order order1 in tuple.Item1)
+            List<Order> list = new List<Order>();
+            Tuple<IEnumerable<Order>, long> tuple = this._repository.Search(storeId, orderStatusId, orderNumber, firstName, lastName, paymentState, startDate, endDate, isFinalized, page, itemsPerPage);
+            List<Order> cachedList = this.GetCachedList(storeId);
+            foreach (var dbOrder in tuple.Item1)
             {
-                BookKeeping.Domain.Models.Order dbOrder = order1;
-                BookKeeping.Domain.Models.Order order2 = Enumerable.SingleOrDefault<BookKeeping.Domain.Models.Order>((IEnumerable<BookKeeping.Domain.Models.Order>)cachedList, (Func<BookKeeping.Domain.Models.Order, bool>)(o => o.Id == dbOrder.Id));
-                if (order2 == null)
+                Order order = cachedList.SingleOrDefault((Order o) => o.Id == dbOrder.Id);
+                if (order == null)
                 {
                     lock (this._cacheLock)
                     {
-                        order2 = Enumerable.SingleOrDefault<BookKeeping.Domain.Models.Order>((IEnumerable<BookKeeping.Domain.Models.Order>)cachedList, (Func<BookKeeping.Domain.Models.Order, bool>)(o => o.Id == dbOrder.Id));
-                        if (order2 == null)
+                        order = cachedList.SingleOrDefault((Order o) => o.Id == dbOrder.Id);
+                        if (order == null)
                         {
                             cachedList.Add(dbOrder);
-                            order2 = dbOrder;
+                            order = dbOrder;
                         }
                     }
                 }
-                list.Add(order2);
+                list.Add(order);
             }
-            return Tuple.Create<IEnumerable<BookKeeping.Domain.Models.Order>, long>(Enumerable.AsEnumerable<BookKeeping.Domain.Models.Order>((IEnumerable<BookKeeping.Domain.Models.Order>)list), tuple.Item2);
+            return Tuple.Create<IEnumerable<Order>, long>(list.AsEnumerable<Order>(), tuple.Item2);
         }
 
-        private void Order_Deleted(BookKeeping.Domain.Models.Order order)
+        private void Order_Deleted(Order order)
         {
-            List<BookKeeping.Domain.Models.Order> cachedList = this.GetCachedList(order.StoreId);
-            if (Enumerable.All<BookKeeping.Domain.Models.Order>((IEnumerable<BookKeeping.Domain.Models.Order>)cachedList, (Func<BookKeeping.Domain.Models.Order, bool>)(o => o.Id != order.Id)))
+            List<Order> cachedList = this.GetCachedList(order.StoreId);
+            if (cachedList.All((Order o) => o.Id != order.Id))
+            {
                 return;
+            }
             lock (this._cacheLock)
             {
-                if (!Enumerable.Any<BookKeeping.Domain.Models.Order>((IEnumerable<BookKeeping.Domain.Models.Order>)cachedList, (Func<BookKeeping.Domain.Models.Order, bool>)(o => o.Id == order.Id)))
-                    return;
-                cachedList.Remove(order);
+                if (cachedList.Any((Order o) => o.Id == order.Id))
+                {
+                    cachedList.Remove(order);
+                }
             }
         }
 
-        private List<BookKeeping.Domain.Models.Order> GetCachedList(long storeId)
+        private List<Order> GetCachedList(long storeId)
         {
-            List<BookKeeping.Domain.Models.Order> list = this._cacheService.GetCacheValue<List<BookKeeping.Domain.Models.Order>>("Orders-" + (object)storeId);
+            List<Order> list = this._cacheService.GetCacheValue<List<Order>>("Orders-" + storeId);
             if (list == null)
             {
                 lock (this._cacheLock)
                 {
-                    list = this._cacheService.GetCacheValue<List<BookKeeping.Domain.Models.Order>>("Orders-" + (object)storeId);
+                    list = this._cacheService.GetCacheValue<List<Order>>("Orders-" + storeId);
                     if (list == null)
                     {
-                        list = new List<BookKeeping.Domain.Models.Order>();
-                        this._cacheService.SetCacheValue("Orders-" + (object)storeId, (object)list);
+                        list = new List<Order>();
+                        this._cacheService.SetCacheValue("Orders-" + storeId, list);
                     }
                 }
             }

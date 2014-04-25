@@ -1,4 +1,4 @@
-﻿using System;
+using System.Collections.Generic;
 using BookKeeping.Domain.Notifications;
 using BookKeeping.Domain.Repositories;
 using BookKeeping.Domain.Services;
@@ -9,23 +9,59 @@ namespace BookKeeping.Domain.Models
 {
     public class Country : ISortable
     {
-        public long Id { get; set; }
+        public long Id
+        {
+            get;
+            set;
+        }
 
-        public long StoreId { get; set; }
+        public long StoreId
+        {
+            get;
+            set;
+        }
 
-        public string Name { get; set; }
+        public string Name
+        {
+            get;
+            set;
+        }
 
-        public long DefaultCurrencyId { get; set; }
+        public long DefaultCurrencyId
+        {
+            get;
+            set;
+        }
 
-        public string RegionCode { get; set; }
+        public string RegionCode
+        {
+            get;
+            set;
+        }
 
-        public long? DefaultShippingMethodId { get; set; }
+        public long? DefaultShippingMethodId
+        {
+            get;
+            set;
+        }
 
-        public long? DefaultPaymentMethodId { get; set; }
+        public long? DefaultPaymentMethodId
+        {
+            get;
+            set;
+        }
 
-        public int Sort { get; set; }
+        public int Sort
+        {
+            get;
+            set;
+        }
 
-        public bool IsDeleted { get; set; }
+        public bool IsDeleted
+        {
+            get;
+            set;
+        }
 
         public Country()
         {
@@ -45,7 +81,9 @@ namespace BookKeeping.Domain.Models
             bool flag = this.Id == 0L;
             ICountryRepository countryRepository = DependencyResolver.Current.GetService<ICountryRepository>();
             if (this.Sort == -1)
+            {
                 this.Sort = countryRepository.GetHighestSortValue(this.StoreId) + 1;
+            }
             countryRepository.Save(this);
             Currency currency = CurrencyService.Instance.Get(this.StoreId, this.DefaultCurrencyId);
             if (!currency.AllowedInFollowingCountries.Contains(this.Id) && !this.IsDeleted)
@@ -71,68 +109,61 @@ namespace BookKeeping.Domain.Models
                     paymentMethod.Save();
                 }
             }
-            if (!flag)
-                return;
-            NotificationCenter.Country.OnCreated(this);
+            if (flag)
+            {
+                NotificationCenter.Country.OnCreated(this);
+            }
         }
 
         public bool Delete()
         {
-            bool flag = false;
+            bool result = false;
             Store store = StoreService.Instance.Get(this.StoreId);
             if (store.DefaultCountryId != this.Id)
             {
                 this.IsDeleted = true;
                 this.Save();
-                flag = true;
-                foreach (CountryRegion countryRegion in CountryRegionService.Instance.GetAll(this.StoreId, new long?(this.Id)))
-                    countryRegion.Delete();
-                foreach (Currency currency in CurrencyService.Instance.GetAllAllowedIn(this.StoreId, this.Id))
+                result = true;
+                foreach (CountryRegion current in CountryRegionService.Instance.GetAll(this.StoreId, new long?(this.Id)))
                 {
-                    currency.AllowedInFollowingCountries.Remove(this.Id);
-                    currency.Save();
+                    current.Delete();
                 }
-                foreach (ShippingMethod shippingMethod in ShippingMethodService.Instance.GetAllAllowedIn(this.StoreId, this.Id, new long?()))
+                IEnumerable<Currency> allAllowedIn = CurrencyService.Instance.GetAllAllowedIn(this.StoreId, this.Id);
+                foreach (Currency current2 in allAllowedIn)
                 {
-                    shippingMethod.AllowedInFollowingCountries.Remove(this.Id);
-                    shippingMethod.OriginalPrices.RemoveAll((Predicate<ServicePrice>)(p =>
-                    {
-                        long? local_0 = p.CountryId;
-                        long local_1 = this.Id;
-                        if (local_0.GetValueOrDefault() == local_1)
-                            return local_0.HasValue;
-                        else
-                            return false;
-                    }));
-                    shippingMethod.Save();
+                    current2.AllowedInFollowingCountries.Remove(this.Id);
+                    current2.Save();
                 }
-                foreach (PaymentMethod paymentMethod in PaymentMethodService.Instance.GetAllAllowedIn(this.StoreId, this.Id, new long?()))
+                IEnumerable<ShippingMethod> allAllowedIn2 = ShippingMethodService.Instance.GetAllAllowedIn(this.StoreId, this.Id, null);
+                foreach (ShippingMethod current3 in allAllowedIn2)
                 {
-                    paymentMethod.AllowedInFollowingCountries.Remove(this.Id);
-                    paymentMethod.OriginalPrices.RemoveAll((Predicate<ServicePrice>)(p =>
-                    {
-                        long? local_0 = p.CountryId;
-                        long local_1 = this.Id;
-                        if (local_0.GetValueOrDefault() == local_1)
-                            return local_0.HasValue;
-                        else
-                            return false;
-                    }));
-                    paymentMethod.Save();
+                    current3.AllowedInFollowingCountries.Remove(this.Id);
+                    current3.OriginalPrices.RemoveAll((ServicePrice p) => p.CountryId == this.Id);
+                    current3.Save();
                 }
-                foreach (VatGroup vatGroup in VatGroupService.Instance.GetAll(this.StoreId))
+                IEnumerable<PaymentMethod> allAllowedIn3 = PaymentMethodService.Instance.GetAllAllowedIn(this.StoreId, this.Id, null);
+                foreach (PaymentMethod current4 in allAllowedIn3)
                 {
-                    if (vatGroup.CountrySpecificVatRates.ContainsKey(this.Id))
+                    current4.AllowedInFollowingCountries.Remove(this.Id);
+                    current4.OriginalPrices.RemoveAll((ServicePrice p) => p.CountryId == this.Id);
+                    current4.Save();
+                }
+                IEnumerable<VatGroup> all = VatGroupService.Instance.GetAll(this.StoreId);
+                foreach (VatGroup current5 in all)
+                {
+                    if (current5.CountrySpecificVatRates.ContainsKey(this.Id))
                     {
-                        vatGroup.CountrySpecificVatRates.Remove(this.Id);
-                        vatGroup.Save();
+                        current5.CountrySpecificVatRates.Remove(this.Id);
+                        current5.Save();
                     }
                 }
                 NotificationCenter.Country.OnDeleted(this);
             }
             else
+            {
                 LoggingService.Instance.Log("Can't delete the country " + this.Name + " because it is the default for the store " + store.Name);
-            return flag;
+            }
+            return result;
         }
     }
 }

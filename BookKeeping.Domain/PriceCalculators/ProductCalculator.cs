@@ -30,14 +30,13 @@ namespace BookKeeping.Domain.PriceCalculators
         {
             Contract.Requires<ArgumentNullException>(order != null, "order");
             Contract.Requires<ArgumentNullException>(vatRate != null, "vatRate");
-            return (IEnumerable<Price>)Enumerable.ToList<Price>(Enumerable.Select(Enumerable.Select((IEnumerable<OriginalUnitPrice>)this.ProductService.GetOriginalUnitPrices(productIdentifier), originalUnitPrice => new
-            {
-                originalUnitPrice = originalUnitPrice,
-                currency = this.CurrencyService.Get(order.StoreId, originalUnitPrice.CurrencyId)
-            }), param0 => new Price(this.CalculatePrice(param0.originalUnitPrice, productIdentifier, param0.currency, order), vatRate, param0.currency)));
+            return (
+                from originalUnitPrice in this.ProductService.GetOriginalUnitPrices(productIdentifier)
+                let currency = this.CurrencyService.Get(order.StoreId, originalUnitPrice.CurrencyId)
+                select new Price(this.CalculatePrice(originalUnitPrice, productIdentifier, currency, order), vatRate, currency)).ToList<Price>();
         }
 
-        protected virtual Decimal CalculatePrice(OriginalUnitPrice originalUnitPrice, string productIdentifier, Currency currency, Order order)
+        protected virtual decimal CalculatePrice(OriginalUnitPrice originalUnitPrice, string productIdentifier, Currency currency, Order order)
         {
             Contract.Requires<ArgumentNullException>(originalUnitPrice != null, "originalUnitPrice");
             Contract.Requires<ArgumentNullException>(currency != null, "currency");
@@ -48,25 +47,26 @@ namespace BookKeeping.Domain.PriceCalculators
         public virtual VatRate CalculateVatRate(string productIdentifier, long countryId, long? countryRegionId, VatRate fallbackVatRate)
         {
             Contract.Requires<ArgumentNullException>(fallbackVatRate != null, "fallbackVatRate");
-            VatRate vatRate = fallbackVatRate;
+            VatRate result = fallbackVatRate;
             long? vatGroupId = this.ProductService.GetVatGroupId(productIdentifier);
             if (vatGroupId.HasValue)
-                vatRate = this.VatGroupService.Get(this.ProductService.GetStoreId(productIdentifier), vatGroupId.Value).GetVatRate(countryId, countryRegionId);
-            return vatRate;
+            {
+                result = this.VatGroupService.Get(this.ProductService.GetStoreId(productIdentifier), vatGroupId.Value).GetVatRate(countryId, countryRegionId);
+            }
+            return result;
         }
 
         public IEnumerable<Price> CalculatePrices(string productIdentifier, VatRate vatRate)
         {
             Contract.Requires<ArgumentNullException>(vatRate != null, "vatRate");
             long storeId = this.ProductService.GetStoreId(productIdentifier);
-            return (IEnumerable<Price>)Enumerable.ToList<Price>(Enumerable.Select(Enumerable.Select((IEnumerable<OriginalUnitPrice>)this.ProductService.GetOriginalUnitPrices(productIdentifier), originalUnitPrice => new
-            {
-                originalUnitPrice = originalUnitPrice,
-                currency = this.CurrencyService.Get(storeId, originalUnitPrice.CurrencyId)
-            }), param0 => new Price(this.CalculatePrice(param0.originalUnitPrice, productIdentifier, param0.currency), vatRate, param0.currency)));
+            return (
+                from originalUnitPrice in this.ProductService.GetOriginalUnitPrices(productIdentifier)
+                let currency = this.CurrencyService.Get(storeId, originalUnitPrice.CurrencyId)
+                select new Price(this.CalculatePrice(originalUnitPrice, productIdentifier, currency), vatRate, currency)).ToList<Price>();
         }
 
-        protected virtual Decimal CalculatePrice(OriginalUnitPrice originalUnitPrice, string productIdentifier, BookKeeping.Domain.Models.Currency currency)
+        protected virtual decimal CalculatePrice(OriginalUnitPrice originalUnitPrice, string productIdentifier, Currency currency)
         {
             Contract.Requires<ArgumentNullException>(originalUnitPrice != null, "originalUnitPrice");
             Contract.Requires<ArgumentNullException>(currency != null, "currency");

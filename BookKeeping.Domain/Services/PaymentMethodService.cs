@@ -1,6 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
+using BookKeeping.Domain.Models;
 using BookKeeping.Domain.Notifications;
 using BookKeeping.Domain.Repositories;
 using BookKeeping.Infrastructure.Caching;
@@ -10,10 +10,10 @@ namespace BookKeeping.Domain.Services
 {
     public class PaymentMethodService : IPaymentMethodService
     {
-        private readonly object _cacheLock = new object();
         private const string CacheKey = "PaymentMethods";
         private readonly IPaymentMethodRepository _repository;
         private readonly ICacheService _cacheService;
+        private readonly object _cacheLock = new object();
 
         public static IPaymentMethodService Instance
         {
@@ -30,69 +30,73 @@ namespace BookKeeping.Domain.Services
             NotificationCenter.PaymentMethod.Created += new PaymentMethodEventHandler(this.PaymentMethodCreated);
         }
 
-        public IEnumerable<BookKeeping.Domain.Models.PaymentMethod> GetAll(long storeId)
+        public IEnumerable<PaymentMethod> GetAll(long storeId)
         {
-            return (IEnumerable<BookKeeping.Domain.Models.PaymentMethod>)Enumerable.OrderBy<BookKeeping.Domain.Models.PaymentMethod, int>(Enumerable.Where<BookKeeping.Domain.Models.PaymentMethod>((IEnumerable<BookKeeping.Domain.Models.PaymentMethod>)this.GetCachedList(storeId), (Func<BookKeeping.Domain.Models.PaymentMethod, bool>)(i => !i.IsDeleted)), (Func<BookKeeping.Domain.Models.PaymentMethod, int>)(i => i.Sort));
+            return
+                from i in this.GetCachedList(storeId)
+                where !i.IsDeleted
+                orderby i.Sort
+                select i;
         }
 
-        public IEnumerable<BookKeeping.Domain.Models.PaymentMethod> GetAllAllowedIn(long storeId, long countryId, long? countryRegionId = null)
+        public IEnumerable<PaymentMethod> GetAllAllowedIn(long storeId, long countryId, long? countryRegionId = null)
         {
-            return (IEnumerable<BookKeeping.Domain.Models.PaymentMethod>)Enumerable.ToList<BookKeeping.Domain.Models.PaymentMethod>(Enumerable.Where<BookKeeping.Domain.Models.PaymentMethod>(this.GetAll(storeId), (Func<BookKeeping.Domain.Models.PaymentMethod, bool>)(pm =>
-            {
-                if (!pm.AllowedInFollowingCountries.Contains(countryId))
-                    return false;
-                if (countryRegionId.HasValue)
-                    return pm.AllowedInFollowingCountryRegions.Contains(countryRegionId.Value);
-                else
-                    return true;
-            })));
+            return (
+                from pm in this.GetAll(storeId)
+                where pm.AllowedInFollowingCountries.Contains(countryId) && (!countryRegionId.HasValue || pm.AllowedInFollowingCountryRegions.Contains(countryRegionId.Value))
+                select pm).ToList<PaymentMethod>();
         }
 
-        public BookKeeping.Domain.Models.PaymentMethod Get(long storeId, long paymentMethodId)
+        public PaymentMethod Get(long storeId, long paymentMethodId)
         {
-            List<BookKeeping.Domain.Models.PaymentMethod> cachedList = this.GetCachedList(storeId);
-            BookKeeping.Domain.Models.PaymentMethod paymentMethod = Enumerable.SingleOrDefault<BookKeeping.Domain.Models.PaymentMethod>((IEnumerable<BookKeeping.Domain.Models.PaymentMethod>)cachedList, (Func<BookKeeping.Domain.Models.PaymentMethod, bool>)(i => i.Id == paymentMethodId));
+            List<PaymentMethod> cachedList = this.GetCachedList(storeId);
+            PaymentMethod paymentMethod = cachedList.SingleOrDefault((PaymentMethod i) => i.Id == paymentMethodId);
             if (paymentMethod == null)
             {
                 lock (this._cacheLock)
                 {
-                    paymentMethod = Enumerable.SingleOrDefault<BookKeeping.Domain.Models.PaymentMethod>((IEnumerable<BookKeeping.Domain.Models.PaymentMethod>)cachedList, (Func<BookKeeping.Domain.Models.PaymentMethod, bool>)(i => i.Id == paymentMethodId));
+                    paymentMethod = cachedList.SingleOrDefault((PaymentMethod i) => i.Id == paymentMethodId);
                     if (paymentMethod == null)
                     {
                         paymentMethod = this._repository.Get(storeId, paymentMethodId);
                         if (paymentMethod != null)
+                        {
                             cachedList.Add(paymentMethod);
+                        }
                     }
                 }
             }
             return paymentMethod;
         }
 
-        private void PaymentMethodCreated(BookKeeping.Domain.Models.PaymentMethod paymentMethod)
+        private void PaymentMethodCreated(PaymentMethod paymentMethod)
         {
-            List<BookKeeping.Domain.Models.PaymentMethod> cachedList = this.GetCachedList(paymentMethod.StoreId);
-            if (Enumerable.Any<BookKeeping.Domain.Models.PaymentMethod>((IEnumerable<BookKeeping.Domain.Models.PaymentMethod>)cachedList, (Func<BookKeeping.Domain.Models.PaymentMethod, bool>)(pm => pm.Id == paymentMethod.Id)))
+            List<PaymentMethod> cachedList = this.GetCachedList(paymentMethod.StoreId);
+            if (cachedList.Any((PaymentMethod pm) => pm.Id == paymentMethod.Id))
+            {
                 return;
+            }
             lock (this._cacheLock)
             {
-                if (!Enumerable.All<BookKeeping.Domain.Models.PaymentMethod>((IEnumerable<BookKeeping.Domain.Models.PaymentMethod>)cachedList, (Func<BookKeeping.Domain.Models.PaymentMethod, bool>)(pm => pm.Id != paymentMethod.Id)))
-                    return;
-                cachedList.Add(paymentMethod);
+                if (cachedList.All((PaymentMethod pm) => pm.Id != paymentMethod.Id))
+                {
+                    cachedList.Add(paymentMethod);
+                }
             }
         }
 
-        private List<BookKeeping.Domain.Models.PaymentMethod> GetCachedList(long storeId)
+        private List<PaymentMethod> GetCachedList(long storeId)
         {
-            List<BookKeeping.Domain.Models.PaymentMethod> list = this._cacheService.GetCacheValue<List<BookKeeping.Domain.Models.PaymentMethod>>("PaymentMethods-" + (object)storeId);
+            List<PaymentMethod> list = this._cacheService.GetCacheValue<List<PaymentMethod>>("PaymentMethods-" + storeId);
             if (list == null)
             {
                 lock (this._cacheLock)
                 {
-                    list = this._cacheService.GetCacheValue<List<BookKeeping.Domain.Models.PaymentMethod>>("PaymentMethods-" + (object)storeId);
+                    list = this._cacheService.GetCacheValue<List<PaymentMethod>>("PaymentMethods-" + storeId);
                     if (list == null)
                     {
-                        list = Enumerable.ToList<BookKeeping.Domain.Models.PaymentMethod>(this._repository.GetAll(storeId));
-                        this._cacheService.SetCacheValue("PaymentMethods-" + (object)storeId, (object)list);
+                        list = this._repository.GetAll(storeId).ToList<PaymentMethod>();
+                        this._cacheService.SetCacheValue("PaymentMethods-" + storeId, list);
                     }
                 }
             }

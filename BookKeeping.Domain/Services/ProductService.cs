@@ -1,5 +1,4 @@
-﻿using System;
-using BookKeeping.Domain.InformationExtractors;
+﻿using BookKeeping.Domain.InformationExtractors;
 using BookKeeping.Domain.Models;
 using BookKeeping.Domain.Repositories;
 using BookKeeping.Infrastructure.Dependency;
@@ -67,23 +66,24 @@ namespace BookKeeping.Domain.Services
             return this._productInformationExtractor.GetSnapshot(productIdentifier);
         }
 
-        public Decimal? GetStock(long storeId, string sku)
+        public decimal? GetStock(long storeId, string sku)
         {
-            Decimal? nullable = new Decimal?();
+            decimal? result = null;
             if (!string.IsNullOrEmpty(sku))
             {
-                storeId = this._storeService.Get(storeId).StockSharingStoreId ?? storeId;
-                nullable = this._repository.GetStock(storeId, sku);
+                storeId = (this._storeService.Get(storeId).StockSharingStoreId ?? storeId);
+                result = this._repository.GetStock(storeId, sku);
             }
-            return nullable;
+            return result;
         }
 
-        public void SetStock(long storeId, string sku, Decimal? value)
+        public void SetStock(long storeId, string sku, decimal? value)
         {
-            if (string.IsNullOrEmpty(sku))
-                return;
-            storeId = this._storeService.Get(storeId).StockSharingStoreId ?? storeId;
-            this._repository.SetStock(storeId, sku, value);
+            if (!string.IsNullOrEmpty(sku))
+            {
+                storeId = (this._storeService.Get(storeId).StockSharingStoreId ?? storeId);
+                this._repository.SetStock(storeId, sku, value);
+            }
         }
 
         public bool HasAccess(long storeId, string productIdentifier)

@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using BookKeeping.Domain.Services;
 
@@ -9,160 +8,166 @@ namespace BookKeeping.Domain.Models
     {
         public IEnumerable<OrderLine> GetAll()
         {
-            List<OrderLine> list = Enumerable.ToList<OrderLine>((IEnumerable<OrderLine>)this);
-            foreach (OrderLine orderLine in (List<OrderLine>)this)
-                list.AddRange(orderLine.OrderLines.GetAll());
-            return (IEnumerable<OrderLine>)list;
+            List<OrderLine> list = this.ToList<OrderLine>();
+            foreach (OrderLine current in this)
+            {
+                list.AddRange(current.OrderLines.GetAll());
+            }
+            return list;
         }
 
         public OrderLine Get(long orderLineId)
         {
-            OrderLine orderLine1 = Enumerable.SingleOrDefault<OrderLine>((IEnumerable<OrderLine>)this, (Func<OrderLine, bool>)(ol =>
+            OrderLine orderLine = this.SingleOrDefault((OrderLine ol) => ol.Id == orderLineId || ol.CopiedFromOrderLineId == orderLineId);
+            if (orderLine == null)
             {
-                if (ol.Id == orderLineId)
-                    return true;
-                long? local_0 = ol.CopiedFromOrderLineId;
-                long local_1 = orderLineId;
-                if (local_0.GetValueOrDefault() == local_1)
-                    return local_0.HasValue;
-                else
-                    return false;
-            }));
-            if (orderLine1 == null)
-            {
-                foreach (OrderLine orderLine2 in (List<OrderLine>)this)
+                foreach (OrderLine current in this)
                 {
-                    orderLine1 = orderLine2.OrderLines.Get(orderLineId);
-                    if (orderLine1 != null)
+                    orderLine = current.OrderLines.Get(orderLineId);
+                    if (orderLine != null)
+                    {
                         break;
+                    }
                 }
-            }
-            return orderLine1;
-        }
-
-        public OrderLine GetUnique(ProductSnapshot productSnapshot, IDictionary<string, string> properties = null)
-        {
-            IList<string> uniquenessPropertyAliases = StoreService.Instance.Get(productSnapshot.StoreId).ProductUniquenessPropertyAliases;
-            OrderLine orderLine;
-            if (!Enumerable.Any<string>((IEnumerable<string>)uniquenessPropertyAliases))
-            {
-                orderLine = Enumerable.SingleOrDefault<OrderLine>((IEnumerable<OrderLine>)this, (Func<OrderLine, bool>)(ol => ol.Sku == productSnapshot.Sku));
-            }
-            else
-            {
-                IDictionary<string, string> uniquenessProperties = (IDictionary<string, string>)new Dictionary<string, string>();
-                foreach (string index in (IEnumerable<string>)uniquenessPropertyAliases)
-                {
-                    CustomProperty customProperty = productSnapshot.Properties.Get(index);
-                    if (customProperty != null)
-                        uniquenessProperties.Add(customProperty.Alias, customProperty.Value);
-                    else if (properties != null && properties.ContainsKey(index))
-                        uniquenessProperties.Add(index, properties[index]);
-                }
-                uniquenessProperties = (IDictionary<string, string>)Enumerable.ToDictionary<KeyValuePair<string, string>, string, string>(Enumerable.Where<KeyValuePair<string, string>>((IEnumerable<KeyValuePair<string, string>>)uniquenessProperties, (Func<KeyValuePair<string, string>, bool>)(kvp => !string.IsNullOrEmpty(kvp.Value))), (Func<KeyValuePair<string, string>, string>)(kvp => kvp.Key), (Func<KeyValuePair<string, string>, string>)(kvp => kvp.Value));
-                orderLine = Enumerable.SingleOrDefault<OrderLine>((IEnumerable<OrderLine>)this, (Func<OrderLine, bool>)(ol =>
-                {
-                    if (ol.Sku == productSnapshot.Sku)
-                        return Enumerable.All<KeyValuePair<string, string>>((IEnumerable<KeyValuePair<string, string>>)uniquenessProperties, (Func<KeyValuePair<string, string>, bool>)(p => Enumerable.Any<CustomProperty>((IEnumerable<CustomProperty>)ol.Properties, (Func<CustomProperty, bool>)(p2 =>
-                        {
-                            if (p2.Alias == p.Key)
-                                return p2.Value == p.Value;
-                            else
-                                return false;
-                        }))));
-                    else
-                        return false;
-                }));
             }
             return orderLine;
         }
 
+        public OrderLine GetUnique(ProductSnapshot productSnapshot, IDictionary<string, string> properties = null)
+        {
+            IList<string> productUniquenessPropertyAliases = StoreService.Instance.Get(productSnapshot.StoreId).ProductUniquenessPropertyAliases;
+            OrderLine result;
+            if (!productUniquenessPropertyAliases.Any<string>())
+            {
+                result = this.SingleOrDefault((OrderLine ol) => ol.Sku == productSnapshot.Sku);
+            }
+            else
+            {
+                IDictionary<string, string> uniquenessProperties = new Dictionary<string, string>();
+                foreach (string current in productUniquenessPropertyAliases)
+                {
+                    CustomProperty customProperty = productSnapshot.Properties.Get(current);
+                    if (customProperty != null)
+                    {
+                        uniquenessProperties.Add(customProperty.Alias, customProperty.Value);
+                    }
+                    else
+                    {
+                        if (properties != null && properties.ContainsKey(current))
+                        {
+                            uniquenessProperties.Add(current, properties[current]);
+                        }
+                    }
+                }
+                uniquenessProperties = (
+                    from kvp in uniquenessProperties
+                    where !string.IsNullOrEmpty(kvp.Value)
+                    select kvp).ToDictionary((KeyValuePair<string, string> kvp) => kvp.Key, (KeyValuePair<string, string> kvp) => kvp.Value);
+                result = this.SingleOrDefault((OrderLine ol) => ol.Sku == productSnapshot.Sku && uniquenessProperties.All((KeyValuePair<string, string> p) => ol.Properties.Any((CustomProperty p2) => p2.Alias == p.Key && p2.Value == p.Value)));
+            }
+            return result;
+        }
+
         public OrderLine GetBundle(string bundleIdentifier)
         {
-            OrderLine orderLine1 = Enumerable.SingleOrDefault<OrderLine>((IEnumerable<OrderLine>)this, (Func<OrderLine, bool>)(ol => ol.BundleIdentifier == bundleIdentifier));
-            if (orderLine1 == null)
+            OrderLine orderLine = this.SingleOrDefault((OrderLine ol) => ol.BundleIdentifier == bundleIdentifier);
+            if (orderLine == null)
             {
-                foreach (OrderLine orderLine2 in (List<OrderLine>)this)
+                foreach (OrderLine current in this)
                 {
-                    orderLine1 = orderLine2.OrderLines.GetBundle(bundleIdentifier);
-                    if (orderLine1 != null)
+                    orderLine = current.OrderLines.GetBundle(bundleIdentifier);
+                    if (orderLine != null)
+                    {
                         break;
+                    }
                 }
             }
-            return orderLine1;
+            return orderLine;
         }
 
         public OrderLine Remove(long orderLineId)
         {
-            OrderLine orderLine1 = Enumerable.SingleOrDefault<OrderLine>((IEnumerable<OrderLine>)this, (Func<OrderLine, bool>)(ol =>
+            OrderLine orderLine = this.SingleOrDefault((OrderLine ol) => ol.Id == orderLineId || ol.CopiedFromOrderLineId == orderLineId);
+            if (orderLine == null)
             {
-                if (ol.Id == orderLineId)
-                    return true;
-                long? local_0 = ol.CopiedFromOrderLineId;
-                long local_1 = orderLineId;
-                if (local_0.GetValueOrDefault() == local_1)
-                    return local_0.HasValue;
-                else
-                    return false;
-            }));
-            if (orderLine1 == null)
-            {
-                foreach (OrderLine orderLine2 in (List<OrderLine>)this)
+                foreach (OrderLine item in this)
                 {
-                    orderLine1 = orderLine2.OrderLines.Remove(orderLineId);
-                    if (orderLine1 != null)
+                    orderLine = item.OrderLines.Remove(orderLineId);
+                    if (orderLine != null)
+                    {
                         break;
+                    }
+                    return orderLine;
                 }
             }
-            else
-                base.Remove(orderLine1);
-            return orderLine1;
+            base.Remove(orderLine);
+            return orderLine;
         }
 
-        public OrderLine AddOrUpdate(string productIdentifier, Decimal? quantity = null, IDictionary<string, string> properties = null, bool overwriteQuantity = false, string bundleIdentifier = null, string parentBundleIdentifier = null)
+        public OrderLine AddOrUpdate(string productIdentifier, decimal? quantity = null, IDictionary<string, string> properties = null, bool overwriteQuantity = false, string bundleIdentifier = null, string parentBundleIdentifier = null)
         {
-            OrderLine orderLine1 = (OrderLine)null;
-            OrderLine orderLine2 = !string.IsNullOrEmpty(parentBundleIdentifier) ? this.GetBundle(parentBundleIdentifier) : (OrderLine)null;
+            OrderLine orderLine = null;
+            OrderLine orderLine2 = (!string.IsNullOrEmpty(parentBundleIdentifier)) ? this.GetBundle(parentBundleIdentifier) : null;
             ProductSnapshot snapshot = ProductService.Instance.GetSnapshot(productIdentifier);
             if (string.IsNullOrEmpty(parentBundleIdentifier))
-                orderLine1 = this.GetUnique(snapshot, properties);
-            else if (orderLine2 != null)
-                orderLine1 = orderLine2.OrderLines.GetUnique(snapshot, properties);
-            if ((quantity.HasValue || properties != null && Enumerable.Any<KeyValuePair<string, string>>((IEnumerable<KeyValuePair<string, string>>)properties)) && (orderLine1 == null && (string.IsNullOrEmpty(parentBundleIdentifier) || orderLine2 != null)))
             {
-                orderLine1 = new OrderLine(snapshot)
+                orderLine = this.GetUnique(snapshot, properties);
+            }
+            else
+            {
+                if (orderLine2 != null)
+                {
+                    orderLine = orderLine2.OrderLines.GetUnique(snapshot, properties);
+                }
+            }
+            if ((quantity.HasValue || (properties != null && properties.Any<KeyValuePair<string, string>>())) && orderLine == null && (string.IsNullOrEmpty(parentBundleIdentifier) || orderLine2 != null))
+            {
+                orderLine = new OrderLine(snapshot)
                 {
                     BundleIdentifier = bundleIdentifier
                 };
                 if (string.IsNullOrEmpty(parentBundleIdentifier))
-                    this.Add(orderLine1);
-                else if (orderLine2 != null)
-                    orderLine2.OrderLines.Add(orderLine1);
+                {
+                    base.Add(orderLine);
+                }
+                else
+                {
+                    if (orderLine2 != null)
+                    {
+                        orderLine2.OrderLines.Add(orderLine);
+                    }
+                }
             }
-            this.Update(orderLine1, quantity, properties, overwriteQuantity);
-            return orderLine1;
+            this.Update(orderLine, quantity, properties, overwriteQuantity);
+            return orderLine;
         }
 
-        public OrderLine Update(long orderLineId, Decimal? quantity = null, IDictionary<string, string> properties = null, bool overwriteQuantity = false)
+        public OrderLine Update(long orderLineId, decimal? quantity = null, IDictionary<string, string> properties = null, bool overwriteQuantity = false)
         {
             OrderLine orderLine = this.Get(orderLineId);
             this.Update(orderLine, quantity, properties, overwriteQuantity);
             return orderLine;
         }
 
-        private void Update(OrderLine orderLine, Decimal? quantity, IDictionary<string, string> properties, bool overwriteQuantity)
+        private void Update(OrderLine orderLine, decimal? quantity, IDictionary<string, string> properties, bool overwriteQuantity)
         {
             if (orderLine == null)
+            {
                 return;
+            }
             if (quantity.HasValue)
-                orderLine.ChangeQuantity(!overwriteQuantity ? orderLine.Quantity + quantity.Value : quantity.Value);
+            {
+                orderLine.ChangeQuantity((!overwriteQuantity) ? (orderLine.Quantity + quantity.Value) : quantity.Value);
+            }
             orderLine.Properties.AddOrUpdate(properties);
         }
 
         public OrderLineCollection Copy()
         {
             OrderLineCollection orderLineCollection = new OrderLineCollection();
-            orderLineCollection.AddRange(Enumerable.Select<OrderLine, OrderLine>((IEnumerable<OrderLine>)this, (Func<OrderLine, OrderLine>)(orderLine => orderLine.Copy())));
+            orderLineCollection.AddRange(
+                from orderLine in this
+                select orderLine.Copy());
             return orderLineCollection;
         }
 
@@ -170,10 +175,14 @@ namespace BookKeeping.Domain.Models
         {
             OrderLineCollection orderLineCollection = obj as OrderLineCollection;
             if (orderLineCollection == null)
+            {
                 return false;
-            bool flag = this.Count == orderLineCollection.Count;
+            }
+            bool flag = base.Count == orderLineCollection.Count;
             if (flag)
-                flag = !Enumerable.Any<OrderLine>((IEnumerable<OrderLine>)this, (Func<OrderLine, bool>)(ol => Enumerable.All<OrderLine>((IEnumerable<OrderLine>)orderLineCollection, (Func<OrderLine, bool>)(col => !col.Equals((object)ol)))));
+            {
+                flag = !this.Any((OrderLine ol) => orderLineCollection.All((OrderLine col) => !col.Equals(ol)));
+            }
             return flag;
         }
 

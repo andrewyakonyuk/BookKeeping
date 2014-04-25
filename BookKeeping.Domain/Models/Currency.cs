@@ -1,4 +1,3 @@
-﻿using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
@@ -12,31 +11,75 @@ namespace BookKeeping.Domain.Models
 {
     public class Currency : ISortable
     {
-        public long Id { get; set; }
+        public long Id
+        {
+            get;
+            set;
+        }
 
-        public long StoreId { get; set; }
+        public long StoreId
+        {
+            get;
+            set;
+        }
 
-        public string Name { get; set; }
+        public string Name
+        {
+            get;
+            set;
+        }
 
-        public string IsoCode { get; set; }
+        public string IsoCode
+        {
+            get;
+            set;
+        }
 
-        public string PricePropertyAlias { get; set; }
+        public string PricePropertyAlias
+        {
+            get;
+            set;
+        }
 
-        public string CultureName { get; set; }
+        public string CultureName
+        {
+            get;
+            set;
+        }
 
-        public string Symbol { get; set; }
+        public string Symbol
+        {
+            get;
+            set;
+        }
 
-        public CurrencySymbolPlacement? SymbolPlacement { get; set; }
+        public CurrencySymbolPlacement? SymbolPlacement
+        {
+            get;
+            set;
+        }
 
-        public int Sort { get; set; }
+        public int Sort
+        {
+            get;
+            set;
+        }
 
-        public bool IsDeleted { get; set; }
+        public bool IsDeleted
+        {
+            get;
+            set;
+        }
 
-        public IList<long> AllowedInFollowingCountries { get; set; }
+        public IList<long> AllowedInFollowingCountries
+        {
+            get;
+            set;
+        }
 
         public Currency()
         {
-            this.AllowedInFollowingCountries = (IList<long>)new List<long>();
+            this.AllowedInFollowingCountries = new List<long>();
             this.Sort = -1;
         }
 
@@ -53,79 +96,80 @@ namespace BookKeeping.Domain.Models
             bool flag = this.Id == 0L;
             if (!flag)
             {
-                var removedAllowedCountries = DependencyResolver.Current.GetService<ICurrencyRepository>().Get(this.StoreId, this.Id).AllowedInFollowingCountries.Where(i => !this.AllowedInFollowingCountries.Contains(i)).ToList();
-                if (removedAllowedCountries.Any())
+                Currency currency = DependencyResolver.Current.GetService<ICurrencyRepository>().Get(this.StoreId, this.Id);
+                List<long> removedAllowedCountries = (
+                    from i in currency.AllowedInFollowingCountries
+                    where !this.AllowedInFollowingCountries.Contains(i)
+                    select i).ToList<long>();
+                if (removedAllowedCountries.Any<long>())
                 {
-                    foreach (long countryId in removedAllowedCountries)
+                    foreach (long current in new List<long>(removedAllowedCountries))
                     {
-                        Country country = CountryService.Instance.Get(this.StoreId, countryId);
+                        Country country = CountryService.Instance.Get(this.StoreId, current);
                         if (country != null && country.DefaultCurrencyId == this.Id)
                         {
-                            removedAllowedCountries.Remove(countryId);
-                            this.AllowedInFollowingCountries.Add(countryId);
+                            removedAllowedCountries.Remove(current);
+                            this.AllowedInFollowingCountries.Add(current);
                         }
                     }
-                    foreach (ShippingMethod shippingMethod in ShippingMethodService.Instance.GetAll(this.StoreId))
+                    foreach (ShippingMethod current2 in ShippingMethodService.Instance.GetAll(this.StoreId))
                     {
-                        if (shippingMethod.OriginalPrices.RemoveAll(p =>
+                        if (current2.OriginalPrices.RemoveAll((ServicePrice p) => p.CurrencyId == this.Id && p.CountryId.HasValue && removedAllowedCountries.Contains(p.CountryId.Value)) > 0)
                         {
-                            if (p.CurrencyId == this.Id && p.CountryId.HasValue)
-                                return removedAllowedCountries.Contains(p.CountryId.Value);
-                            else
-                                return false;
-                        }) > 0)
-                        {
-                            shippingMethod.Save();
+                            current2.Save();
                         }
                     }
-                    foreach (PaymentMethod paymentMethod in PaymentMethodService.Instance.GetAll(this.StoreId))
+                    foreach (PaymentMethod current3 in PaymentMethodService.Instance.GetAll(this.StoreId))
                     {
-                        if (paymentMethod.OriginalPrices.RemoveAll((Predicate<ServicePrice>)(p =>
+                        if (current3.OriginalPrices.RemoveAll((ServicePrice p) => p.CurrencyId == this.Id && p.CountryId.HasValue && removedAllowedCountries.Contains(p.CountryId.Value)) > 0)
                         {
-                            if (p.CurrencyId == this.Id && p.CountryId.HasValue)
-                                return removedAllowedCountries.Contains(p.CountryId.Value);
-                            else
-                                return false;
-                        })) > 0)
-                        {
-                            paymentMethod.Save();
+                            current3.Save();
                         }
                     }
                 }
             }
             ICurrencyRepository currencyRepository = DependencyResolver.Current.GetService<ICurrencyRepository>();
             if (this.Sort == -1)
+            {
                 this.Sort = currencyRepository.GetHighestSortValue(this.StoreId) + 1;
+            }
             currencyRepository.Save(this);
-            if (!flag)
-                return;
-            NotificationCenter.Currency.OnCreated(this);
+            if (flag)
+            {
+                NotificationCenter.Currency.OnCreated(this);
+            }
         }
 
         public bool Delete()
         {
-            bool flag = false;
-            Country country = CountryService.Instance.GetAll(this.StoreId).FirstOrDefault(c => c.DefaultCurrencyId == this.Id);
+            bool result = false;
+            Country country = CountryService.Instance.GetAll(this.StoreId).FirstOrDefault((Country c) => c.DefaultCurrencyId == this.Id);
             if (country == null)
             {
                 this.IsDeleted = true;
                 this.Save();
-                flag = true;
-                foreach (ShippingMethod shippingMethod in ShippingMethodService.Instance.GetAll(this.StoreId))
+                result = true;
+                foreach (ShippingMethod current in ShippingMethodService.Instance.GetAll(this.StoreId))
                 {
-                    if (shippingMethod.OriginalPrices.RemoveAll(p => p.CurrencyId == this.Id) > 0)
-                        shippingMethod.Save();
+                    if (current.OriginalPrices.RemoveAll((ServicePrice p) => p.CurrencyId == this.Id) > 0)
+                    {
+                        current.Save();
+                    }
                 }
-                foreach (PaymentMethod paymentMethod in PaymentMethodService.Instance.GetAll(this.StoreId))
+                foreach (PaymentMethod current2 in PaymentMethodService.Instance.GetAll(this.StoreId))
                 {
-                    if (paymentMethod.OriginalPrices.RemoveAll(p => p.CurrencyId == this.Id) > 0)
-                        paymentMethod.Save();
+                    if (current2.OriginalPrices.RemoveAll((ServicePrice p) => p.CurrencyId == this.Id) > 0)
+                    {
+                        current2.Save();
+                    }
                 }
                 NotificationCenter.Currency.OnDeleted(this);
             }
             else
+            {
                 LoggingService.Instance.Log("Can't delete the currency " + this.Name + " because it is the default for the country " + country.Name);
-            return flag;
+            }
+            return result;
         }
 
         public bool IsAllowedInCountry(long countryId)
@@ -133,39 +177,49 @@ namespace BookKeeping.Domain.Models
             return !this.IsDeleted && this.AllowedInFollowingCountries.Contains(countryId);
         }
 
-        public string FormatMoney(Decimal money)
+        public string FormatMoney(decimal money)
         {
-            string formated;
+            string text;
             if (!string.IsNullOrEmpty(this.Symbol))
             {
-                string withoutSymbol = this.FormatMoneyWithoutSymbol(money);
-                formated = !this.SymbolPlacement.HasValue || this.SymbolPlacement.Value != CurrencySymbolPlacement.Right ? this.Symbol + withoutSymbol : withoutSymbol + this.Symbol;
-            }
-            else
-                formated = money.ToString("c", CultureInfo.GetCultureInfo(this.CultureName));
-            return formated;
-        }
-
-        public string FormatMoneyWithoutSymbol(Decimal money)
-        {
-            CultureInfo cultureInfo = CultureInfo.GetCultureInfo(this.CultureName);
-            int[] currencyGroupSizes = cultureInfo.NumberFormat.CurrencyGroupSizes;
-            int currencyDecimalDigits = cultureInfo.NumberFormat.CurrencyDecimalDigits;
-            int[] numArray = Enumerable.ToArray<int>(Enumerable.Reverse<int>(Enumerable.Concat<int>(Enumerable.Repeat<int>(Enumerable.First<int>(currencyGroupSizes), 4), currencyGroupSizes)));
-            string format = "0." + new string('0', currencyDecimalDigits);
-            for (int index = 0; index < numArray.Length; ++index)
-            {
-                if (index == 0)
+                text = this.FormatMoneyWithoutSymbol(money);
+                if (this.SymbolPlacement.HasValue && this.SymbolPlacement.Value == CurrencySymbolPlacement.Right)
                 {
-                    format = new string('#', numArray[index] - 1) + format;
+                    text += this.Symbol;
                 }
                 else
                 {
-                    string str = (string)(object)',' + (object)format;
-                    format = new string('#', numArray[index]) + str;
+                    text = this.Symbol + text;
                 }
             }
-            return money.ToString(format, (IFormatProvider)cultureInfo);
+            else
+            {
+                text = money.ToString("c", CultureInfo.GetCultureInfo(this.CultureName));
+            }
+            return text;
+        }
+
+        public string FormatMoneyWithoutSymbol(decimal money)
+        {
+            CultureInfo cultureInfo = CultureInfo.GetCultureInfo(this.CultureName);
+            int[] array = cultureInfo.NumberFormat.CurrencyGroupSizes;
+            int currencyDecimalDigits = cultureInfo.NumberFormat.CurrencyDecimalDigits;
+            array = Enumerable.Repeat<int>(array.First<int>(), 4).Concat(array).Reverse<int>().ToArray<int>();
+            string text = new string('0', currencyDecimalDigits);
+            text = "0." + text;
+            for (int i = 0; i < array.Length; i++)
+            {
+                if (i == 0)
+                {
+                    text = new string('#', array[i] - 1) + text;
+                }
+                else
+                {
+                    text = ',' + text;
+                    text = new string('#', array[i]) + text;
+                }
+            }
+            return money.ToString(text, cultureInfo);
         }
     }
 }

@@ -1,6 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
+using BookKeeping.Domain.Models;
 using BookKeeping.Domain.Notifications;
 using BookKeeping.Domain.Repositories;
 using BookKeeping.Infrastructure.Caching;
@@ -10,10 +10,10 @@ namespace BookKeeping.Domain.Services
 {
     public class CountryRegionService : ICountryRegionService
     {
-        private readonly object _cacheLock = new object();
         private const string CacheKey = "CountryRegions";
         private readonly ICountryRegionRepository _repository;
         private readonly ICacheService _cacheService;
+        private readonly object _cacheLock = new object();
 
         public static ICountryRegionService Instance
         {
@@ -30,68 +30,65 @@ namespace BookKeeping.Domain.Services
             NotificationCenter.CountryRegion.Created += new CountryRegionEventHandler(this.CountryRegionCreated);
         }
 
-        public IEnumerable<BookKeeping.Domain.Models.CountryRegion> GetAll(long storeId, long? countryId = null)
+        public IEnumerable<CountryRegion> GetAll(long storeId, long? countryId = null)
         {
-            return (IEnumerable<BookKeeping.Domain.Models.CountryRegion>)Enumerable.OrderBy<BookKeeping.Domain.Models.CountryRegion, int>(Enumerable.Where<BookKeeping.Domain.Models.CountryRegion>((IEnumerable<BookKeeping.Domain.Models.CountryRegion>)this.GetCachedList(storeId), (Func<BookKeeping.Domain.Models.CountryRegion, bool>)(i =>
-            {
-                if (i.IsDeleted)
-                    return false;
-                if (!countryId.HasValue)
-                    return true;
-                long local_0 = i.CountryId;
-                long? local_1 = countryId;
-                if (local_0 == local_1.GetValueOrDefault())
-                    return local_1.HasValue;
-                else
-                    return false;
-            })), (Func<BookKeeping.Domain.Models.CountryRegion, int>)(i => i.Sort));
+            return
+                from i in this.GetCachedList(storeId)
+                where !i.IsDeleted && (!countryId.HasValue || i.CountryId == countryId)
+                orderby i.Sort
+                select i;
         }
 
-        public BookKeeping.Domain.Models.CountryRegion Get(long storeId, long countryRegionId)
+        public CountryRegion Get(long storeId, long countryRegionId)
         {
-            List<BookKeeping.Domain.Models.CountryRegion> cachedList = this.GetCachedList(storeId);
-            BookKeeping.Domain.Models.CountryRegion countryRegion = Enumerable.SingleOrDefault<BookKeeping.Domain.Models.CountryRegion>((IEnumerable<BookKeeping.Domain.Models.CountryRegion>)cachedList, (Func<BookKeeping.Domain.Models.CountryRegion, bool>)(i => i.Id == countryRegionId));
+            List<CountryRegion> cachedList = this.GetCachedList(storeId);
+            CountryRegion countryRegion = cachedList.SingleOrDefault((CountryRegion i) => i.Id == countryRegionId);
             if (countryRegion == null)
             {
                 lock (this._cacheLock)
                 {
-                    countryRegion = Enumerable.SingleOrDefault<BookKeeping.Domain.Models.CountryRegion>((IEnumerable<BookKeeping.Domain.Models.CountryRegion>)cachedList, (Func<BookKeeping.Domain.Models.CountryRegion, bool>)(i => i.Id == countryRegionId));
+                    countryRegion = cachedList.SingleOrDefault((CountryRegion i) => i.Id == countryRegionId);
                     if (countryRegion == null)
                     {
                         countryRegion = this._repository.Get(storeId, countryRegionId);
                         if (countryRegion != null)
+                        {
                             cachedList.Add(countryRegion);
+                        }
                     }
                 }
             }
             return countryRegion;
         }
 
-        private void CountryRegionCreated(BookKeeping.Domain.Models.CountryRegion countryRegion)
+        private void CountryRegionCreated(CountryRegion countryRegion)
         {
-            List<BookKeeping.Domain.Models.CountryRegion> cachedList = this.GetCachedList(countryRegion.StoreId);
-            if (Enumerable.Any<BookKeeping.Domain.Models.CountryRegion>((IEnumerable<BookKeeping.Domain.Models.CountryRegion>)cachedList, (Func<BookKeeping.Domain.Models.CountryRegion, bool>)(cr => cr.Id == countryRegion.Id)))
+            List<CountryRegion> cachedList = this.GetCachedList(countryRegion.StoreId);
+            if (cachedList.Any((CountryRegion cr) => cr.Id == countryRegion.Id))
+            {
                 return;
+            }
             lock (this._cacheLock)
             {
-                if (!Enumerable.All<BookKeeping.Domain.Models.CountryRegion>((IEnumerable<BookKeeping.Domain.Models.CountryRegion>)cachedList, (Func<BookKeeping.Domain.Models.CountryRegion, bool>)(cr => cr.Id != countryRegion.Id)))
-                    return;
-                cachedList.Add(countryRegion);
+                if (cachedList.All((CountryRegion cr) => cr.Id != countryRegion.Id))
+                {
+                    cachedList.Add(countryRegion);
+                }
             }
         }
 
-        private List<BookKeeping.Domain.Models.CountryRegion> GetCachedList(long storeId)
+        private List<CountryRegion> GetCachedList(long storeId)
         {
-            List<BookKeeping.Domain.Models.CountryRegion> list = this._cacheService.GetCacheValue<List<BookKeeping.Domain.Models.CountryRegion>>("CountryRegions-" + (object)storeId);
+            List<CountryRegion> list = this._cacheService.GetCacheValue<List<CountryRegion>>("CountryRegions-" + storeId);
             if (list == null)
             {
                 lock (this._cacheLock)
                 {
-                    list = this._cacheService.GetCacheValue<List<BookKeeping.Domain.Models.CountryRegion>>("CountryRegions-" + (object)storeId);
+                    list = this._cacheService.GetCacheValue<List<CountryRegion>>("CountryRegions-" + storeId);
                     if (list == null)
                     {
-                        list = Enumerable.ToList<BookKeeping.Domain.Models.CountryRegion>(this._repository.GetAll(storeId, new long?()));
-                        this._cacheService.SetCacheValue("CountryRegions-" + (object)storeId, (object)list);
+                        list = this._repository.GetAll(storeId, null).ToList<CountryRegion>();
+                        this._cacheService.SetCacheValue("CountryRegions-" + storeId, list);
                     }
                 }
             }
