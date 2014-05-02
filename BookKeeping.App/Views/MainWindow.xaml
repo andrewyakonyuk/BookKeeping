@@ -22,9 +22,6 @@
             <ResourceDictionary.MergedDictionaries>
                 <ResourceDictionary Source="pack://application:,,,/BookKeeping.App;component/Styles/Styles.xaml" />
                 <ResourceDictionary Source="pack://application:,,,/BookKeeping.App;component/Styles/Colors.xaml" />
-                <ResourceDictionary>
-                   
-                </ResourceDictionary>
             </ResourceDictionary.MergedDictionaries>
         </ResourceDictionary>
     </Window.Resources>

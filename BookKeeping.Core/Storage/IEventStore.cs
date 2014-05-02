@@ -1,4 +1,5 @@
-﻿using System;
+﻿using BookKeeping.Core.Domain;
+using System;
 using System.Collections.Generic;
 using System.Runtime.Serialization;
 

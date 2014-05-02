@@ -62,7 +62,11 @@
     <Compile Include="Behaviors\TabControlBehavior.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="CommandHandlerFactory.cs" />
+    <Compile Include="Context.cs" />
     <Compile Include="DelegateCommand.cs" />
+    <Compile Include="EventHandlerFactory.cs" />
+    <Compile Include="NotificationObject.cs" />
     <Compile Include="Properties\Resources.uk-Ua.Designer.cs">
       <DependentUpon>Resources.uk-Ua.resx</DependentUpon>
       <AutoGen>True</AutoGen>
@@ -207,13 +211,25 @@
     <Resource Include="Resources\Entypo.ttf" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\BookKeeping.Contracts\BookKeeping.Domain.Contracts.csproj">
+      <Project>{de4dd63b-fab7-47a8-b031-88f3dc510a6a}</Project>
+      <Name>BookKeeping.Domain.Contracts</Name>
+    </ProjectReference>
     <ProjectReference Include="..\BookKeeping.Core\BookKeeping.Core.csproj">
       <Project>{25165f2f-30cf-48e7-a26d-0bae31581547}</Project>
       <Name>BookKeeping.Core</Name>
     </ProjectReference>
-    <ProjectReference Include="..\BookKeeping\BookKeeping.csproj">
-      <Project>{8a0777e5-a87c-407d-afe9-3371117d0c36}</Project>
-      <Name>BookKeeping</Name>
+    <ProjectReference Include="..\BookKeeping.Domain\BookKeeping.Domain.csproj">
+      <Project>{e4297e21-339c-4c0c-ad53-1370036b6d7e}</Project>
+      <Name>BookKeeping.Domain</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\BookKeeping.Infrastructure\BookKeeping.Infrastructure.csproj">
+      <Project>{a3193598-57ed-4c08-8bdb-723e123a5733}</Project>
+      <Name>BookKeeping.Infrastructure</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\BookKeeping.Projections\BookKeeping.Projections.csproj">
+      <Project>{a83ca787-bcfb-4882-a3fe-5591f9ee6587}</Project>
+      <Name>BookKeeping.Projections</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>

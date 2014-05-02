@@ -60,37 +60,49 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="AtomicStorage\FileDocumentStore.cs" />
     <Compile Include="AtomicStorage\IDocumentStore.cs" />
-    <Compile Include="ICommand.cs" />
-    <Compile Include="ICommandBus.cs" />
-    <Compile Include="ICommandHandler.cs" />
-    <Compile Include="IEvent.cs" />
-    <Compile Include="IEventBus.cs" />
-    <Compile Include="IEventHandler.cs" />
-    <Compile Include="IIdentity.cs" />
-    <Compile Include="IndentityBase.cs" />
-    <Compile Include="IPagedEnumerable.cs" />
+    <Compile Include="Current.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="DependencyResolver.cs" />
+    <Compile Include="Domain\ICriterion.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="IDependencyResolver.cs" />
+    <Compile Include="Domain\IIdentity.cs" />
+    <Compile Include="Domain\ICommand.cs" />
+    <Compile Include="Domain\ICommandBus.cs" />
+    <Compile Include="Domain\ICommandHandler.cs" />
+    <Compile Include="Domain\IEvent.cs" />
+    <Compile Include="Domain\IEventBus.cs" />
+    <Compile Include="Domain\IEventHandler.cs" />
+    <Compile Include="Domain\IQuery.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Domain\IQueryBuilder.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Domain\IQueryFactory.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Domain\IQueryFor.cs">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="Maybe.cs" />
-    <Compile Include="AtomicStorage\DocumentStrategy.cs" />
     <Compile Include="AtomicStorage\ExtendDocumentReader.cs" />
     <Compile Include="AtomicStorage\ExtendDocumentWriter.cs" />
-    <Compile Include="AtomicStorage\FileDocumentReaderWriter.cs" />
     <Compile Include="AtomicStorage\IDocumentReader.cs" />
     <Compile Include="AtomicStorage\IDocumentStrategy.cs" />
     <Compile Include="AtomicStorage\IDocumentWriter.cs" />
-    <Compile Include="NameCache.cs" />
-    <Compile Include="NullId.cs" />
-    <Compile Include="PagedEnumerable.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Range.cs" />
-    <Compile Include="SequenceEnumerableExtensions.cs" />
-    <Compile Include="SmartEnumerable.cs" />
-    <Compile Include="Storage\EventStore.cs" />
-    <Compile Include="Storage\FileAppendOnlyStore.cs" />
+    <Compile Include="Domain\QueryFor.cs">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="Storage\IAppendOnlyStore.cs" />
     <Compile Include="Storage\IEventStore.cs" />
-    <Compile Include="Storage\IEventStrategy.cs" />
+    <Compile Include="Storage\IMessageStrategy.cs">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="SystemObserver.cs" />
     <Compile Include="unit.cs" />
     <Compile Include="UnregisteredDomainCommandException.cs" />
@@ -118,6 +130,7 @@
       <Install>true</Install>
     </BootstrapperPackage>
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

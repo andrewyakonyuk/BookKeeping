@@ -1,11 +1,19 @@
 ﻿
-Microsoft Visual Studio Solution File, Format Version 11.00
-# Visual Studio 2010
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Express 2013 for Windows Desktop
+VisualStudioVersion = 12.0.21005.1
+MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BookKeeping.App", "BookKeeping.App\BookKeeping.App.csproj", "{08A56326-DE4E-4F0F-A4C8-A0FDA3DA30CD}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BookKeeping.Core", "BookKeeping.Core\BookKeeping.Core.csproj", "{25165F2F-30CF-48E7-A26D-0BAE31581547}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BookKeeping", "BookKeeping\BookKeeping.csproj", "{8A0777E5-A87C-407D-AFE9-3371117D0C36}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BookKeeping.Domain", "BookKeeping.Domain\BookKeeping.Domain.csproj", "{E4297E21-339C-4C0C-AD53-1370036B6D7E}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BookKeeping.Infrastructure", "BookKeeping.Infrastructure\BookKeeping.Infrastructure.csproj", "{A3193598-57ED-4C08-8BDB-723E123A5733}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BookKeeping.Domain.Contracts", "BookKeeping.Contracts\BookKeeping.Domain.Contracts.csproj", "{DE4DD63B-FAB7-47A8-B031-88F3DC510A6A}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BookKeeping.Projections", "BookKeeping.Projections\BookKeeping.Projections.csproj", "{A83CA787-BCFB-4882-A3FE-5591F9EE6587}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -21,10 +29,22 @@ Global
 		{25165F2F-30CF-48E7-A26D-0BAE31581547}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{25165F2F-30CF-48E7-A26D-0BAE31581547}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{25165F2F-30CF-48E7-A26D-0BAE31581547}.Release|Any CPU.Build.0 = Release|Any CPU
-		{8A0777E5-A87C-407D-AFE9-3371117D0C36}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{8A0777E5-A87C-407D-AFE9-3371117D0C36}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{8A0777E5-A87C-407D-AFE9-3371117D0C36}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{8A0777E5-A87C-407D-AFE9-3371117D0C36}.Release|Any CPU.Build.0 = Release|Any CPU
+		{E4297E21-339C-4C0C-AD53-1370036B6D7E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E4297E21-339C-4C0C-AD53-1370036B6D7E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E4297E21-339C-4C0C-AD53-1370036B6D7E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E4297E21-339C-4C0C-AD53-1370036B6D7E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A3193598-57ED-4C08-8BDB-723E123A5733}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A3193598-57ED-4C08-8BDB-723E123A5733}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A3193598-57ED-4C08-8BDB-723E123A5733}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A3193598-57ED-4C08-8BDB-723E123A5733}.Release|Any CPU.Build.0 = Release|Any CPU
+		{DE4DD63B-FAB7-47A8-B031-88F3DC510A6A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{DE4DD63B-FAB7-47A8-B031-88F3DC510A6A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{DE4DD63B-FAB7-47A8-B031-88F3DC510A6A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{DE4DD63B-FAB7-47A8-B031-88F3DC510A6A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A83CA787-BCFB-4882-A3FE-5591F9EE6587}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A83CA787-BCFB-4882-A3FE-5591F9EE6587}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A83CA787-BCFB-4882-A3FE-5591F9EE6587}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A83CA787-BCFB-4882-A3FE-5591F9EE6587}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
