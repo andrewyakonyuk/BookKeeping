@@ -41,8 +41,11 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="CustomerTransactionProjections.cs" />
-    <Compile Include="ProductsProjection.cs" />
+    <Compile Include="ClientBoundedContext.cs" />
+    <Compile Include="CustomerTransactions\CustomerTransactionProjections.cs" />
+    <Compile Include="CustomerTransactions\CustomerTransactionView.cs" />
+    <Compile Include="ProductsList\ProductListView.cs" />
+    <Compile Include="ProductsList\ProductsProjection.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -55,6 +58,7 @@
       <Name>BookKeeping.Core</Name>
     </ProjectReference>
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

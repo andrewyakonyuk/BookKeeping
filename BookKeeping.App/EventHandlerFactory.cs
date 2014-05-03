@@ -2,6 +2,7 @@
 using BookKeeping.Core.AtomicStorage;
 using BookKeeping.Core.Domain;
 using BookKeeping.Infrastructure;
+using BookKeeping.Projections;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -18,7 +19,10 @@ namespace BookKeeping.App
 
         public IEnumerable<IEventHandler<T>> GetHandlers<T>() where T : IEvent
         {
-            return DomainBoundedContext.Projections(_documentStore).OfType<IEventHandler<T>>();
+            return DomainBoundedContext.Projections(_documentStore)
+                .OfType<IEventHandler<T>>()
+                .Concat(ClientBoundedContext.Projections(_documentStore)
+                .OfType<IEventHandler<T>>());
         }
     }
 }

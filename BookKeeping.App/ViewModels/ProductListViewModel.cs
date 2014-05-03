@@ -11,6 +11,7 @@ using System.Windows.Controls;
 using System.Collections;
 using System.Collections.ObjectModel;
 using System.Collections.Specialized;
+using BookKeeping.Projections.ProductsList;
 
 namespace BookKeeping.App.ViewModels
 {
@@ -19,8 +20,8 @@ namespace BookKeeping.App.ViewModels
         string _searchText = string.Empty;
         bool _showFindPopup = false;
         bool _showProductDetail = false;
-        ProductDto _selectedItem;
-        IList<ProductDto> _selectedItems;
+        ProductView _selectedItem;
+        IList<ProductView> _selectedItems;
 
         public ProductListViewModel()
         {
@@ -29,10 +30,10 @@ namespace BookKeeping.App.ViewModels
 
             DisplayName = BookKeeping.App.Properties.Resources.Product_List;
 
-            var reader = Context.Current.ViewDocs.GetReader<unit, ProductListDto>();
+            var reader = Context.Current.ViewDocs.GetReader<unit, ProductListView>();
 
-            var productList = new ObservableCollection<ProductDto>((reader.Get(unit.it).Convert(t => t.Products,
-                () => new List<ProductDto>())));
+            var productList = new ObservableCollection<ProductView>((reader.Get(unit.it).Convert(t => t.Products,
+                () => new List<ProductView>())));
             productList.CollectionChanged += productList_CollectionChanged;
             Source = productList;
         }
@@ -71,7 +72,7 @@ namespace BookKeeping.App.ViewModels
             }
         }
 
-        public ProductDto SelectedItem
+        public ProductView SelectedItem
         {
             get { return _selectedItem; }
             set
@@ -93,7 +94,7 @@ namespace BookKeeping.App.ViewModels
             set
             {
                 OnPropertyChanging(() => SelectedItems);
-                _selectedItems = value.OfType<ProductDto>().ToList();
+                _selectedItems = value.OfType<ProductView>().ToList();
                 OnPropertyChanged(() => SelectedItems);
             }
         }
@@ -110,7 +111,7 @@ namespace BookKeeping.App.ViewModels
             {
                 if (string.IsNullOrEmpty(searchText))
                     return true;
-                var product = (ProductDto)t;
+                var product = (ProductView)t;
                 return product.Title.StartsWith(searchText, StringComparison.CurrentCultureIgnoreCase);
             };
         }

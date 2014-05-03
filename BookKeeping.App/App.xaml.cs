@@ -1,6 +1,9 @@
 ﻿using BookKeeping.App.ViewModels;
 using BookKeeping.App.Views;
+using BookKeeping.Domain.Contracts;
+using System;
 using System.Windows;
+using System.Linq;
 
 namespace BookKeeping.App
 {

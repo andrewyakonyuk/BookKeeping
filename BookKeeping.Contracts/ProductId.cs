@@ -9,6 +9,12 @@ namespace BookKeeping.Domain.Contracts
     [DataContract(Namespace = "BookKeeping")]
     public sealed class ProductId : IdentityBase<Guid>, IIdentity
     {
+        public ProductId()
+            : base(Guid.NewGuid())
+        {
+
+        }
+
         public ProductId(Guid id)
             : base(id)
         {

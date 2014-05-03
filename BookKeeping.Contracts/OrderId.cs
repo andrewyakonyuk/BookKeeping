@@ -1,12 +1,20 @@
 ﻿using BookKeeping.Core;
 using BookKeeping.Core.Domain;
 using System;
+using System.Runtime.Serialization;
 
 namespace BookKeeping.Domain.Contracts
 {
+    [DataContract(Namespace = "BookKeeping")]
     [Serializable]
     public sealed class OrderId : IdentityBase<long>, IIdentity
     {
+        public OrderId()
+            : base(0)
+        {
+
+        }
+
         public OrderId(long id)
             : base(id)
         {
@@ -24,5 +32,8 @@ namespace BookKeeping.Domain.Contracts
         {
             return string.Format("order-{0}", Id);
         }
+
+        [DataMember(Order = 1)]
+        public override long Id { get; protected set; }
     }
 }

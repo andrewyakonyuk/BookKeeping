@@ -2,43 +2,10 @@
 using BookKeeping.Core.AtomicStorage;
 using BookKeeping.Core.Domain;
 using BookKeeping.Domain.Contracts;
-using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Runtime.Serialization;
 
-namespace BookKeeping.Projections
+namespace BookKeeping.Projections.ProductsList
 {
-    [DataContract]
-    [Serializable]
-    public class ProductDto
-    {
-        public ProductId Id { get; set; }
-
-        public string Title { get; set; }
-
-        public string Barcode { get; set; }
-
-        public string ItemNo { get; set; }
-
-        public CurrencyAmount Price { get; set; }
-
-        public double Stock { get; set; }
-
-        public string UOM { get; set; }
-
-        public double VAT { get; set; }
-    }
-
-    [DataContract]
-    [Serializable]
-    public class ProductListDto
-    {
-        private IList<ProductDto> _products = new List<ProductDto>();
-
-        public IList<ProductDto> Products { get { return _products; } }
-    }
-
     public class ProductsProjection : 
         IEventHandler<ProductCreated>,
         IEventHandler<ProductStockUpdated>,
@@ -49,9 +16,9 @@ namespace BookKeeping.Projections
         IEventHandler<ProductUOMChanged>,
         IEventHandler<ProductVATChanged>
     {
-        private readonly IDocumentWriter<unit, ProductListDto> _store;
+        private readonly IDocumentWriter<unit, ProductListView> _store;
 
-        public ProductsProjection(IDocumentWriter<unit, ProductListDto> store)
+        public ProductsProjection(IDocumentWriter<unit, ProductListView> store)
         {
             _store = store;
         }
@@ -59,7 +26,7 @@ namespace BookKeeping.Projections
         public void When(ProductCreated e)
         {
             _store.UpdateEnforcingNew(unit.it, prs => prs.Products.Add(
-            new ProductDto
+            new ProductView
             {
                 Id = e.Id,
                 Title = e.Title,
