@@ -1,4 +1,5 @@
-﻿using BookKeeping.Core.Domain;
+﻿using BookKeeping.Core;
+using BookKeeping.Core.Domain;
 using BookKeeping.Core.Storage;
 using BookKeeping.Domain.Contracts;
 using BookKeeping.Domain.Services.WarehouseIndex;
@@ -14,7 +15,8 @@ namespace BookKeeping.Domain.Aggregates.Sku
         ICommandHandler<ChangeSkuItemNo>,
         ICommandHandler<ChangeSkuPrice>,
         ICommandHandler<ChangeSkuUnitOfMeasure>,
-        ICommandHandler<ChangeSkuVatRate>
+        ICommandHandler<ChangeSkuVatRate>,
+        ICommandHandler<MoveSkuToWarehouse>
     {
         private readonly IEventBus _eventBus;
         private readonly IEventStore _eventStore;
@@ -43,42 +45,47 @@ namespace BookKeeping.Domain.Aggregates.Sku
 
         public void When(CreateSku c)
         {
-            Update(c.Id, p => p.Create(c.Id, c.Warehouse, c.Title, c.ItemNo, c.Price, c.Stock, c.UnitOfMeasure, c.VatRate, _warehouseService, DateTime.UtcNow));
+            Update(c.Id, p => p.Create(c.Id, c.Warehouse, c.Title, c.ItemNo, c.Price, c.Stock, c.UnitOfMeasure, c.VatRate, _warehouseService, Current.UtcNow));
         }
 
         public void When(UpdateSkuStock c)
         {
-            Update(c.Id, p => p.UpdateStock(c.Quantity, c.Reason, DateTime.UtcNow));
+            Update(c.Id, p => p.UpdateStock(c.Quantity, c.Reason, Current.UtcNow));
         }
 
         public void When(RenameSku c)
         {
-            Update(c.Id, p => p.Rename(c.NewTitle, DateTime.UtcNow));
+            Update(c.Id, p => p.Rename(c.NewTitle, Current.UtcNow));
         }
 
         public void When(ChangeSkuBarcode c)
         {
-            Update(c.Id, p => p.ChangeBarcode(c.NewBarcode, DateTime.UtcNow));
+            Update(c.Id, p => p.ChangeBarcode(c.NewBarcode, Current.UtcNow));
         }
 
         public void When(ChangeSkuItemNo c)
         {
-            Update(c.Id, p => p.ChangeItemNo(c.NewItemNo, DateTime.UtcNow));
+            Update(c.Id, p => p.ChangeItemNo(c.NewItemNo, Current.UtcNow));
         }
 
         public void When(ChangeSkuPrice c)
         {
-            Update(c.Id, p => p.ChangePrice(c.NewPrice, DateTime.UtcNow));
+            Update(c.Id, p => p.ChangePrice(c.NewPrice, Current.UtcNow));
         }
 
         public void When(ChangeSkuUnitOfMeasure c)
         {
-            Update(c.Id, p => p.ChangeUnitOfMeasure(c.NewUnitOfMeasure, DateTime.UtcNow));
+            Update(c.Id, p => p.ChangeUnitOfMeasure(c.NewUnitOfMeasure, Current.UtcNow));
         }
 
         public void When(ChangeSkuVatRate c)
         {
-            Update(c.Id, p => p.ChangeVatRate(c.NewVatRate, DateTime.UtcNow));
+            Update(c.Id, p => p.ChangeVatRate(c.NewVatRate, Current.UtcNow));
+        }
+
+        public void When(MoveSkuToWarehouse c)
+        {
+            Update(c.Id, p => p.MoveToWarehouse(c.DestinationWarehouse, c.Reason, Current.UtcNow));
         }
     }
 }

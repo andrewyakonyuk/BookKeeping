@@ -51,7 +51,7 @@ namespace BookKeeping.Domain.Aggregates.Sku
 
         public void When(SkuStockUpdated e)
         {
-            Stock += e.Quantity;
+            Stock = e.Quantity;
         }
 
         public void When(SkuRenamed e)
@@ -82,6 +82,11 @@ namespace BookKeeping.Domain.Aggregates.Sku
         public void When(SkuVatRateChanged e)
         {
             VatRate = e.NewVatRate;
+        }
+
+        public void When(SkuMovedToWarehouse e)
+        {
+            Warehouse = e.DestinationWarehouse;
         }
     }
 }

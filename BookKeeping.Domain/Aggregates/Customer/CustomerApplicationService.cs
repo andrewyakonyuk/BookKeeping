@@ -1,4 +1,5 @@
-﻿using BookKeeping.Core.Domain;
+﻿using BookKeeping.Core;
+using BookKeeping.Core.Domain;
 using BookKeeping.Core.Storage;
 using BookKeeping.Domain.Contracts;
 using BookKeeping.Domain.Services;
@@ -55,22 +56,22 @@ namespace BookKeeping.Domain.Aggregates.Customer
 
         public void When(CreateCustomer c)
         {
-            Update(c.Id, a => a.Create(c.Id, c.Name, c.Currency, _pricingService, DateTime.UtcNow));
+            Update(c.Id, a => a.Create(c.Id, c.Name, c.Currency, _pricingService, Current.UtcNow));
         }
 
         public void When(RenameCustomer c)
         {
-            Update(c.Id, a => a.Rename(c.NewName, DateTime.UtcNow));
+            Update(c.Id, a => a.Rename(c.NewName, Current.UtcNow));
         }
 
         public void When(AddCustomerPayment c)
         {
-            Update(c.Id, a => a.AddPayment(c.Name, c.Amount, DateTime.UtcNow));
+            Update(c.Id, a => a.AddPayment(c.Name, c.Amount, Current.UtcNow));
         }
 
         public void When(ChargeCustomer c)
         {
-            Update(c.Id, a => a.Charge(c.Name, c.Amount, DateTime.UtcNow));
+            Update(c.Id, a => a.Charge(c.Name, c.Amount, Current.UtcNow));
         }
 
         public void When(LockCustomerForAccountOverdraft c)

@@ -54,7 +54,7 @@ namespace BookKeeping.Domain.Contracts
         [DataMember(Order = 8)]
         public VatRate VatRate { get; set; }
         [DataMember(Order = 9)]
-        public DateTime Created { get; set; }
+        public DateTime Utc { get; set; }
 
         public override string ToString()
         {
@@ -92,7 +92,7 @@ namespace BookKeeping.Domain.Contracts
         [DataMember(Order = 3)]
         public string Reason { get; set; }
         [DataMember(Order = 4)]
-        public DateTime Updated { get; set; }
+        public DateTime Utc { get; set; }
 
         public override string ToString()
         {
@@ -124,7 +124,7 @@ namespace BookKeeping.Domain.Contracts
         [DataMember(Order = 2)]
         public string NewTitle { get; set; }
         [DataMember(Order = 3)]
-        public DateTime Renamed { get; set; }
+        public DateTime Utc { get; set; }
 
         public override string ToString()
         {
@@ -156,7 +156,7 @@ namespace BookKeeping.Domain.Contracts
         [DataMember(Order = 2)]
         public string NewBarcode { get; set; }
         [DataMember(Order = 2)]
-        public DateTime Changed { get; set; }
+        public DateTime Utc { get; set; }
 
         public override string ToString()
         {
@@ -188,7 +188,7 @@ namespace BookKeeping.Domain.Contracts
         [DataMember(Order = 2)]
         public string NewItemNo { get; set; }
         [DataMember(Order = 3)]
-        public DateTime Changed { get; set; }
+        public DateTime Utc { get; set; }
 
         public override string ToString()
         {
@@ -220,7 +220,7 @@ namespace BookKeeping.Domain.Contracts
         [DataMember(Order = 2)]
         public CurrencyAmount NewPrice { get; set; }
         [DataMember(Order = 3)]
-        public DateTime Changed { get; set; }
+        public DateTime Utc { get; set; }
 
         public override string ToString()
         {
@@ -252,7 +252,7 @@ namespace BookKeeping.Domain.Contracts
         [DataMember(Order = 2)]
         public string NewUnitOfMeasure { get; set; }
         [DataMember(Order = 3)]
-        public DateTime Changed { get; set; }
+        public DateTime Utc { get; set; }
 
         public override string ToString()
         {
@@ -284,11 +284,37 @@ namespace BookKeeping.Domain.Contracts
         [DataMember(Order = 2)]
         public VatRate NewVatRate { get; set; }
         [DataMember(Order = 3)]
-        public DateTime Changed { get; set; }
+        public DateTime Utc { get; set; }
 
         public override string ToString()
         {
             return string.Format("{0} changed Vat rate to '{1}'", Id, NewVatRate);
         }
+    }
+
+    [Serializable]
+    [DataContract(Namespace = "BookKeeping")]
+    public sealed class MoveSkuToWarehouse : ICommand<SkuId>
+    {
+        [DataMember(Order = 1)]
+        public SkuId Id { get; set; }
+        [DataMember(Order = 2)]
+        public WarehouseId DestinationWarehouse { get; set; }
+        [DataMember(Order = 3)]
+        public string Reason { get; set; }
+    }
+
+    [Serializable]
+    [DataContract(Namespace = "BookKeeping")]
+    public sealed class SkuMovedToWarehouse : IEvent<SkuId>
+    {
+        [DataMember(Order = 1)]
+        public SkuId Id { get; set; }
+        [DataMember(Order = 2)]
+        public WarehouseId DestinationWarehouse { get; set; }
+        [DataMember(Order = 3)]
+        public string Reason { get; set; }
+        [DataMember(Order = 4)]
+        public DateTime Utc { get; set; }
     }
 }

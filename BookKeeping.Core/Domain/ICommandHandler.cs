@@ -2,6 +2,6 @@
 {
     public interface ICommandHandler<TCommand> where TCommand : ICommand
     {
-        void When(TCommand command);
+        void When(TCommand c);
     }
 }

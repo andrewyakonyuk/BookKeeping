@@ -44,6 +44,9 @@
     <Compile Include="Aggregates\Customer\Customer.cs" />
     <Compile Include="Aggregates\Customer\CustomerApplicationService.cs" />
     <Compile Include="Aggregates\Customer\CustomerState.cs" />
+    <Compile Include="Aggregates\Warehouse\Warehouse.cs" />
+    <Compile Include="Aggregates\Warehouse\WarehouseApplicationService.cs" />
+    <Compile Include="Aggregates\Warehouse\WarehouseState.cs" />
     <Compile Include="DomainBoundedContext.cs" />
     <Compile Include="Services\Pricing\IPricingService.cs" />
     <Compile Include="Aggregates\Order\Order.cs" />

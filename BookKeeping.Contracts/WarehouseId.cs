@@ -8,7 +8,8 @@ namespace BookKeeping.Domain.Contracts
     [Serializable]
     public sealed class WarehouseId : IdentityBase<Guid>, IIdentity
     {
-        public WarehouseId()
+        [Obsolete("Only for serializer")]
+        protected WarehouseId()
             : base(Guid.Empty)
         {
 

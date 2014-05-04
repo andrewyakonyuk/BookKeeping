@@ -34,7 +34,7 @@ namespace BookKeeping.Domain.Contracts
 
     [Serializable]
     [DataContract(Namespace = "BookKeeping")]
-    public sealed class DeleteWarehouse : ICommand<WarehouseId>
+    public sealed class CloseWarehouse : ICommand<WarehouseId>
     {
         [DataMember(Order = 1)]
         public WarehouseId Id { get; set; }
@@ -45,7 +45,7 @@ namespace BookKeeping.Domain.Contracts
 
     [Serializable]
     [DataContract(Namespace = "BookKeeping")]
-    public sealed class WarehouseDeleted : IEvent<WarehouseId>
+    public sealed class WarehouseClosed : IEvent<WarehouseId>
     {
         [DataMember(Order = 1)]
         public WarehouseId Id { get; set; }
@@ -54,6 +54,29 @@ namespace BookKeeping.Domain.Contracts
         public string Reason { get; set; }
 
         [DataMember(Order = 3)]
-        public DateTime Deleted { get; set; }
+        public DateTime Closed { get; set; }
+    }
+
+    [DataContract(Namespace = "BookKeeping")]
+    public sealed class RenameWarehouse : ICommand<WarehouseId>
+    {
+        [DataMember(Order = 1)]
+        public WarehouseId Id { get; set; }
+
+        [DataMember(Order = 2)]
+        public string NewName { get; set; }
+    }
+
+    [DataContract(Namespace = "BookKeeping")]
+    public sealed class WarehouseRenamed : IEvent<WarehouseId>
+    {
+        [DataMember(Order = 1)]
+        public WarehouseId Id { get; set; }
+
+        [DataMember(Order = 2)]
+        public string NewName { get; set; }
+
+        [DataMember(Order = 3)]
+        public DateTime Renamed { get; set; }
     }
 }

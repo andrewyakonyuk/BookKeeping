@@ -47,7 +47,7 @@ namespace BookKeeping.Domain.Aggregates.Sku
                 UnitOfMeasure = unitOfMeasure,
                 Warehouse = warehouse,
                 VatRate = vatRate,
-                Created = utc
+                Utc = utc
             });
         }
 
@@ -58,7 +58,7 @@ namespace BookKeeping.Domain.Aggregates.Sku
                 Id = _state.Id,
                 Quantity = quantity,
                 Reason = reason,
-                Updated = utc
+                Utc = utc
             });
         }
 
@@ -68,7 +68,7 @@ namespace BookKeeping.Domain.Aggregates.Sku
             {
                 Id = _state.Id,
                 NewTitle = title,
-                Renamed = utc
+                Utc = utc
             });
         }
 
@@ -78,7 +78,7 @@ namespace BookKeeping.Domain.Aggregates.Sku
             {
                 Id = _state.Id,
                 NewBarcode = barcode,
-                Changed = utc
+                Utc = utc
             });
         }
 
@@ -88,7 +88,7 @@ namespace BookKeeping.Domain.Aggregates.Sku
             {
                 Id = _state.Id,
                 NewItemNo = itemNo,
-                Changed = utc
+                Utc = utc
             });
         }
 
@@ -98,7 +98,7 @@ namespace BookKeeping.Domain.Aggregates.Sku
             {
                 Id = _state.Id,
                 NewPrice = price,
-                Changed = utc
+                Utc = utc
             });
         }
 
@@ -108,7 +108,7 @@ namespace BookKeeping.Domain.Aggregates.Sku
             {
                 Id = _state.Id,
                 NewUnitOfMeasure = unitOfMeasure,
-                Changed = utc
+                Utc = utc
             });
         }
 
@@ -118,7 +118,18 @@ namespace BookKeeping.Domain.Aggregates.Sku
             {
                 Id = _state.Id,
                 NewVatRate = vat,
-                Changed = utc
+                Utc = utc
+            });
+        }
+
+        public void MoveToWarehouse(WarehouseId warehouse, string reason, DateTime utc)
+        {
+            Apply(new SkuMovedToWarehouse
+            {
+                Id = _state.Id,
+                DestinationWarehouse = warehouse,
+                Reason = reason,
+                Utc = utc
             });
         }
 

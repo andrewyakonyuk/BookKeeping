@@ -18,10 +18,24 @@ namespace BookKeeping.Domain.Services.WarehouseIndex
             return _storage.Get(warehouse.ToString())
                 .Convert(i => i.Skus.Where(t => t.Id.Equals(sku)).Any(), false);
         }
+
+        public bool IsWarehouseRegistered(WarehouseId warehouse)
+        {
+            return _storage.Get(warehouse.ToString()).HasValue;
+        }
+
+        public WarehouseIndexView LoadWarehouseIndex(WarehouseId id)
+        {
+            return _storage.Load(id.ToString());
+        }
     }
 
     public interface IWarehouseIndexService
     {
         bool IsSkuRegistered(SkuId sku, WarehouseId warehouse);
+
+        bool IsWarehouseRegistered(WarehouseId warehouse);
+
+        WarehouseIndexView LoadWarehouseIndex(WarehouseId id);
     }
 }

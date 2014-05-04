@@ -13,7 +13,7 @@ namespace BookKeeping.Domain.Services.WarehouseIndex
     public sealed class WarehouseIndexProjection :
         IEventHandler<WarehouseCreated>,
         IEventHandler<SkuCreated>,
-        IEventHandler<WarehouseDeleted>
+        IEventHandler<WarehouseClosed>
     {
         readonly IDocumentWriter<string, WarehouseIndexView> _writer;
 
@@ -38,7 +38,7 @@ namespace BookKeeping.Domain.Services.WarehouseIndex
             });
         }
 
-        public void When(WarehouseDeleted e)
+        public void When(WarehouseClosed e)
         {
             _writer.TryDelete(e.Id.ToString());
         }
