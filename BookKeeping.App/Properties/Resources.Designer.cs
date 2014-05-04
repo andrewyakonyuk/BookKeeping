@@ -324,18 +324,18 @@ namespace BookKeeping.App.Properties {
         /// <summary>
         ///   Looks up a localized string similar to Unit of measure.
         /// </summary>
-        public static string Unit_of_measure {
+        public static string UnitOfMeasure {
             get {
-                return ResourceManager.GetString("Unit_of_measure", resourceCulture);
+                return ResourceManager.GetString("UnitOfMeasure", resourceCulture);
             }
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to VAT.
+        ///   Looks up a localized string similar to Vat rate.
         /// </summary>
-        public static string Vat {
+        public static string VatRate {
             get {
-                return ResourceManager.GetString("Vat", resourceCulture);
+                return ResourceManager.GetString("VatRate", resourceCulture);
             }
         }
     }

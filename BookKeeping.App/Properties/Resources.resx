@@ -204,10 +204,10 @@
   <data name="Undo" xml:space="preserve">
     <value>Undo</value>
   </data>
-  <data name="Unit_of_measure" xml:space="preserve">
+  <data name="UnitOfMeasure" xml:space="preserve">
     <value>Unit of measure</value>
   </data>
-  <data name="Vat" xml:space="preserve">
-    <value>VAT</value>
+  <data name="VatRate" xml:space="preserve">
+    <value>Vat rate</value>
   </data>
 </root>

@@ -1,14 +1,11 @@
-﻿using BookKeeping.Core;
-using BookKeeping.Core.AtomicStorage;
-using BookKeeping.Core.Storage;
-using BookKeeping.Domain;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using BookKeeping.Domain.Aggregates.Customer;
-using BookKeeping.Domain.Aggregates.Product;
+﻿using BookKeeping.Core.AtomicStorage;
 using BookKeeping.Core.Domain;
+using BookKeeping.Core.Storage;
+using BookKeeping.Domain.Aggregates.Customer;
+using BookKeeping.Domain.Aggregates.Sku;
+using BookKeeping.Domain.Services;
+using BookKeeping.Domain.Services.WarehouseIndex;
+using System.Collections.Generic;
 
 namespace BookKeeping
 {
@@ -18,23 +15,14 @@ namespace BookKeeping
 
         public static IEnumerable<object> Projections(IDocumentStore docs)
         {
-            //yield return new CustomerTransactionsProjection(docs.GetWriter<CustomerId, CustomerTransactionsDto>());
-            //yield return new ProductsProjection(docs.GetWriter<unit, ProductListDto>());
+            yield return new WarehouseIndexProjection(docs.GetWriter<string, WarehouseIndexView>());
             yield break;
         }
 
         public static IEnumerable<object> EntityApplicationServices(IDocumentStore docs, IEventStore store, IEventBus eventBus)
         {
             yield return new CustomerApplicationService(store, eventBus, new PricingService());
-            yield return new ProductApplicationService(store, eventBus);
-            //var unique = new UserIndexService(docs.GetReader<byte, UserIndexLookup>());
-            //var passwords = new PasswordGenerator();
-
-
-            //yield return new UserApplicationService(store);
-            //yield return new SecurityApplicationService(store, id, passwords, unique);
-            //yield return new RegistrationApplicationService(store, id, unique, passwords);
-            //yield return id;
+            yield return new SkuApplicationService(store, eventBus, new WarehouseIndexService(docs.GetReader<string, WarehouseIndexView>()));
         }
     }
 }

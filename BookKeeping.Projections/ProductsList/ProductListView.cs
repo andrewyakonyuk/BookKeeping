@@ -10,28 +10,31 @@ namespace BookKeeping.Projections.ProductsList
     public class ProductView
     {
         [DataMember(Order = 1)]
-        public ProductId Id { get; set; }
+        public SkuId Id { get; set; }
 
         [DataMember(Order = 2)]
-        public string Title { get; set; }
+        public WarehouseId Warehouse { get; set; }
 
         [DataMember(Order = 3)]
-        public string Barcode { get; set; }
+        public string Title { get; set; }
 
         [DataMember(Order = 4)]
-        public string ItemNo { get; set; }
+        public string Barcode { get; set; }
 
         [DataMember(Order = 5)]
-        public CurrencyAmount Price { get; set; }
+        public string ItemNo { get; set; }
 
         [DataMember(Order = 6)]
-        public double Stock { get; set; }
+        public CurrencyAmount Price { get; set; }
 
         [DataMember(Order = 7)]
-        public string UOM { get; set; }
+        public double Stock { get; set; }
 
         [DataMember(Order = 8)]
-        public double VAT { get; set; }
+        public string UnitOfMeasure { get; set; }
+
+        [DataMember(Order = 9)]
+        public VatRate VatRate { get; set; }
     }
 
     [DataContract]

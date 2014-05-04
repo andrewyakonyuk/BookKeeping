@@ -1,36 +1,33 @@
-﻿using BookKeeping.Core;
-using BookKeeping.Core.Domain;
+﻿using BookKeeping.Core.Domain;
 using System;
 using System.Runtime.Serialization;
 
 namespace BookKeeping.Domain.Contracts
 {
-    [Serializable]
     [DataContract(Namespace = "BookKeeping")]
-    public sealed class ProductId : IdentityBase<Guid>, IIdentity
+    [Serializable]
+    public sealed class WarehouseId : IdentityBase<Guid>, IIdentity
     {
-        public ProductId()
-            : base(Guid.NewGuid())
+        public WarehouseId()
+            : base(Guid.Empty)
         {
 
         }
 
-        public ProductId(Guid id)
+        public WarehouseId(Guid id)
             : base(id)
         {
 
         }
 
-        public const string Tag = "product";
-
         public override string GetTag()
         {
-            return Tag;
+            return "warehouse";
         }
 
         public override string ToString()
         {
-            return string.Format("product-{0}", Id);
+            return string.Concat(GetTag(), "-", Id);
         }
 
         [DataMember(Order = 1)]

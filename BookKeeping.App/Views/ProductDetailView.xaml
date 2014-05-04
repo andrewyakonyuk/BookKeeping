@@ -52,9 +52,9 @@
 
         <TextBlock Text="{x:Static p:Resources.Stock}" Grid.Row="0" Grid.Column="2"></TextBlock>
         <TextBox Text="{Binding Path=Stock, Mode=TwoWay}" Grid.Row="0" Grid.Column="3"></TextBox>
-        <TextBlock Text="{x:Static p:Resources.Unit_of_measure}" Grid.Row="1" Grid.Column="2"></TextBlock>
+        <TextBlock Text="{x:Static p:Resources.UnitOfMeasure}" Grid.Row="1" Grid.Column="2"></TextBlock>
         <TextBox Text="{Binding Path=UOM, Mode=TwoWay}" Grid.Row="1" Grid.Column="3"></TextBox>
-        <TextBlock Text="{x:Static p:Resources.Vat}" Grid.Row="2" Grid.Column="2"></TextBlock>
+        <TextBlock Text="{x:Static p:Resources.VatRate}" Grid.Row="2" Grid.Column="2"></TextBlock>
         <TextBox Text="{Binding Path=VAT, Mode=TwoWay}" Grid.Row="2" Grid.Column="3"></TextBox>
     </Grid>
 </UserControl>

@@ -1,10 +1,6 @@
-﻿using BookKeeping.Core;
-using BookKeeping.Core.Domain;
+﻿using BookKeeping.Core.Domain;
 using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Runtime.Serialization;
-using System.Text;
 
 namespace BookKeeping.Domain.Contracts
 {

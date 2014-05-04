@@ -7,14 +7,14 @@ using System.Linq;
 namespace BookKeeping.Projections.ProductsList
 {
     public class ProductsProjection : 
-        IEventHandler<ProductCreated>,
-        IEventHandler<ProductStockUpdated>,
-        IEventHandler<ProductRenamed>,
-        IEventHandler<ProductItemNoChanged>,
-        IEventHandler<ProductBarcodeChanged>,
-        IEventHandler<ProductPriceChanged>,
-        IEventHandler<ProductUOMChanged>,
-        IEventHandler<ProductVATChanged>
+        IEventHandler<SkuCreated>,
+        IEventHandler<SkuStockUpdated>,
+        IEventHandler<SkuRenamed>,
+        IEventHandler<SkuItemNoChanged>,
+        IEventHandler<SkuBarcodeChanged>,
+        IEventHandler<SkuPriceChanged>,
+        IEventHandler<SkuUnitOfMeasureChanged>,
+        IEventHandler<SkuVatRateChanged>
     {
         private readonly IDocumentWriter<unit, ProductListView> _store;
 
@@ -23,7 +23,7 @@ namespace BookKeeping.Projections.ProductsList
             _store = store;
         }
 
-        public void When(ProductCreated e)
+        public void When(SkuCreated e)
         {
             _store.UpdateEnforcingNew(unit.it, prs => prs.Products.Add(
             new ProductView
@@ -32,43 +32,46 @@ namespace BookKeeping.Projections.ProductsList
                 Title = e.Title,
                 ItemNo = e.ItemNo,
                 Price = e.Price,
-                Stock = e.Stock
+                Stock = e.Stock,
+                UnitOfMeasure = e.UnitOfMeasure,
+                VatRate = e.VatRate,
+                Warehouse = e.Warehouse
             }));
         }
 
-        public void When(ProductStockUpdated e)
+        public void When(SkuStockUpdated e)
         {
             _store.UpdateOrThrow(unit.it, list => list.Products.Single(p => p.Id == e.Id).Stock += e.Quantity);
         }
 
-        public void When(ProductRenamed e)
+        public void When(SkuRenamed e)
         {
             _store.UpdateOrThrow(unit.it, list => list.Products.Single(p => p.Id == e.Id).Title = e.NewTitle);
         }
 
-        public void When(ProductItemNoChanged e)
+        public void When(SkuItemNoChanged e)
         {
             _store.UpdateOrThrow(unit.it, list => list.Products.Single(p => p.Id == e.Id).ItemNo = e.NewItemNo);
         }
 
-        public void When(ProductBarcodeChanged e)
+        public void When(SkuBarcodeChanged e)
         {
             _store.UpdateOrThrow(unit.it, list => list.Products.Single(p => p.Id == e.Id).Barcode = e.NewBarcode);
         }
 
-        public void When(ProductPriceChanged e)
+        public void When(SkuPriceChanged e)
         {
             _store.UpdateOrThrow(unit.it, list => list.Products.Single(p => p.Id == e.Id).Price = e.NewPrice);
         }
 
-        public void When(ProductUOMChanged e)
+        public void When(SkuUnitOfMeasureChanged e)
         {
-            _store.UpdateOrThrow(unit.it, list => list.Products.Single(p => p.Id == e.Id).UOM = e.NewUOM);
+            _store.UpdateOrThrow(unit.it, list => list.Products.Single(p => p.Id == e.Id).UnitOfMeasure = e.NewUnitOfMeasure);
         }
 
-        public void When(ProductVATChanged e)
+        public void When(SkuVatRateChanged e)
         {
-            _store.UpdateOrThrow(unit.it, list => list.Products.Single(p => p.Id == e.Id).VAT = e.NewVAT);
+            _store.UpdateOrThrow(unit.it, list => list.Products.Single(p => p.Id == e.Id).VatRate = e.NewVatRate);
         }
     }
 }

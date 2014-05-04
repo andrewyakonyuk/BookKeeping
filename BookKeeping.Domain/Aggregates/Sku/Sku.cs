@@ -1,18 +1,19 @@
 ﻿using BookKeeping.Core.Domain;
 using BookKeeping.Domain.Contracts;
+using BookKeeping.Domain.Services.WarehouseIndex;
 using System;
 using System.Collections.Generic;
 
-namespace BookKeeping.Domain.Aggregates.Product
+namespace BookKeeping.Domain.Aggregates.Sku
 {
-    public class Product
+    public class Sku
     {
         public readonly IList<IEvent> _changes = new List<IEvent>();
-        private readonly ProductState _state;
+        private readonly SkuState _state;
 
-        public Product(IEnumerable<IEvent> events)
+        public Sku(IEnumerable<IEvent> events)
         {
-            _state = new ProductState(events);
+            _state = new SkuState(events);
         }
 
         private void Apply(IEvent e)
@@ -21,7 +22,8 @@ namespace BookKeeping.Domain.Aggregates.Product
             _changes.Add(e);
         }
 
-        public void Create(ProductId id, string title, string itemNo, CurrencyAmount price, double stock, DateTime utc)
+        public void Create(SkuId id, WarehouseId warehouse, string title, string itemNo, CurrencyAmount price,
+            double stock, string unitOfMeasure, VatRate vatRate, IWarehouseIndexService warehouseService, DateTime utc)
         {
             if (id == null)
                 throw new ArgumentNullException("id");
@@ -30,20 +32,28 @@ namespace BookKeeping.Domain.Aggregates.Product
             if (price.Amount < 0)
                 throw new ArgumentException("Price should be prositive", "price");
 
-            Apply(new ProductCreated
+            if (warehouseService.IsSkuRegistered(id, warehouse))
+            {
+                throw new ArgumentException("Id should be unique in the warehouse", "id");
+            }
+
+            Apply(new SkuCreated
             {
                 Id = id,
                 Title = title,
                 ItemNo = itemNo,
                 Price = price,
                 Stock = stock,
+                UnitOfMeasure = unitOfMeasure,
+                Warehouse = warehouse,
+                VatRate = vatRate,
                 Created = utc
             });
         }
 
         public void UpdateStock(double quantity, string reason, DateTime utc)
         {
-            Apply(new ProductStockUpdated
+            Apply(new SkuStockUpdated
             {
                 Id = _state.Id,
                 Quantity = quantity,
@@ -54,7 +64,7 @@ namespace BookKeeping.Domain.Aggregates.Product
 
         public void Rename(string title, DateTime utc)
         {
-            Apply(new ProductRenamed
+            Apply(new SkuRenamed
             {
                 Id = _state.Id,
                 NewTitle = title,
@@ -64,7 +74,7 @@ namespace BookKeeping.Domain.Aggregates.Product
 
         public void ChangeBarcode(string barcode, DateTime utc)
         {
-            Apply(new ProductBarcodeChanged
+            Apply(new SkuBarcodeChanged
             {
                 Id = _state.Id,
                 NewBarcode = barcode,
@@ -74,7 +84,7 @@ namespace BookKeeping.Domain.Aggregates.Product
 
         public void ChangeItemNo(string itemNo, DateTime utc)
         {
-            Apply(new ProductItemNoChanged
+            Apply(new SkuItemNoChanged
             {
                 Id = _state.Id,
                 NewItemNo = itemNo,
@@ -84,7 +94,7 @@ namespace BookKeeping.Domain.Aggregates.Product
 
         public void ChangePrice(CurrencyAmount price, DateTime utc)
         {
-            Apply(new ProductPriceChanged
+            Apply(new SkuPriceChanged
             {
                 Id = _state.Id,
                 NewPrice = price,
@@ -92,22 +102,22 @@ namespace BookKeeping.Domain.Aggregates.Product
             });
         }
 
-        public void ChangeUOM(string uom, DateTime utc)
+        public void ChangeUnitOfMeasure(string unitOfMeasure, DateTime utc)
         {
-            Apply(new ProductUOMChanged
+            Apply(new SkuUnitOfMeasureChanged
             {
                 Id = _state.Id,
-                NewUOM = uom,
+                NewUnitOfMeasure = unitOfMeasure,
                 Changed = utc
             });
         }
 
-        public void ChangeVAT(double vat, DateTime utc)
+        public void ChangeVatRate(VatRate vat, DateTime utc)
         {
-            Apply(new ProductVATChanged
+            Apply(new SkuVatRateChanged
             {
                 Id = _state.Id,
-                NewVAT = vat,
+                NewVatRate = vat,
                 Changed = utc
             });
         }

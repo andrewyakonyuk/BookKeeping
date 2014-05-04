@@ -1,6 +1,7 @@
 ﻿using BookKeeping.Core.Domain;
 using BookKeeping.Core.Storage;
 using BookKeeping.Domain.Contracts;
+using BookKeeping.Domain.Services;
 using System;
 
 namespace BookKeeping.Domain.Aggregates.Customer

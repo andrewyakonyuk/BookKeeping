@@ -60,8 +60,8 @@
                 <DataGridTextColumn Header="{x:Static p:Resources.Title}" Binding="{Binding Title}" Width="*" MaxWidth="200" MinWidth="100"/>
                 <DataGridTextColumn Header="{x:Static p:Resources.ItemNo}" Binding="{Binding ItemNo}" Width="*" MaxWidth="200" MinWidth="100"></DataGridTextColumn>
                 <DataGridTextColumn Header="{x:Static p:Resources.Price}" Binding="{Binding Price}" Width="*" MaxWidth="200" MinWidth="100"></DataGridTextColumn>
-                <DataGridTextColumn Header="{x:Static p:Resources.Stock}" Binding="{Binding Stock}" Width="*" MaxWidth="200" MinWidth="100" >
-                </DataGridTextColumn>
+                <DataGridTextColumn Header="{x:Static p:Resources.Stock}" Binding="{Binding Stock}" Width="*" MaxWidth="200" MinWidth="100" />
+                <DataGridTextColumn Header="{x:Static p:Resources.UnitOfMeasure}" Binding="{Binding UnitOfMeasure}" Width="*" MaxWidth="200" MinWidth="100" />
             </DataGrid.Columns>
             <DataGrid.RowDetailsTemplate>
                 <DataTemplate>
