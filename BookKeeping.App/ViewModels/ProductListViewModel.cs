@@ -30,18 +30,9 @@ namespace BookKeeping.App.ViewModels
 
             DisplayName = BookKeeping.App.Properties.Resources.Product_List;
 
-            var reader = Context.Current.ViewDocs.GetReader<unit, ProductListView>();
-
-            var productList = new ObservableCollection<ProductView>((reader.Get(unit.it).Convert(t => t.Products,
+            var productList = new ObservableCollection<ProductView>((Context.Current.Query<ProductListView>().Convert(t => t.Products,
                 () => new List<ProductView>())));
-            productList.CollectionChanged += productList_CollectionChanged;
             Source = productList;
-        }
-
-
-        void productList_CollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
-        {
-            var a = 5;
         }
 
         public string SearchText
@@ -79,6 +70,7 @@ namespace BookKeeping.App.ViewModels
             {
                 if (ShowProductDetail)
                 {
+                    //TODO: wtf?
                     var currentItem = CollectionView.CurrentItem;
                 }
                 ShowProductDetail = false;
