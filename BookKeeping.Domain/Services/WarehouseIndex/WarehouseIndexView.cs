@@ -13,6 +13,7 @@ namespace BookKeeping.Domain.Services.WarehouseIndex
         [DataMember(Order = 1)]
         public WarehouseId Id { get; set; }
 
+        [DataMember(Order = 2)]
         public List<SkuIndexView> Skus { get; private set; }
 
         public WarehouseIndexView()
