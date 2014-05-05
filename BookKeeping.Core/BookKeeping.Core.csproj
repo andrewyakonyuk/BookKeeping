@@ -68,6 +68,7 @@
     <Compile Include="Domain\ICriterion.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="ICachingService.cs" />
     <Compile Include="IDependencyResolver.cs" />
     <Compile Include="Domain\IIdentity.cs" />
     <Compile Include="Domain\ICommand.cs" />

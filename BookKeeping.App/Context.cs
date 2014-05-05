@@ -17,6 +17,7 @@ namespace BookKeeping.App
         readonly IEventStore _eventStore;
         readonly ICommandBus _commandBus;
         readonly IDocumentStore _projections;
+        readonly ICacheService _cacheService;
         static Context _this;
         static object _lock = new object();
 
@@ -32,6 +33,8 @@ namespace BookKeeping.App
 
             var eventBus = new EventBus(new EventHandlerFactoryImpl(_projections));
             _commandBus = new CommandBus(new CommandHandlerFactoryImpl(_projections, _eventStore, eventBus));
+
+            _cacheService = CacheService.Current;
         }
 
         static Type[] LoadMessageContracts()
@@ -59,6 +62,8 @@ namespace BookKeeping.App
             }
         }
 
+        public ICacheService Cache { get { return _cacheService; } }
+
         public void Send<TCommand>(TCommand command)
             where TCommand : ICommand
         {
@@ -72,7 +77,7 @@ namespace BookKeeping.App
 
         public Maybe<TView> Query<TView>()
         {
-            return _projections.GetReader<unit, TView>().Get(unit.it);
+            return Query<unit, TView>(unit.it);
         }
     }
 }
