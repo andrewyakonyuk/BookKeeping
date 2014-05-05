@@ -1,15 +1,9 @@
 ﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
-
     <ResourceDictionary.MergedDictionaries>
         <ResourceDictionary Source="pack://application:,,,/MahApps.Metro;component/Styles/VS/Colors.xaml" />
-
         <ResourceDictionary>
-
-           
-
         </ResourceDictionary>
-
     </ResourceDictionary.MergedDictionaries>
 
     <Style x:Key="StandardTabControl"
@@ -144,6 +138,7 @@
                         <Grid.RowDefinitions>
                             <RowDefinition Height="Auto" />
                             <RowDefinition Height="*" />
+                            <RowDefinition Height="Auto"></RowDefinition>
                         </Grid.RowDefinitions>
                         <Border Background="Transparent"
                                 BorderBrush="{DynamicResource BackgroundSelected}"
@@ -159,6 +154,8 @@
                         <ContentPresenter Name="PART_SelectedContentHost"
                                           Grid.Row="1"
                                           ContentSource="SelectedContent" />
+                        <Border Grid.Row="2"
+                                BorderBrush="{DynamicResource BackgroundSelected}" BorderThickness="0,0,0,3"/>
                     </Grid>
                 </ControlTemplate>
             </Setter.Value>

@@ -70,6 +70,7 @@ namespace BookKeeping.App.ViewModels
             //    return collectionView.CurrentItem is ProductListViewModel;
             //});
 
+            CollectionViewSource.GetDefaultView(Workspaces).MoveCurrentToFirst();
             Exit = ApplicationCommands.Close;
         }
 

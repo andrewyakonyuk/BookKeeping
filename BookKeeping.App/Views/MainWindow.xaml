@@ -72,8 +72,8 @@
         </TextBlock>
         <Grid>
             <Grid.ColumnDefinitions>
-                <ColumnDefinition />
-                <ColumnDefinition Width="300" />
+                <ColumnDefinition Width="2*"/>
+                <ColumnDefinition Width="0.5*" MinWidth="250"/>
             </Grid.ColumnDefinitions>
             <TabControl Margin="0,10,0,0" ItemsSource="{Binding Path=Workspaces, Mode=OneTime}"
                 IsSynchronizedWithCurrentItem="True" DisplayMemberPath="DisplayName" ClipToBounds="True"
