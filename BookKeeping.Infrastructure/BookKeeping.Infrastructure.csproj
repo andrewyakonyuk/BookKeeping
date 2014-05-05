@@ -48,6 +48,7 @@
     <Compile Include="AtomicStorage\FileDocumentReaderWriter.cs" />
     <Compile Include="AtomicStorage\FileDocumentStore.cs" />
     <Compile Include="CommandBus.cs" />
+    <Compile Include="ContractsEvil.cs" />
     <Compile Include="EventBus.cs" />
     <Compile Include="ICommandHandlerFactory.cs" />
     <Compile Include="IEventHandlerFactory.cs" />
@@ -56,8 +57,13 @@
     <Compile Include="Storage\DefaultMessageStrategy.cs" />
     <Compile Include="Storage\EventStore.cs" />
     <Compile Include="Storage\FileAppendOnlyStore.cs" />
+    <Compile Include="Storage\MessageStrategyBase.cs" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\BookKeeping.Contracts\BookKeeping.Domain.Contracts.csproj">
+      <Project>{de4dd63b-fab7-47a8-b031-88f3dc510a6a}</Project>
+      <Name>BookKeeping.Domain.Contracts</Name>
+    </ProjectReference>
     <ProjectReference Include="..\BookKeeping.Core\BookKeeping.Core.csproj">
       <Project>{25165f2f-30cf-48e7-a26d-0bae31581547}</Project>
       <Name>BookKeeping.Core</Name>

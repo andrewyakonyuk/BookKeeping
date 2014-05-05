@@ -27,7 +27,11 @@ namespace BookKeeping.Infrastructure.Storage
             var name = IdentityToKey(id);
             using (var memory = new MemoryStream())
             {
-                _messageStrategy.Serialize(events.ToArray(), memory);
+                _messageStrategy.WriteCompactInt(events.Count, memory);
+                foreach (var @event in events.ToArray())
+                {
+                    _messageStrategy.WriteMessage(@event, @event.GetType(), memory);
+                }
                 var data = memory.ToArray();
                 try
                 {
@@ -54,8 +58,13 @@ namespace BookKeeping.Infrastructure.Storage
             {
                 using (var memory = new MemoryStream(tapeRecord.Data))
                 {
-                    var events = _messageStrategy.Deserialize<IEvent[]>(memory);
-                    stream.Events.AddRange(events);
+                    var eventCount = _messageStrategy.ReadCompactInt(memory);
+                    var objects = new object[eventCount];
+                    for (int i = 0; i < eventCount; i++)
+                    {
+                        objects[i] = _messageStrategy.ReadMessage(memory);
+                    }
+                    stream.Events.AddRange(objects.Cast<IEvent>());
                     stream.Version = tapeRecord.Version;
                 }
             }

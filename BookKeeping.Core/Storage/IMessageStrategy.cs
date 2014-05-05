@@ -1,11 +1,16 @@
-﻿using System.IO;
+﻿using System;
+using System.IO;
 
 namespace BookKeeping.Core.Storage
 {
     public interface IMessageStrategy
     {
-        void Serialize<TEntity>(TEntity entity, Stream stream);
+        void WriteMessage(object entity, Type type, Stream stream);
 
-        TEntity Deserialize<TEntity>(Stream stream);
+        object ReadMessage(Stream stream);
+
+        int ReadCompactInt(Stream stream);
+
+        void WriteCompactInt(int value, Stream stream);
     }
 }
