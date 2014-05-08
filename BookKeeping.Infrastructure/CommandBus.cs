@@ -9,6 +9,7 @@ namespace BookKeeping.Infrastructure
     {
         private readonly ICommandHandlerFactory _commandHandlerFactory;
         private readonly Queue<Action> _queue = new Queue<Action>();
+        private bool _isCommited = false;
 
         public CommandBus(ICommandHandlerFactory commandHandlerFactory)
         {
@@ -21,6 +22,7 @@ namespace BookKeeping.Infrastructure
             if (handler != null)
             {
                 _queue.Enqueue(() => handler.When(command));
+                _isCommited = false;
             }
             else
             {
@@ -34,11 +36,20 @@ namespace BookKeeping.Infrastructure
             {
                 _queue.Dequeue()();
             }
+            _isCommited = true;
         }
 
         public void Rollback()
         {
             _queue.Clear();
+            _isCommited = false;
+        }
+
+        public void Dispose()
+        {
+            if (!_isCommited)
+                Rollback();
+            GC.SuppressFinalize(this);
         }
     }
 }

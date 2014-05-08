@@ -10,19 +10,21 @@ using System;
 using BookKeeping.Domain.Contracts;
 using System.Linq;
 using System.Diagnostics;
+using System.Threading.Tasks;
 
 namespace BookKeeping.App
 {
-    public sealed class Context : IDisposable
+    public sealed class Context
     {
         readonly IEventStore _eventStore;
         readonly ICommandBus _commandBus;
+        readonly IEventBus _eventBus;
         readonly IDocumentStore _projections;
         readonly ICacheService _cacheService;
         static Context _this;
         static object _lock = new object();
         readonly Stopwatch _stopwatch = new Stopwatch();
-        bool _isCommited = false;
+        ContextUnitOfWork _unitOfWork;
 
         public Context()
         {
@@ -34,8 +36,8 @@ namespace BookKeeping.App
             _eventStore = new EventStore(appendOnlyStore, new DefaultMessageStrategy(LoadMessageContracts()));
             _projections = new FileDocumentStore(pathToStore, new DefaultDocumentStrategy());
 
-            var eventBus = new EventBus(new EventHandlerFactoryImpl(_projections));
-            _commandBus = new CommandBus(new CommandHandlerFactoryImpl(_projections, _eventStore, eventBus));
+            _eventBus = new EventBus(new EventHandlerFactoryImpl(_projections));
+            _commandBus = new CommandBus(new CommandHandlerFactoryImpl(_projections, _eventStore, _eventBus));
 
             _cacheService = CacheService.Current;
         }
@@ -71,26 +73,8 @@ namespace BookKeeping.App
             where TCommand : ICommand
         {
             Profile(() => _commandBus.Send(command), command.ToString());
-            _isCommited = false;
-        }
-
-        public void Commit()
-        {
-            try
-            {
-                Profile(() => _commandBus.Commit(), "bus");
-                _isCommited = true;
-            }
-            catch (Exception)
-            {
-                Rollback();
-                throw;
-            }
-        }
-
-        public void Rollback()
-        {
-            _commandBus.Rollback();
+            if (_unitOfWork != null)
+                _unitOfWork.Reset();
         }
 
         public Maybe<TView> Query<TKey, TView>(TKey id)
@@ -122,10 +106,55 @@ namespace BookKeeping.App
             Trace.TraceInformation("End. Ellapsed: {0}", _stopwatch.Elapsed);
         }
 
-        public void Dispose()
+        public IUnitOfWork Capture()
         {
-            if (!_isCommited)
-                Rollback();
+            if (_unitOfWork != null)
+            {
+                _unitOfWork.Dispose();
+            }
+            _unitOfWork = new ContextUnitOfWork(_commandBus);
+            return _unitOfWork;
+        }
+
+        private class ContextUnitOfWork : IUnitOfWork, IDisposable
+        {
+            bool _isCommited = false;
+            ICommandBus _commandBus;
+
+            public ContextUnitOfWork(ICommandBus commandBus)
+            {
+                _commandBus = commandBus;
+            }
+
+            public void Commit()
+            {
+                try
+                {
+                    _commandBus.Commit();
+                    _isCommited = true;
+                }
+                catch (Exception)
+                {
+                    Rollback();
+                    throw;
+                }
+            }
+
+            public void Reset()
+            {
+                _isCommited = false;
+            }
+
+            public void Rollback()
+            {
+                _commandBus.Rollback();
+            }
+
+            public void Dispose()
+            {
+                if (!_isCommited)
+                    Rollback();
+            }
         }
     }
 }

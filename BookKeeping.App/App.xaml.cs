@@ -18,8 +18,9 @@ namespace BookKeeping.App
 
             System.Threading.Thread.CurrentThread.CurrentUICulture = System.Globalization.CultureInfo.CurrentCulture; //new System.Globalization.CultureInfo("uk-Ua");
 
-            using (var context = Context.Current)
+            using (var uow = Context.Current.Capture())
             {
+                var context = Context.Current;
                 var random = new Random(Guid.NewGuid().ToByteArray()[0]);
 
                 for (int i = 0; i < 100; i++)
@@ -36,7 +37,7 @@ namespace BookKeeping.App
                         Warehouse = new WarehouseId(Guid.Parse("9B3D7441-0615-4F6A-8EE8-2EC5DEDE48A6"))
                     });
                 }
-                context.Commit();
+               //uow.Commit();
             }
 
             MainWindow window = new MainWindow();

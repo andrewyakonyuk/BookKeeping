@@ -5,7 +5,7 @@ using System.Text;
 
 namespace BookKeeping.Core.Domain
 {
-    public interface IUnitOfWork
+    public interface IUnitOfWork : IDisposable
     {
         void Commit();
         void Rollback();

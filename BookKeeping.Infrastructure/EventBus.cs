@@ -8,6 +8,7 @@ namespace BookKeeping.Infrastructure
     {
         private IEventHandlerFactory _eventHandlerFactory;
         Queue<Action> _queue = new Queue<Action>();
+        private bool _isCommited = false;
 
         public EventBus(IEventHandlerFactory eventHandlerFactory)
         {
@@ -25,6 +26,7 @@ namespace BookKeeping.Infrastructure
                     eventHandler.When(@event);
                 });
             }
+            _isCommited = false;
         }
 
         public void Commit()
@@ -33,11 +35,20 @@ namespace BookKeeping.Infrastructure
             {
                 _queue.Dequeue()();
             }
+            _isCommited = true;
         }
 
         public void Rollback()
         {
             _queue.Clear();
+            _isCommited = false;
+        }
+
+        public void Dispose()
+        {
+            if (!_isCommited)
+                Rollback();
+            GC.SuppressFinalize(this);
         }
     }
 }
