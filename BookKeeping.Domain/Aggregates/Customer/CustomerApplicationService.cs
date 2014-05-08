@@ -105,6 +105,7 @@ namespace BookKeeping.Domain.Aggregates.Customer
                 var realEvent = (dynamic)System.Convert.ChangeType(@event, @event.GetType());
                 _eventBus.Publish(realEvent);
             }
+            _eventBus.Commit();
         }
 
         // Sample of method that would apply simple conflict resolution.

@@ -41,6 +41,7 @@ namespace BookKeeping.Domain.Aggregates.Sku
                 var realEvent = (dynamic)System.Convert.ChangeType(@event, @event.GetType());
                 _eventBus.Publish(realEvent);
             }
+            _eventBus.Commit();
         }
 
         public void When(CreateSku c)

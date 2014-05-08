@@ -35,6 +35,7 @@ namespace BookKeeping.Domain.Aggregates.Warehouse
                 var realEvent = (dynamic)System.Convert.ChangeType(@event, @event.GetType());
                 _eventBus.Publish(realEvent);
             }
+            _eventBus.Commit();
         }
 
         public void When(CreateWarehouse c)

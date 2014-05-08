@@ -1,7 +1,8 @@
 ﻿namespace BookKeeping.Core.Domain
 {
-    public interface ICommandBus
+    public interface ICommandBus : IUnitOfWork
     {
-        void Send<T>(T command) where T : ICommand;
+        void Send<T>(T command) 
+            where T : ICommand;
     }
 }

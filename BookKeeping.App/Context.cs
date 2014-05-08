@@ -9,10 +9,11 @@ using System.IO;
 using System;
 using BookKeeping.Domain.Contracts;
 using System.Linq;
+using System.Diagnostics;
 
 namespace BookKeeping.App
 {
-    public sealed class Context
+    public sealed class Context : IDisposable
     {
         readonly IEventStore _eventStore;
         readonly ICommandBus _commandBus;
@@ -20,6 +21,8 @@ namespace BookKeeping.App
         readonly ICacheService _cacheService;
         static Context _this;
         static object _lock = new object();
+        readonly Stopwatch _stopwatch = new Stopwatch();
+        bool _isCommited = false;
 
         public Context()
         {
@@ -67,17 +70,62 @@ namespace BookKeeping.App
         public void Send<TCommand>(TCommand command)
             where TCommand : ICommand
         {
-            _commandBus.Send(command);
+            Profile(() => _commandBus.Send(command), command.ToString());
+            _isCommited = false;
+        }
+
+        public void Commit()
+        {
+            try
+            {
+                Profile(() => _commandBus.Commit(), "bus");
+                _isCommited = true;
+            }
+            catch (Exception)
+            {
+                Rollback();
+                throw;
+            }
+        }
+
+        public void Rollback()
+        {
+            _commandBus.Rollback();
         }
 
         public Maybe<TView> Query<TKey, TView>(TKey id)
         {
-            return _projections.GetReader<TKey, TView>().Get(id);
+            return Profile(() => _projections.GetReader<TKey, TView>().Get(id), typeof(TView).Name);
         }
 
         public Maybe<TView> Query<TView>()
         {
             return Query<unit, TView>(unit.it);
+        }
+
+        private TResult Profile<TResult>(Func<TResult> func, string name)
+        {
+            Trace.TraceInformation("Begin query {0}: ", name);
+            _stopwatch.Restart();
+            var result = func();
+            _stopwatch.Stop();
+            Trace.TraceInformation("End. Ellapsed: {0}", _stopwatch.Elapsed);
+            return result;
+        }
+
+        private void Profile(Action action, string name)
+        {
+            Trace.TraceInformation("Start command {0}: ", name);
+            _stopwatch.Restart();
+            action();
+            _stopwatch.Stop();
+            Trace.TraceInformation("End. Ellapsed: {0}", _stopwatch.Elapsed);
+        }
+
+        public void Dispose()
+        {
+            if (!_isCommited)
+                Rollback();
         }
     }
 }

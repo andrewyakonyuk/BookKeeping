@@ -1,6 +1,6 @@
 ﻿namespace BookKeeping.Core.Domain
 {
-    public interface IEventBus
+    public interface IEventBus : IUnitOfWork
     {
         void Publish<T>(T @event) 
             where T : IEvent;

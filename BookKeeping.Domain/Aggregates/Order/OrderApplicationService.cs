@@ -28,6 +28,7 @@ namespace BookKeeping.Domain.OrderAggregate
                 var realEvent = (dynamic)System.Convert.ChangeType(@event, @event.GetType());
                 _eventBus.Publish(realEvent);
             }
+            _eventBus.Commit();
         }
     }
 }
