@@ -1,20 +1,22 @@
 ﻿using BookKeeping.Core.Domain;
 using BookKeeping.Domain.Contracts;
-using BookKeeping.Domain.Services.WarehouseIndex;
+using BookKeeping.Domain.Contracts.Store;
+using BookKeeping.Domain.Contracts.Store.Events;
+using BookKeeping.Domain.Services.StoreIndex;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace BookKeeping.Domain.Aggregates.Warehouse
+namespace BookKeeping.Domain.Aggregates.Store
 {
-    public class Warehouse
+    public class Store
     {
         public readonly IList<IEvent> _changes = new List<IEvent>();
-        private readonly WarehouseState _state;
+        private readonly StoreState _state;
 
-        public Warehouse(IEnumerable<IEvent> events)
+        public Store(IEnumerable<IEvent> events)
         {
-            _state = new WarehouseState(events);
+            _state = new StoreState(events);
         }
 
         private void Apply(IEvent e)
@@ -25,20 +27,20 @@ namespace BookKeeping.Domain.Aggregates.Warehouse
 
         public IList<IEvent> Changes { get { return _changes; } }
 
-        public void Create(WarehouseId id, string name, DateTime utc)
+        public void Create(StoreId id, string name, DateTime utc)
         {
             if (id == null)
                 throw new ArgumentNullException("id");
             if (string.IsNullOrEmpty(name))
                 throw new ArgumentException("Name should be not null or empty", "name");
             if (_state.Id != null)
-                throw new InvalidOperationException("Warehouse already created");
+                throw new InvalidOperationException("Store already created");
 
-            Apply(new WarehouseCreated
+            Apply(new StoreCreated
             {
                 Id = id,
                 Name = name,
-                Created = utc
+                Utc = utc
             });
         }
 
@@ -47,30 +49,25 @@ namespace BookKeeping.Domain.Aggregates.Warehouse
             if (string.IsNullOrEmpty(name))
                 throw new ArgumentException("Name should be not null or empty", "name");
 
-            Apply(new WarehouseRenamed
+            Apply(new StoreRenamed
             {
                 Id = _state.Id,
                 NewName = name,
-                Renamed = utc
+                Utc = utc
             });
         }
 
-        public void Close(string reason, IWarehouseIndexService warehouseIndex, DateTime utc)
+        public void Close(string reason, IStoreIndexService warehouseIndex, DateTime utc)
         {
-            if (warehouseIndex.LoadWarehouseIndex(_state.Id).Skus.Any())
-                throw new InvalidOperationException("All related skus should be moved to another warehouse");
+            if (warehouseIndex.LoadStoreIndex(_state.Id).Products.Any())
+                throw new InvalidOperationException("All related products should be moved to another store");
 
-            Apply(new WarehouseClosed
+            Apply(new StoreClosed
             {
                 Id = _state.Id,
-                Closed = utc,
+                Utc = utc,
                 Reason = reason
             });
-        }
-
-        public void AddSku(ProductId sku, DateTime utc)
-        {
-
         }
     }
 }

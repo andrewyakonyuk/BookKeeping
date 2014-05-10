@@ -2,17 +2,16 @@
 using BookKeeping.Core.AtomicStorage;
 using BookKeeping.Core.Domain;
 using BookKeeping.Core.Storage;
+using BookKeeping.Domain.Contracts.Store.Commands;
 using BookKeeping.Infrastructure;
 using BookKeeping.Infrastructure.AtomicStorage;
 using BookKeeping.Infrastructure.Storage;
-using System.IO;
-using System;
-using BookKeeping.Domain.Contracts;
-using System.Linq;
-using System.Diagnostics;
-using System.Threading.Tasks;
-using System.Collections.Generic;
 using BookKeeping.Projections;
+using System;
+using System.Collections.Generic;
+using System.Diagnostics;
+using System.IO;
+using System.Linq;
 
 namespace BookKeeping.App
 {
@@ -46,7 +45,7 @@ namespace BookKeeping.App
 
         static Type[] LoadMessageContracts()
         {
-            var messages = new[] { typeof(CreateWarehouse) }
+            var messages = new[] { typeof(CreateStore) }
                 .SelectMany(t => t.Assembly.GetExportedTypes())
                 .Where(t => typeof(IEvent).IsAssignableFrom(t) || typeof(ICommand).IsAssignableFrom(t))
                 .Where(t => !t.IsAbstract)

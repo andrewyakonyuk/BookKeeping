@@ -68,9 +68,14 @@
     <Compile Include="OrderId.cs" />
     <Compile Include="OrderMessages.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Store\Commands\CloseStore.cs" />
+    <Compile Include="Store\Commands\CreateStore.cs" />
+    <Compile Include="Store\Commands\RenameStore.cs" />
+    <Compile Include="Store\Events\StoreClosed.cs" />
+    <Compile Include="Store\Events\StoreCreated.cs" />
+    <Compile Include="Store\Events\StoreRenamed.cs" />
     <Compile Include="VatRate.cs" />
-    <Compile Include="WarehouseId.cs" />
-    <Compile Include="WarehouseMessages.cs" />
+    <Compile Include="Store\StoreId.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\BookKeeping.Core\BookKeeping.Core.csproj">

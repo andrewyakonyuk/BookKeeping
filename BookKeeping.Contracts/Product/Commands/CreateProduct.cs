@@ -1,4 +1,5 @@
 ﻿using BookKeeping.Core.Domain;
+using BookKeeping.Domain.Contracts.Store;
 using System;
 using System.Runtime.Serialization;
 
@@ -11,7 +12,7 @@ namespace BookKeeping.Domain.Contracts.Product.Commands
         [DataMember(Order = 1)]
         public ProductId Id { get; set; }
         [DataMember(Order = 2)]
-        public WarehouseId Warehouse { get; set; }
+        public StoreId Store { get; set; }
         [DataMember(Order = 3)]
         public string Title { get; set; }
         [DataMember(Order = 4)]
@@ -28,7 +29,7 @@ namespace BookKeeping.Domain.Contracts.Product.Commands
         public override string ToString()
         {
             return string.Format("Create {0} named '{1}' in '{2}'  with item no. '{3}', price '{4}',"
-                + " stock '{5}', unit of measure '{6}', vat rate '{7}'", Id, Warehouse, Title, ItemNo, Price,
+                + " stock '{5}', unit of measure '{6}', vat rate '{7}'", Id, Store, Title, ItemNo, Price,
                 Stock, UnitOfMeasure, VatRate);
         }
     }

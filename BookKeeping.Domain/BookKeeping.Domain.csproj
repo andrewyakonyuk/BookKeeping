@@ -44,9 +44,9 @@
     <Compile Include="Aggregates\Customer\Customer.cs" />
     <Compile Include="Aggregates\Customer\CustomerApplicationService.cs" />
     <Compile Include="Aggregates\Customer\CustomerState.cs" />
-    <Compile Include="Aggregates\Warehouse\Warehouse.cs" />
-    <Compile Include="Aggregates\Warehouse\WarehouseApplicationService.cs" />
-    <Compile Include="Aggregates\Warehouse\WarehouseState.cs" />
+    <Compile Include="Aggregates\Store\Store.cs" />
+    <Compile Include="Aggregates\Store\StoreApplicationService.cs" />
+    <Compile Include="Aggregates\Store\StoreState.cs" />
     <Compile Include="DomainBoundedContext.cs" />
     <Compile Include="Services\Pricing\IPricingService.cs" />
     <Compile Include="Aggregates\Order\Order.cs" />
@@ -58,9 +58,9 @@
     <Compile Include="Aggregates\Product\ProductState.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Services\Pricing\PricingService.cs" />
-    <Compile Include="Services\WarehouseIndex\WarehouseIndexView.cs" />
-    <Compile Include="Services\WarehouseIndex\WarehouseIndexProjection.cs" />
-    <Compile Include="Services\WarehouseIndex\WarehouseIndexService.cs" />
+    <Compile Include="Services\StoreIndex\StoreIndexView.cs" />
+    <Compile Include="Services\StoreIndex\StoreIndexProjection.cs" />
+    <Compile Include="Services\StoreIndex\StoreIndexService.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\BookKeeping.Contracts\BookKeeping.Domain.Contracts.csproj">

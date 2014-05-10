@@ -4,7 +4,7 @@ using BookKeeping.Core.Storage;
 using BookKeeping.Domain.Contracts;
 using BookKeeping.Domain.Contracts.Product;
 using BookKeeping.Domain.Contracts.Product.Commands;
-using BookKeeping.Domain.Services.WarehouseIndex;
+using BookKeeping.Domain.Services.StoreIndex;
 using System;
 
 namespace BookKeeping.Domain.Aggregates.Product
@@ -21,9 +21,9 @@ namespace BookKeeping.Domain.Aggregates.Product
     {
         private readonly IEventBus _eventBus;
         private readonly IEventStore _eventStore;
-        private readonly IWarehouseIndexService _warehouseService;
+        private readonly IStoreIndexService _warehouseService;
 
-        public ProductApplicationService(IEventStore eventStore, IEventBus eventBus, IWarehouseIndexService warehouseService)
+        public ProductApplicationService(IEventStore eventStore, IEventBus eventBus, IStoreIndexService warehouseService)
         {
             _eventStore = eventStore;
             _eventBus = eventBus;
@@ -46,7 +46,7 @@ namespace BookKeeping.Domain.Aggregates.Product
 
         public void When(CreateProduct c)
         {
-            Update(c.Id, p => p.Create(c.Id, c.Warehouse, c.Title, c.ItemNo, c.Price, c.Stock, c.UnitOfMeasure, c.VatRate, _warehouseService, Current.UtcNow));
+            Update(c.Id, p => p.Create(c.Id, c.Store, c.Title, c.ItemNo, c.Price, c.Stock, c.UnitOfMeasure, c.VatRate, _warehouseService, Current.UtcNow));
         }
 
         public void When(UpdateProductStock c)

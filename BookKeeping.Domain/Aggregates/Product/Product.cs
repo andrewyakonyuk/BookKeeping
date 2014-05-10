@@ -2,7 +2,8 @@
 using BookKeeping.Domain.Contracts;
 using BookKeeping.Domain.Contracts.Product;
 using BookKeeping.Domain.Contracts.Product.Events;
-using BookKeeping.Domain.Services.WarehouseIndex;
+using BookKeeping.Domain.Contracts.Store;
+using BookKeeping.Domain.Services.StoreIndex;
 using System;
 using System.Collections.Generic;
 
@@ -24,8 +25,8 @@ namespace BookKeeping.Domain.Aggregates.Product
             _changes.Add(e);
         }
 
-        public void Create(ProductId id, WarehouseId warehouse, string title, string itemNo, CurrencyAmount price,
-            double stock, string unitOfMeasure, VatRate vatRate, IWarehouseIndexService warehouseService, DateTime utc)
+        public void Create(ProductId id, StoreId warehouse, string title, string itemNo, CurrencyAmount price,
+            double stock, string unitOfMeasure, VatRate vatRate, IStoreIndexService warehouseService, DateTime utc)
         {
             if (id == null)
                 throw new ArgumentNullException("id");
@@ -34,7 +35,7 @@ namespace BookKeeping.Domain.Aggregates.Product
             if (price.Amount < 0)
                 throw new ArgumentException("Price should be prositive", "price");
 
-            if (warehouseService.IsSkuRegistered(id, warehouse))
+            if (warehouseService.IsProductRegistered(id, warehouse))
             {
                 throw new ArgumentException("Id should be unique in the warehouse", "id");
             }
@@ -47,7 +48,7 @@ namespace BookKeeping.Domain.Aggregates.Product
                 Price = price,
                 Stock = stock,
                 UnitOfMeasure = unitOfMeasure,
-                Warehouse = warehouse,
+                Store = warehouse,
                 VatRate = vatRate,
                 Utc = utc
             });

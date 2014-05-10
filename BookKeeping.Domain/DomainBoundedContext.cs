@@ -3,9 +3,9 @@ using BookKeeping.Core.Domain;
 using BookKeeping.Core.Storage;
 using BookKeeping.Domain.Aggregates.Customer;
 using BookKeeping.Domain.Aggregates.Product;
-using BookKeeping.Domain.Aggregates.Warehouse;
+using BookKeeping.Domain.Aggregates.Store;
 using BookKeeping.Domain.Services;
-using BookKeeping.Domain.Services.WarehouseIndex;
+using BookKeeping.Domain.Services.StoreIndex;
 using System.Collections.Generic;
 
 namespace BookKeeping
@@ -14,17 +14,17 @@ namespace BookKeeping
     {
         public static IEnumerable<object> Projections(IDocumentStore docs)
         {
-            yield return new WarehouseIndexProjection(docs.GetWriter<string, WarehouseIndexView>());
+            yield return new StoreIndexProjection(docs.GetWriter<string, StoreIndexView>());
             yield break;
         }
 
         public static IEnumerable<object> EntityApplicationServices(IDocumentStore docs, IEventStore store, IEventBus eventBus)
         {
-            var warehouseService = new WarehouseIndexService(docs.GetReader<string, WarehouseIndexView>());
+            var warehouseService = new StoreIndexService(docs.GetReader<string, StoreIndexView>());
 
             yield return new CustomerApplicationService(store, eventBus, new PricingService());
             yield return new ProductApplicationService(store, eventBus, warehouseService);
-            yield return new WarehouseApplicationService(store, eventBus, warehouseService);
+            yield return new StoreApplicationService(store, eventBus, warehouseService);
         }
     }
 }

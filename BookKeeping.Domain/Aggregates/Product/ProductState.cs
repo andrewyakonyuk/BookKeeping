@@ -2,6 +2,7 @@
 using BookKeeping.Domain.Contracts;
 using BookKeeping.Domain.Contracts.Product;
 using BookKeeping.Domain.Contracts.Product.Events;
+using BookKeeping.Domain.Contracts.Store;
 using System.Collections.Generic;
 
 namespace BookKeeping.Domain.Aggregates.Product
@@ -11,7 +12,7 @@ namespace BookKeeping.Domain.Aggregates.Product
         public ProductId Id { get; private set; }
 
         //TODO:
-        public WarehouseId Warehouse { get; private set; }
+        public StoreId Warehouse { get; private set; }
 
         public string Title { get; private set; }
 
@@ -43,7 +44,7 @@ namespace BookKeeping.Domain.Aggregates.Product
         public void When(ProductCreated e)
         {
             Id = e.Id;
-            Warehouse = e.Warehouse;
+            Warehouse = e.Store;
             Title = e.Title;
             ItemNo = e.ItemNo;
             Price = e.Price;

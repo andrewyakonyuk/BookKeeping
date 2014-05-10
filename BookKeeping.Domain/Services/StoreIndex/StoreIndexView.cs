@@ -1,27 +1,28 @@
 ﻿using BookKeeping.Domain.Contracts;
 using BookKeeping.Domain.Contracts.Product;
+using BookKeeping.Domain.Contracts.Store;
 using System.Collections.Generic;
 using System.Runtime.Serialization;
 
-namespace BookKeeping.Domain.Services.WarehouseIndex
+namespace BookKeeping.Domain.Services.StoreIndex
 {
     [DataContract]
-    public sealed class WarehouseIndexView
+    public sealed class StoreIndexView
     {
         [DataMember(Order = 1)]
-        public WarehouseId Id { get; set; }
+        public StoreId Id { get; set; }
 
         [DataMember(Order = 2)]
-        public List<SkuIndexView> Skus { get; private set; }
+        public List<ProductIndexView> Products { get; private set; }
 
-        public WarehouseIndexView()
+        public StoreIndexView()
         {
-            Skus = new List<SkuIndexView>();
+            Products = new List<ProductIndexView>();
         }
     }
 
     [DataContract]
-    public sealed class SkuIndexView
+    public sealed class ProductIndexView
     {
         [DataMember(Order = 1)]
         public ProductId Id { get; set; }

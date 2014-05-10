@@ -1,4 +1,6 @@
 ﻿using BookKeeping.Domain.Contracts;
+using BookKeeping.Domain.Contracts.Product;
+using BookKeeping.Domain.Contracts.Store;
 using System;
 using System.Collections.Generic;
 using System.Runtime.Serialization;
@@ -13,7 +15,7 @@ namespace BookKeeping.Projections.ProductsList
         public ProductId Id { get; set; }
 
         [DataMember(Order = 2)]
-        public WarehouseId Warehouse { get; set; }
+        public StoreId Warehouse { get; set; }
 
         [DataMember(Order = 3)]
         public string Title { get; set; }

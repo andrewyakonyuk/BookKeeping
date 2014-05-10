@@ -2,20 +2,20 @@
 using System;
 using System.Runtime.Serialization;
 
-namespace BookKeeping.Domain.Contracts
+namespace BookKeeping.Domain.Contracts.Store
 {
     [DataContract(Namespace = "BookKeeping")]
     [Serializable]
-    public sealed class WarehouseId : IdentityBase<Guid>, IIdentity
+    public sealed class StoreId : IdentityBase<Guid>, IIdentity
     {
         [Obsolete("Only for serializer")]
-        protected WarehouseId()
+        protected StoreId()
             : base(Guid.Empty)
         {
 
         }
 
-        public WarehouseId(Guid id)
+        public StoreId(Guid id)
             : base(id)
         {
 
@@ -23,7 +23,7 @@ namespace BookKeeping.Domain.Contracts
 
         public override string GetTag()
         {
-            return "warehouse";
+            return "store";
         }
 
         public override string ToString()

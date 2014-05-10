@@ -2,6 +2,7 @@
 using BookKeeping.Core.AtomicStorage;
 using BookKeeping.Core.Domain;
 using BookKeeping.Domain.Contracts;
+using BookKeeping.Domain.Contracts.Product.Events;
 using System.Linq;
 
 namespace BookKeeping.Projections.ProductsList
@@ -35,7 +36,7 @@ namespace BookKeeping.Projections.ProductsList
                 Stock = e.Stock,
                 UnitOfMeasure = e.UnitOfMeasure,
                 VatRate = e.VatRate,
-                Warehouse = e.Warehouse
+                Warehouse = e.Store
             }));
         }
 
