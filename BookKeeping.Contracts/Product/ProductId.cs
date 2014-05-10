@@ -2,20 +2,20 @@
 using System;
 using System.Runtime.Serialization;
 
-namespace BookKeeping.Domain.Contracts
+namespace BookKeeping.Domain.Contracts.Product
 {
     [Serializable]
     [DataContract(Namespace = "BookKeeping")]
-    public sealed class SkuId : IdentityBase<string>, IIdentity
+    public sealed class ProductId : IdentityBase<string>, IIdentity
     {
         [Obsolete("Only for serializer")]
-        protected SkuId()
+        protected ProductId()
             : base(string.Empty)
         {
 
         }
 
-        public SkuId(string sku)
+        public ProductId(string sku)
             : base(sku)
         {
 
@@ -23,7 +23,7 @@ namespace BookKeeping.Domain.Contracts
 
         public override string GetTag()
         {
-            return "sku";
+            return "product";
         }
 
         [DataMember(Order = 1)]

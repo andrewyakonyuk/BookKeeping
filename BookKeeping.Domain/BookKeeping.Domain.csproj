@@ -53,9 +53,9 @@
     <Compile Include="Aggregates\Order\OrderApplicationService.cs" />
     <Compile Include="Aggregates\Order\OrderLine.cs" />
     <Compile Include="Aggregates\Order\OrderState.cs" />
-    <Compile Include="Aggregates\Sku\Sku.cs" />
-    <Compile Include="Aggregates\Sku\SkuApplicationService.cs" />
-    <Compile Include="Aggregates\Sku\SkuState.cs" />
+    <Compile Include="Aggregates\Sku\Product.cs" />
+    <Compile Include="Aggregates\Sku\ProductApplicationService.cs" />
+    <Compile Include="Aggregates\Sku\ProductState.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Services\Pricing\PricingService.cs" />
     <Compile Include="Services\WarehouseIndex\WarehouseIndexView.cs" />

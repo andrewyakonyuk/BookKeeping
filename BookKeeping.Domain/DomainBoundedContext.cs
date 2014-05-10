@@ -2,7 +2,7 @@
 using BookKeeping.Core.Domain;
 using BookKeeping.Core.Storage;
 using BookKeeping.Domain.Aggregates.Customer;
-using BookKeeping.Domain.Aggregates.Sku;
+using BookKeeping.Domain.Aggregates.Product;
 using BookKeeping.Domain.Aggregates.Warehouse;
 using BookKeeping.Domain.Services;
 using BookKeeping.Domain.Services.WarehouseIndex;
@@ -23,7 +23,7 @@ namespace BookKeeping
             var warehouseService = new WarehouseIndexService(docs.GetReader<string, WarehouseIndexView>());
 
             yield return new CustomerApplicationService(store, eventBus, new PricingService());
-            yield return new SkuApplicationService(store, eventBus, warehouseService);
+            yield return new ProductApplicationService(store, eventBus, warehouseService);
             yield return new WarehouseApplicationService(store, eventBus, warehouseService);
         }
     }

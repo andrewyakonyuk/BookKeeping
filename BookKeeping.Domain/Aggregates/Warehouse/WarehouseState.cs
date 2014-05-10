@@ -25,7 +25,7 @@ namespace BookKeeping.Domain.Aggregates.Warehouse
 
         public bool IsClosed { get; private set; }
 
-        public List<SkuId> Skus { get; private set; }
+        public List<ProductId> Skus { get; private set; }
 
         public void When(WarehouseCreated e)
         {

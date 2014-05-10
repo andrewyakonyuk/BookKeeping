@@ -12,7 +12,7 @@ namespace BookKeeping.Domain.Services.WarehouseIndex
 {
     public sealed class WarehouseIndexProjection :
         IEventHandler<WarehouseCreated>,
-        IEventHandler<SkuCreated>,
+        IEventHandler<ProductCreated>,
         IEventHandler<WarehouseClosed>
     {
         readonly IDocumentWriter<string, WarehouseIndexView> _writer;
@@ -27,7 +27,7 @@ namespace BookKeeping.Domain.Services.WarehouseIndex
             _writer.Add(e.Id.ToString(), new WarehouseIndexView());
         }
 
-        public void When(SkuCreated e)
+        public void When(ProductCreated e)
         {
             _writer.UpdateEnforcingNew(e.Warehouse.ToString(), v =>
             {

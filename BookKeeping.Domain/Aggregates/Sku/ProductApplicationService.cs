@@ -2,37 +2,38 @@
 using BookKeeping.Core.Domain;
 using BookKeeping.Core.Storage;
 using BookKeeping.Domain.Contracts;
+using BookKeeping.Domain.Contracts.Product;
+using BookKeeping.Domain.Contracts.Product.Commands;
 using BookKeeping.Domain.Services.WarehouseIndex;
 using System;
 
-namespace BookKeeping.Domain.Aggregates.Sku
+namespace BookKeeping.Domain.Aggregates.Product
 {
-    public class SkuApplicationService : 
-        ICommandHandler<CreateSku>,
-        ICommandHandler<UpdateSkuStock>,
-        ICommandHandler<RenameSku>,
-        ICommandHandler<ChangeSkuBarcode>,
-        ICommandHandler<ChangeSkuItemNo>,
-        ICommandHandler<ChangeSkuPrice>,
-        ICommandHandler<ChangeSkuUnitOfMeasure>,
-        ICommandHandler<ChangeSkuVatRate>,
-        ICommandHandler<MoveSkuToWarehouse>
+    public class ProductApplicationService : 
+        ICommandHandler<CreateProduct>,
+        ICommandHandler<UpdateProductStock>,
+        ICommandHandler<RenameProduct>,
+        ICommandHandler<ChangeProductBarcode>,
+        ICommandHandler<ChangeProductItemNo>,
+        ICommandHandler<ChangeProductPrice>,
+        ICommandHandler<ChangeProductUnitOfMeasure>,
+        ICommandHandler<ChangeProductVatRate>
     {
         private readonly IEventBus _eventBus;
         private readonly IEventStore _eventStore;
         private readonly IWarehouseIndexService _warehouseService;
 
-        public SkuApplicationService(IEventStore eventStore, IEventBus eventBus, IWarehouseIndexService warehouseService)
+        public ProductApplicationService(IEventStore eventStore, IEventBus eventBus, IWarehouseIndexService warehouseService)
         {
             _eventStore = eventStore;
             _eventBus = eventBus;
             _warehouseService = warehouseService;
         }
 
-        private void Update(SkuId id, Action<Sku> execute)
+        private void Update(ProductId id, Action<Product> execute)
         {
             var stream = _eventStore.LoadEventStream(id);
-            var customer = new Sku(stream.Events);
+            var customer = new Product(stream.Events);
             execute(customer);
             _eventStore.AppendToStream(id, stream.Version, customer.Changes);
 
@@ -43,49 +44,44 @@ namespace BookKeeping.Domain.Aggregates.Sku
             }
         }
 
-        public void When(CreateSku c)
+        public void When(CreateProduct c)
         {
             Update(c.Id, p => p.Create(c.Id, c.Warehouse, c.Title, c.ItemNo, c.Price, c.Stock, c.UnitOfMeasure, c.VatRate, _warehouseService, Current.UtcNow));
         }
 
-        public void When(UpdateSkuStock c)
+        public void When(UpdateProductStock c)
         {
             Update(c.Id, p => p.UpdateStock(c.Quantity, c.Reason, Current.UtcNow));
         }
 
-        public void When(RenameSku c)
+        public void When(RenameProduct c)
         {
             Update(c.Id, p => p.Rename(c.NewTitle, Current.UtcNow));
         }
 
-        public void When(ChangeSkuBarcode c)
+        public void When(ChangeProductBarcode c)
         {
             Update(c.Id, p => p.ChangeBarcode(c.NewBarcode, Current.UtcNow));
         }
 
-        public void When(ChangeSkuItemNo c)
+        public void When(ChangeProductItemNo c)
         {
             Update(c.Id, p => p.ChangeItemNo(c.NewItemNo, Current.UtcNow));
         }
 
-        public void When(ChangeSkuPrice c)
+        public void When(ChangeProductPrice c)
         {
             Update(c.Id, p => p.ChangePrice(c.NewPrice, Current.UtcNow));
         }
 
-        public void When(ChangeSkuUnitOfMeasure c)
+        public void When(ChangeProductUnitOfMeasure c)
         {
             Update(c.Id, p => p.ChangeUnitOfMeasure(c.NewUnitOfMeasure, Current.UtcNow));
         }
 
-        public void When(ChangeSkuVatRate c)
+        public void When(ChangeProductVatRate c)
         {
             Update(c.Id, p => p.ChangeVatRate(c.NewVatRate, Current.UtcNow));
-        }
-
-        public void When(MoveSkuToWarehouse c)
-        {
-            Update(c.Id, p => p.MoveToWarehouse(c.DestinationWarehouse, c.Reason, Current.UtcNow));
         }
     }
 }

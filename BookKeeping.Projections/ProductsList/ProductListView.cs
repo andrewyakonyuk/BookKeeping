@@ -10,7 +10,7 @@ namespace BookKeeping.Projections.ProductsList
     public class ProductView
     {
         [DataMember(Order = 1)]
-        public SkuId Id { get; set; }
+        public ProductId Id { get; set; }
 
         [DataMember(Order = 2)]
         public WarehouseId Warehouse { get; set; }

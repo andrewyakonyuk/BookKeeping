@@ -1,19 +1,21 @@
 ﻿using BookKeeping.Core.Domain;
 using BookKeeping.Domain.Contracts;
+using BookKeeping.Domain.Contracts.Product;
+using BookKeeping.Domain.Contracts.Product.Events;
 using BookKeeping.Domain.Services.WarehouseIndex;
 using System;
 using System.Collections.Generic;
 
-namespace BookKeeping.Domain.Aggregates.Sku
+namespace BookKeeping.Domain.Aggregates.Product
 {
-    public class Sku
+    public class Product
     {
         public readonly IList<IEvent> _changes = new List<IEvent>();
-        private readonly SkuState _state;
+        private readonly ProductState _state;
 
-        public Sku(IEnumerable<IEvent> events)
+        public Product(IEnumerable<IEvent> events)
         {
-            _state = new SkuState(events);
+            _state = new ProductState(events);
         }
 
         private void Apply(IEvent e)
@@ -22,7 +24,7 @@ namespace BookKeeping.Domain.Aggregates.Sku
             _changes.Add(e);
         }
 
-        public void Create(SkuId id, WarehouseId warehouse, string title, string itemNo, CurrencyAmount price,
+        public void Create(ProductId id, WarehouseId warehouse, string title, string itemNo, CurrencyAmount price,
             double stock, string unitOfMeasure, VatRate vatRate, IWarehouseIndexService warehouseService, DateTime utc)
         {
             if (id == null)
@@ -37,7 +39,7 @@ namespace BookKeeping.Domain.Aggregates.Sku
                 throw new ArgumentException("Id should be unique in the warehouse", "id");
             }
 
-            Apply(new SkuCreated
+            Apply(new ProductCreated
             {
                 Id = id,
                 Title = title,
@@ -53,7 +55,7 @@ namespace BookKeeping.Domain.Aggregates.Sku
 
         public void UpdateStock(double quantity, string reason, DateTime utc)
         {
-            Apply(new SkuStockUpdated
+            Apply(new ProductStockUpdated
             {
                 Id = _state.Id,
                 Quantity = quantity,
@@ -64,7 +66,7 @@ namespace BookKeeping.Domain.Aggregates.Sku
 
         public void Rename(string title, DateTime utc)
         {
-            Apply(new SkuRenamed
+            Apply(new ProductRenamed
             {
                 Id = _state.Id,
                 NewTitle = title,
@@ -74,7 +76,7 @@ namespace BookKeeping.Domain.Aggregates.Sku
 
         public void ChangeBarcode(string barcode, DateTime utc)
         {
-            Apply(new SkuBarcodeChanged
+            Apply(new ProductBarcodeChanged
             {
                 Id = _state.Id,
                 NewBarcode = barcode,
@@ -84,7 +86,7 @@ namespace BookKeeping.Domain.Aggregates.Sku
 
         public void ChangeItemNo(string itemNo, DateTime utc)
         {
-            Apply(new SkuItemNoChanged
+            Apply(new ProductItemNoChanged
             {
                 Id = _state.Id,
                 NewItemNo = itemNo,
@@ -94,7 +96,7 @@ namespace BookKeeping.Domain.Aggregates.Sku
 
         public void ChangePrice(CurrencyAmount price, DateTime utc)
         {
-            Apply(new SkuPriceChanged
+            Apply(new ProductPriceChanged
             {
                 Id = _state.Id,
                 NewPrice = price,
@@ -104,7 +106,7 @@ namespace BookKeeping.Domain.Aggregates.Sku
 
         public void ChangeUnitOfMeasure(string unitOfMeasure, DateTime utc)
         {
-            Apply(new SkuUnitOfMeasureChanged
+            Apply(new ProductUnitOfMeasureChanged
             {
                 Id = _state.Id,
                 NewUnitOfMeasure = unitOfMeasure,
@@ -114,21 +116,10 @@ namespace BookKeeping.Domain.Aggregates.Sku
 
         public void ChangeVatRate(VatRate vat, DateTime utc)
         {
-            Apply(new SkuVatRateChanged
+            Apply(new ProductVatRateChanged
             {
                 Id = _state.Id,
                 NewVatRate = vat,
-                Utc = utc
-            });
-        }
-
-        public void MoveToWarehouse(WarehouseId warehouse, string reason, DateTime utc)
-        {
-            Apply(new SkuMovedToWarehouse
-            {
-                Id = _state.Id,
-                DestinationWarehouse = warehouse,
-                Reason = reason,
                 Utc = utc
             });
         }

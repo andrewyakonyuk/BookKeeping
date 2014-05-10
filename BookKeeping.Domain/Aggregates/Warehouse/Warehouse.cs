@@ -68,7 +68,7 @@ namespace BookKeeping.Domain.Aggregates.Warehouse
             });
         }
 
-        public void AddSku(SkuId sku, DateTime utc)
+        public void AddSku(ProductId sku, DateTime utc)
         {
 
         }

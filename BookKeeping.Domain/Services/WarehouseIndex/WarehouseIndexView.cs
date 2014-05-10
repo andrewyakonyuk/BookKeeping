@@ -1,9 +1,7 @@
 ﻿using BookKeeping.Domain.Contracts;
-using System;
+using BookKeeping.Domain.Contracts.Product;
 using System.Collections.Generic;
-using System.Linq;
 using System.Runtime.Serialization;
-using System.Text;
 
 namespace BookKeeping.Domain.Services.WarehouseIndex
 {
@@ -26,6 +24,6 @@ namespace BookKeeping.Domain.Services.WarehouseIndex
     public sealed class SkuIndexView
     {
         [DataMember(Order = 1)]
-        public SkuId Id { get; set; }
+        public ProductId Id { get; set; }
     }
 }

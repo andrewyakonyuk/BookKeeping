@@ -1,13 +1,16 @@
 ﻿using BookKeeping.Core.Domain;
 using BookKeeping.Domain.Contracts;
+using BookKeeping.Domain.Contracts.Product;
+using BookKeeping.Domain.Contracts.Product.Events;
 using System.Collections.Generic;
 
-namespace BookKeeping.Domain.Aggregates.Sku
+namespace BookKeeping.Domain.Aggregates.Product
 {
-    public class SkuState
+    public class ProductState
     {
-        public SkuId Id { get; private set; }
+        public ProductId Id { get; private set; }
 
+        //TODO:
         public WarehouseId Warehouse { get; private set; }
 
         public string Title { get; private set; }
@@ -24,7 +27,7 @@ namespace BookKeeping.Domain.Aggregates.Sku
 
         public VatRate VatRate { get; private set; }
 
-        public SkuState(IEnumerable<IEvent> events)
+        public ProductState(IEnumerable<IEvent> events)
         {
             foreach (var e in events)
             {
@@ -37,7 +40,7 @@ namespace BookKeeping.Domain.Aggregates.Sku
             ((dynamic)this).When((dynamic)e);
         }
 
-        public void When(SkuCreated e)
+        public void When(ProductCreated e)
         {
             Id = e.Id;
             Warehouse = e.Warehouse;
@@ -49,44 +52,39 @@ namespace BookKeeping.Domain.Aggregates.Sku
             VatRate = e.VatRate;
         }
 
-        public void When(SkuStockUpdated e)
+        public void When(ProductStockUpdated e)
         {
             Stock = e.Quantity;
         }
 
-        public void When(SkuRenamed e)
+        public void When(ProductRenamed e)
         {
             Title = e.NewTitle;
         }
 
-        public void When(SkuBarcodeChanged e)
+        public void When(ProductBarcodeChanged e)
         {
             Barcode = e.NewBarcode;
         }
 
-        public void When(SkuItemNoChanged e)
+        public void When(ProductItemNoChanged e)
         {
             ItemNo = e.NewItemNo;
         }
 
-        public void When(SkuPriceChanged e)
+        public void When(ProductPriceChanged e)
         {
             Price = e.NewPrice;
         }
 
-        public void When(SkuUnitOfMeasureChanged e)
+        public void When(ProductUnitOfMeasureChanged e)
         {
             UnitOfMeasure = e.NewUnitOfMeasure;
         }
 
-        public void When(SkuVatRateChanged e)
+        public void When(ProductVatRateChanged e)
         {
             VatRate = e.NewVatRate;
-        }
-
-        public void When(SkuMovedToWarehouse e)
-        {
-            Warehouse = e.DestinationWarehouse;
         }
     }
 }

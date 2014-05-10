@@ -1,5 +1,6 @@
 ﻿using BookKeeping.Core.AtomicStorage;
 using BookKeeping.Domain.Contracts;
+using BookKeeping.Domain.Contracts.Product;
 using System.Linq;
 
 namespace BookKeeping.Domain.Services.WarehouseIndex
@@ -13,7 +14,7 @@ namespace BookKeeping.Domain.Services.WarehouseIndex
             _storage = storage;
         }
 
-        public bool IsSkuRegistered(SkuId sku, WarehouseId warehouse)
+        public bool IsSkuRegistered(ProductId sku, WarehouseId warehouse)
         {
             return _storage.Get(warehouse.ToString())
                 .Convert(i => i.Skus.Where(t => t.Id.Equals(sku)).Any(), false);
@@ -32,7 +33,7 @@ namespace BookKeeping.Domain.Services.WarehouseIndex
 
     public interface IWarehouseIndexService
     {
-        bool IsSkuRegistered(SkuId sku, WarehouseId warehouse);
+        bool IsSkuRegistered(ProductId sku, WarehouseId warehouse);
 
         bool IsWarehouseRegistered(WarehouseId warehouse);
 
