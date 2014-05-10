@@ -64,13 +64,11 @@
     <Compile Include="Current.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="DependencyResolver.cs" />
     <Compile Include="Domain\ICriterion.cs">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="Domain\IUnitOfWork.cs" />
     <Compile Include="ICachingService.cs" />
-    <Compile Include="IDependencyResolver.cs" />
     <Compile Include="Domain\IIdentity.cs" />
     <Compile Include="Domain\ICommand.cs" />
     <Compile Include="Domain\ICommandBus.cs" />
