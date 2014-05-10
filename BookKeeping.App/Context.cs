@@ -11,6 +11,8 @@ using BookKeeping.Domain.Contracts;
 using System.Linq;
 using System.Diagnostics;
 using System.Threading.Tasks;
+using System.Collections.Generic;
+using BookKeeping.Projections;
 
 namespace BookKeeping.App
 {
@@ -69,7 +71,7 @@ namespace BookKeeping.App
 
         public ICacheService Cache { get { return _cacheService; } }
 
-        public void Send<TCommand>(TCommand command)
+        public void Command<TCommand>(TCommand command)
             where TCommand : ICommand
         {
             Profile(() => _commandBus.Send(command), command.ToString());
@@ -112,25 +114,62 @@ namespace BookKeeping.App
             {
                 _unitOfWork.Dispose();
             }
-            _unitOfWork = new ContextUnitOfWork(_commandBus);
+            _unitOfWork = new ContextUnitOfWork(_eventBus);
             return _unitOfWork;
+        }
+
+        private sealed class CommandHandlerFactoryImpl : ICommandHandlerFactory
+        {
+            private readonly IDocumentStore _documentStore;
+            private readonly IEventBus _eventBus;
+            private readonly IEventStore _eventStore;
+
+            public CommandHandlerFactoryImpl(IDocumentStore documentStore, IEventStore eventStore, IEventBus eventBus)
+            {
+                _documentStore = documentStore;
+                _eventBus = eventBus;
+                _eventStore = eventStore;
+            }
+
+            public ICommandHandler<T> GetHandler<T>() where T : ICommand
+            {
+                return (ICommandHandler<T>)DomainBoundedContext.EntityApplicationServices(_documentStore, _eventStore, _eventBus)
+                    .SingleOrDefault(service => service is ICommandHandler<T>);
+            }
+        }
+
+        private sealed class EventHandlerFactoryImpl : IEventHandlerFactory
+        {
+            private readonly IDocumentStore _documentStore;
+
+            public EventHandlerFactoryImpl(IDocumentStore documentStore)
+            {
+                _documentStore = documentStore;
+            }
+
+            public IEnumerable<IEventHandler<T>> GetHandlers<T>() where T : IEvent
+            {
+                return DomainBoundedContext.Projections(_documentStore)
+                    .Concat(ClientBoundedContext.Projections(_documentStore))
+                    .OfType<IEventHandler<T>>();
+            }
         }
 
         private class ContextUnitOfWork : IUnitOfWork, IDisposable
         {
             bool _isCommited = false;
-            ICommandBus _commandBus;
+            IEventBus _eventBus;
 
-            public ContextUnitOfWork(ICommandBus commandBus)
+            public ContextUnitOfWork(IEventBus eventBus)
             {
-                _commandBus = commandBus;
+                _eventBus = eventBus;
             }
 
             public void Commit()
             {
                 try
                 {
-                    _commandBus.Commit();
+                    _eventBus.Commit();
                     _isCommited = true;
                 }
                 catch (Exception)
@@ -147,7 +186,7 @@ namespace BookKeeping.App
 
             public void Rollback()
             {
-                _commandBus.Rollback();
+                _eventBus.Rollback();
             }
 
             public void Dispose()

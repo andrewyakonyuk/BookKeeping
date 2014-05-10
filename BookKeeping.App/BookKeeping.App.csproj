@@ -77,10 +77,8 @@
     <Compile Include="Behaviors\TabControlBehavior.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="CommandHandlerFactory.cs" />
     <Compile Include="Context.cs" />
     <Compile Include="DelegateCommand.cs" />
-    <Compile Include="EventHandlerFactory.cs" />
     <Compile Include="NotificationObject.cs" />
     <Compile Include="Properties\Resources.uk-Ua.Designer.cs">
       <DependentUpon>Resources.uk-Ua.resx</DependentUpon>
