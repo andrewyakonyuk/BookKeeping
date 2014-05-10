@@ -125,6 +125,25 @@ namespace BookKeeping.Domain.Aggregates.Product
             });
         }
 
+        public void MakeOrderable(DateTime utc)
+        {
+            Apply(new ProductMakedOrderable
+            {
+                Id = _state.Id,
+                Utc = utc
+            });
+        }
+
+        public void MakeNonOrderable(string reason, DateTime utc)
+        {
+            Apply(new ProductMakedNonOrderable
+            {
+                Id = _state.Id,
+                Reason = reason,
+                Utc = utc
+            });
+        }
+
         public IList<IEvent> Changes { get { return _changes; } }
     }
 }

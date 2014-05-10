@@ -17,7 +17,9 @@ namespace BookKeeping.Domain.Aggregates.Product
         ICommandHandler<ChangeProductItemNo>,
         ICommandHandler<ChangeProductPrice>,
         ICommandHandler<ChangeProductUnitOfMeasure>,
-        ICommandHandler<ChangeProductVatRate>
+        ICommandHandler<ChangeProductVatRate>,
+        ICommandHandler<MakeProductOrderable>,
+        ICommandHandler<MakeProductNonOrderable>
     {
         private readonly IEventBus _eventBus;
         private readonly IEventStore _eventStore;
@@ -82,6 +84,16 @@ namespace BookKeeping.Domain.Aggregates.Product
         public void When(ChangeProductVatRate c)
         {
             Update(c.Id, p => p.ChangeVatRate(c.NewVatRate, Current.UtcNow));
+        }
+
+        public void When(MakeProductOrderable c)
+        {
+            Update(c.Id, p => p.MakeOrderable(Current.UtcNow));
+        }
+
+        public void When(MakeProductNonOrderable c)
+        {
+            Update(c.Id, p => p.MakeNonOrderable(c.Reason, Current.UtcNow));
         }
     }
 }

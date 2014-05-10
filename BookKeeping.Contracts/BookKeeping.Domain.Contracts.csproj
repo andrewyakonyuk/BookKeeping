@@ -54,11 +54,15 @@
     <Compile Include="Product\Commands\ChangeProductUnitOfMeasure.cs" />
     <Compile Include="Product\Commands\ChangeProductVatRate.cs" />
     <Compile Include="Product\Commands\CreateProduct.cs" />
+    <Compile Include="Product\Commands\MakeProductNonOrderable.cs" />
+    <Compile Include="Product\Commands\MakeProductOrderable.cs" />
     <Compile Include="Product\Commands\RenameProduct.cs" />
     <Compile Include="Product\Commands\UpdateProductStock.cs" />
     <Compile Include="Product\Events\ProductBarcodeChanged.cs" />
     <Compile Include="Product\Events\ProductCreated.cs" />
     <Compile Include="Product\Events\ProductItemNoChanged.cs" />
+    <Compile Include="Product\Events\ProductMakedNonOrderable.cs" />
+    <Compile Include="Product\Events\ProductMakedOrderable.cs" />
     <Compile Include="Product\Events\ProductPriceChanged.cs" />
     <Compile Include="Product\Events\ProductRenamed.cs" />
     <Compile Include="Product\Events\ProductStockUpdated.cs" />

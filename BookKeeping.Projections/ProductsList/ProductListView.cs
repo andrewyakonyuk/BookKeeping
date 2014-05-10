@@ -37,6 +37,14 @@ namespace BookKeeping.Projections.ProductsList
 
         [DataMember(Order = 9)]
         public VatRate VatRate { get; set; }
+
+        [DataMember(Order = 10)]
+        public bool IsOrderable { get; set; }
+
+        public ProductView()
+        {
+            IsOrderable = true;
+        }
     }
 
     [DataContract]

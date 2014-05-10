@@ -15,7 +15,9 @@ namespace BookKeeping.Projections.ProductsList
         IEventHandler<ProductBarcodeChanged>,
         IEventHandler<ProductPriceChanged>,
         IEventHandler<ProductUnitOfMeasureChanged>,
-        IEventHandler<ProductVatRateChanged>
+        IEventHandler<ProductVatRateChanged>,
+        IEventHandler<ProductMakedOrderable>,
+        IEventHandler<ProductMakedNonOrderable>
     {
         private readonly IDocumentWriter<unit, ProductListView> _store;
 
@@ -73,6 +75,16 @@ namespace BookKeeping.Projections.ProductsList
         public void When(ProductVatRateChanged e)
         {
             _store.UpdateOrThrow(unit.it, list => list.Products.Single(p => p.Id == e.Id).VatRate = e.NewVatRate);
+        }
+
+        public void When(ProductMakedOrderable e)
+        {
+            _store.UpdateOrThrow(unit.it, list => list.Products.Single(p => p.Id == e.Id).IsOrderable = true);
+        }
+
+        public void When(ProductMakedNonOrderable e)
+        {
+            _store.UpdateOrThrow(unit.it, list => list.Products.Single(p => p.Id == e.Id).IsOrderable = false);
         }
     }
 }

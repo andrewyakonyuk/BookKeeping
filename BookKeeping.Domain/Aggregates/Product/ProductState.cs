@@ -28,8 +28,11 @@ namespace BookKeeping.Domain.Aggregates.Product
 
         public VatRate VatRate { get; private set; }
 
+        public bool IsOrderable { get; private set; }
+
         public ProductState(IEnumerable<IEvent> events)
         {
+            IsOrderable = true;
             foreach (var e in events)
             {
                 Mutate(e);
@@ -86,6 +89,16 @@ namespace BookKeeping.Domain.Aggregates.Product
         public void When(ProductVatRateChanged e)
         {
             VatRate = e.NewVatRate;
+        }
+
+        public void When(ProductMakedOrderable e)
+        {
+            IsOrderable = true;
+        }
+
+        public void When(ProductMakedNonOrderable e)
+        {
+            IsOrderable = false;
         }
     }
 }
