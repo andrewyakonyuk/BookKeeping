@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace BookKeeping
+namespace BookKeeping.App.Infrastructure
 {
     public static class Current
     {

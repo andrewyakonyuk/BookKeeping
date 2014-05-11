@@ -1,17 +1,11 @@
-﻿using BookKeeping.Core;
-using BookKeeping.Projections;
+﻿using BookKeeping.App.Common;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using BookKeeping.Core.AtomicStorage;
-using ICommand  = System.Windows.Input.ICommand;
-using System.Windows.Data;
-using System.Windows.Controls;
 using System.Collections;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.Collections.Specialized;
-using BookKeeping.Projections.ProductsList;
+using System.Linq;
+using System.Windows.Data;
+using ICommand = System.Windows.Input.ICommand;
 
 namespace BookKeeping.App.ViewModels
 {
@@ -20,8 +14,8 @@ namespace BookKeeping.App.ViewModels
         string _searchText = string.Empty;
         bool _showFindPopup = false;
         bool _showProductDetail = false;
-        ProductView _selectedItem;
-        IList<ProductView> _selectedItems;
+        object _selectedItem;
+        IList _selectedItems;
 
         public ProductListViewModel()
         {
@@ -30,9 +24,8 @@ namespace BookKeeping.App.ViewModels
 
             DisplayName = BookKeeping.App.Properties.Resources.Product_List;
 
-            var productList = new ObservableCollection<ProductView>((Context.Current.Query<ProductListView>().Convert(t => t.Products,
-                () => new List<ProductView>())));
-            Source = productList;
+            //TODO: retrieve products
+            Source = null;
         }
 
         public string SearchText
@@ -63,7 +56,7 @@ namespace BookKeeping.App.ViewModels
             }
         }
 
-        public ProductView SelectedItem
+        public object SelectedItem
         {
             get { return _selectedItem; }
             set
@@ -86,7 +79,7 @@ namespace BookKeeping.App.ViewModels
             set
             {
                 OnPropertyChanging(() => SelectedItems);
-                _selectedItems = value.OfType<ProductView>().ToList();
+                _selectedItems = value;
                 OnPropertyChanged(() => SelectedItems);
             }
         }
@@ -103,8 +96,8 @@ namespace BookKeeping.App.ViewModels
             {
                 if (string.IsNullOrEmpty(searchText))
                     return true;
-                var product = (ProductView)t;
-                return product.Title.StartsWith(searchText, StringComparison.CurrentCultureIgnoreCase);
+                return true;
+                //TODO: search
             };
         }
 

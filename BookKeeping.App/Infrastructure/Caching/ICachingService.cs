@@ -1,5 +1,4 @@
-﻿
-namespace BookKeeping.App.Common
+﻿namespace BookKeeping.App.Infrastructure.Caching
 {
     public interface ICacheService
     {

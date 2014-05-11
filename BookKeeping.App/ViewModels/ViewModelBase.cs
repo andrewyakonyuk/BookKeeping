@@ -1,4 +1,5 @@
-﻿using System;
+﻿using BookKeeping.App.Common;
+using System;
 using System.ComponentModel;
 
 namespace BookKeeping.App.ViewModels

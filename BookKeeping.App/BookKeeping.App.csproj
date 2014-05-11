@@ -78,11 +78,13 @@
     <Compile Include="Behaviors\TabControlBehavior.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="Common\CachingService.cs" />
-    <Compile Include="Current.cs" />
+    <Compile Include="Infrastructure\Current.cs" />
     <Compile Include="Common\DelegateCommand.cs" />
-    <Compile Include="Common\ICacheService.cs" />
     <Compile Include="Common\NotificationObject.cs" />
+    <Compile Include="Infrastructure\Caching\CachingService.cs" />
+    <Compile Include="Infrastructure\Caching\ICachingService.cs" />
+    <Compile Include="Infrastructure\Logging\ILogger.cs" />
+    <Compile Include="Infrastructure\Logging\NullLogger.cs" />
     <Compile Include="Maybe.cs" />
     <Compile Include="Properties\Resources.uk-Ua.Designer.cs">
       <DependentUpon>Resources.uk-Ua.resx</DependentUpon>
@@ -94,15 +96,11 @@
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
     </Compile>
-    <Compile Include="SystemObserver.cs" />
-    <Compile Include="ViewModels\CustomerTransactionsViewModel.cs" />
+    <Compile Include="Infrastructure\SystemObserver.cs" />
     <Compile Include="ViewModels\MainWindowViewModel.cs" />
     <Compile Include="ViewModels\ProductListViewModel.cs" />
     <Compile Include="ViewModels\ViewModelBase.cs" />
     <Compile Include="ViewModels\WorkspaceViewModel.cs" />
-    <Compile Include="Views\CustomerTransactions.xaml.cs">
-      <DependentUpon>CustomerTransactions.xaml</DependentUpon>
-    </Compile>
     <Compile Include="Views\ProductDetailView.xaml.cs">
       <DependentUpon>ProductDetailView.xaml</DependentUpon>
     </Compile>
@@ -160,10 +158,6 @@
     <Page Include="Styles\TextBox.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
-    </Page>
-    <Page Include="Views\CustomerTransactions.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Views\MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
@@ -258,6 +252,7 @@
       <Install>true</Install>
     </BootstrapperPackage>
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

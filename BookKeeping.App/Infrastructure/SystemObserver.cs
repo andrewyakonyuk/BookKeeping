@@ -2,7 +2,7 @@
 using System.Diagnostics;
 using System.Globalization;
 
-namespace BookKeeping
+namespace BookKeeping.App.Infrastructure
 {
     /// <summary>
     /// System event representing something that happened

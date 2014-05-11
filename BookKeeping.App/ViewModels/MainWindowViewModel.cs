@@ -1,5 +1,4 @@
-﻿using BookKeeping.Domain;
-using BookKeeping.Projections;
+﻿using BookKeeping.App.Common;
 using System;
 using System.Collections.ObjectModel;
 using System.Collections.Specialized;
@@ -7,11 +6,7 @@ using System.ComponentModel;
 using System.Diagnostics.Contracts;
 using System.Linq;
 using System.Windows.Data;
-using BookKeeping.Core.AtomicStorage;
-using System.Collections.Generic;
 using System.Windows.Input;
-using BookKeeping.App.Views;
-using BookKeeping.Core;
 using ICommand = System.Windows.Input.ICommand;
 
 namespace BookKeeping.App.ViewModels
@@ -31,13 +26,6 @@ namespace BookKeeping.App.ViewModels
                 DisplayName = "Empty workspace"
             });
 
-            OpenCustomerTransactions = new DelegateCommand(_ =>
-            {
-                bool isExist;
-                var viewModel = CreateOrGetExistWorkspace<CustomerTransactionsViewModel>(out isExist);
-                SetActiveWorkspace(viewModel);
-            });
-
             OpenProductList = new DelegateCommand(_ =>
             {
                 bool isExist;
@@ -45,38 +33,11 @@ namespace BookKeeping.App.ViewModels
                 SetActiveWorkspace(viewModel);
             });
 
-            //int counter = 1;
-            //AddProduct = new DelegateCommand(_ =>
-            //{
-            //    Context.Current.CommandBus.Send(new CreateProduct
-            //    {
-            //        Id = new ProductId(Guid.NewGuid()),
-            //        Title = "Some title" + counter,
-            //        ItemNo = string.Format("art {0:00000}", counter),
-            //        Price = new CurrencyAmount(counter * 14, Currency.Eur),
-            //        Stock = 34 * counter - 15 / counter
-            //    });
-            //    var workspacesView = CollectionViewSource.GetDefaultView(Workspaces);
-            //    var collectionView =  (ListCollectionView)CollectionViewSource.GetDefaultView(((ViewModelBase)workspacesView.CurrentItem).Source);
-            //     var reader = Context.Current.ViewDocs.GetReader<unit, ProductListDto>();
-            //        var productList = reader.Get(unit.it);
-            //        collectionView.AddNewItem(productList.Convert(t => t.Products,
-            //                () => new List<ProductDto>()).LastOrDefault());
-            //        collectionView.MoveCurrentToLast();
-            //    counter++;
-            //}, _ =>
-            //{
-            //    var collectionView = CollectionViewSource.GetDefaultView(Workspaces);
-            //    return collectionView.CurrentItem is ProductListViewModel;
-            //});
-
             CollectionViewSource.GetDefaultView(Workspaces).MoveCurrentToFirst();
             Exit = ApplicationCommands.Close;
         }
 
         public ICommand AddProduct { get; set; }
-
-        public ICommand OpenCustomerTransactions { get; set; }
 
         public ICommand OpenProductList { get; set; }
 

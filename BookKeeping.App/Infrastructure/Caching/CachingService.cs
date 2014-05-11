@@ -2,7 +2,7 @@
 using System.Diagnostics.Contracts;
 using System.Runtime.Caching;
 
-namespace BookKeeping.App.Common
+namespace BookKeeping.App.Infrastructure.Caching
 {
     public class CacheService : ICacheService
     {

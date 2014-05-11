@@ -31,8 +31,6 @@
               Margin="2,0,0,0">
             <MenuItem Header="{x:Static p:Resources.File}">
                 <MenuItem Header="Rocket slot 1">
-                    <MenuItem Header="Open customer trx" Command="{Binding OpenCustomerTransactions}"/>
-                    <Separator />
                     <MenuItem Header="Open product list" Command="{Binding OpenProductList}"/>
                     <MenuItem Header="Report damage to control room" />
                 </MenuItem>
@@ -81,9 +79,6 @@
                 <TabControl.Resources>
                     <DataTemplate DataType="{x:Type viewmodels:WorkspaceViewModel}">
                         <views:Workspace></views:Workspace>
-                    </DataTemplate>
-                    <DataTemplate DataType="{x:Type viewmodels:CustomerTransactionsViewModel}">
-                        <views:CustomerTransactions></views:CustomerTransactions>
                     </DataTemplate>
                     <DataTemplate DataType="{x:Type viewmodels:ProductListViewModel}">
                         <views:ProductList></views:ProductList>
