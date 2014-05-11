@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace BookKeeping.Core
+namespace BookKeeping.Domain
 {
     /// <summary>
     /// Helper class that indicates nullable value in a good-citizenship code and

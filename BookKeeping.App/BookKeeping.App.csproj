@@ -55,6 +55,7 @@
     <Reference Include="System" />
     <Reference Include="System.configuration" />
     <Reference Include="System.Data" />
+    <Reference Include="System.Runtime.Caching" />
     <Reference Include="System.Windows.Interactivity, Version=4.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <HintPath>..\packages\MahApps.Metro.0.13.1.0\lib\net40\System.Windows.Interactivity.dll</HintPath>
     </Reference>
@@ -77,9 +78,12 @@
     <Compile Include="Behaviors\TabControlBehavior.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="Context.cs" />
-    <Compile Include="DelegateCommand.cs" />
-    <Compile Include="NotificationObject.cs" />
+    <Compile Include="Common\CachingService.cs" />
+    <Compile Include="Current.cs" />
+    <Compile Include="Common\DelegateCommand.cs" />
+    <Compile Include="Common\ICacheService.cs" />
+    <Compile Include="Common\NotificationObject.cs" />
+    <Compile Include="Maybe.cs" />
     <Compile Include="Properties\Resources.uk-Ua.Designer.cs">
       <DependentUpon>Resources.uk-Ua.resx</DependentUpon>
       <AutoGen>True</AutoGen>
@@ -90,6 +94,7 @@
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
     </Compile>
+    <Compile Include="SystemObserver.cs" />
     <Compile Include="ViewModels\CustomerTransactionsViewModel.cs" />
     <Compile Include="ViewModels\MainWindowViewModel.cs" />
     <Compile Include="ViewModels\ProductListViewModel.cs" />
@@ -224,28 +229,6 @@
     </None>
     <AppDesigner Include="Properties\" />
     <Resource Include="Resources\Entypo.ttf" />
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\BookKeeping.Contracts\BookKeeping.Domain.Contracts.csproj">
-      <Project>{de4dd63b-fab7-47a8-b031-88f3dc510a6a}</Project>
-      <Name>BookKeeping.Domain.Contracts</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\BookKeeping.Core\BookKeeping.Core.csproj">
-      <Project>{25165f2f-30cf-48e7-a26d-0bae31581547}</Project>
-      <Name>BookKeeping.Core</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\BookKeeping.Domain\BookKeeping.Domain.csproj">
-      <Project>{e4297e21-339c-4c0c-ad53-1370036b6d7e}</Project>
-      <Name>BookKeeping.Domain</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\BookKeeping.Infrastructure\BookKeeping.Infrastructure.csproj">
-      <Project>{a3193598-57ed-4c08-8bdb-723e123a5733}</Project>
-      <Name>BookKeeping.Infrastructure</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\BookKeeping.Projections\BookKeeping.Projections.csproj">
-      <Project>{a83ca787-bcfb-4882-a3fe-5591f9ee6587}</Project>
-      <Name>BookKeeping.Projections</Name>
-    </ProjectReference>
   </ItemGroup>
   <ItemGroup>
     <Resource Include="Resources\WindowsIcons-license.txt" />

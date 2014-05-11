@@ -4,14 +4,13 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{E4297E21-339C-4C0C-AD53-1370036B6D7E}</ProjectGuid>
+    <ProjectGuid>{4E7D1397-478D-49E7-9A57-959321A77326}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>BookKeeping.Domain</RootNamespace>
     <AssemblyName>BookKeeping.Domain</AssemblyName>
-    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
-    <TargetFrameworkProfile />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -33,7 +32,6 @@
   <ItemGroup>
     <Reference Include="System" />
     <Reference Include="System.Core" />
-    <Reference Include="System.Runtime.Serialization" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="Microsoft.CSharp" />
@@ -41,36 +39,8 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Aggregates\Customer\Customer.cs" />
-    <Compile Include="Aggregates\Customer\CustomerApplicationService.cs" />
-    <Compile Include="Aggregates\Customer\CustomerState.cs" />
-    <Compile Include="Aggregates\Store\Store.cs" />
-    <Compile Include="Aggregates\Store\StoreApplicationService.cs" />
-    <Compile Include="Aggregates\Store\StoreState.cs" />
-    <Compile Include="DomainBoundedContext.cs" />
-    <Compile Include="Services\Pricing\IPricingService.cs" />
-    <Compile Include="Aggregates\Order\Order.cs" />
-    <Compile Include="Aggregates\Order\OrderApplicationService.cs" />
-    <Compile Include="Aggregates\Order\OrderLine.cs" />
-    <Compile Include="Aggregates\Order\OrderState.cs" />
-    <Compile Include="Aggregates\Product\Product.cs" />
-    <Compile Include="Aggregates\Product\ProductApplicationService.cs" />
-    <Compile Include="Aggregates\Product\ProductState.cs" />
+    <Compile Include="Maybe.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Services\Pricing\PricingService.cs" />
-    <Compile Include="Services\StoreIndex\StoreIndexView.cs" />
-    <Compile Include="Services\StoreIndex\StoreIndexProjection.cs" />
-    <Compile Include="Services\StoreIndex\StoreIndexService.cs" />
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\BookKeeping.Contracts\BookKeeping.Domain.Contracts.csproj">
-      <Project>{de4dd63b-fab7-47a8-b031-88f3dc510a6a}</Project>
-      <Name>BookKeeping.Domain.Contracts</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\BookKeeping.Core\BookKeeping.Core.csproj">
-      <Project>{25165f2f-30cf-48e7-a26d-0bae31581547}</Project>
-      <Name>BookKeeping.Core</Name>
-    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

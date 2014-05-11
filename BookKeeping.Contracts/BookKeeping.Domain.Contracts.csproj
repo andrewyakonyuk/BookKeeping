@@ -81,12 +81,6 @@
     <Compile Include="VatRate.cs" />
     <Compile Include="Store\StoreId.cs" />
   </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\BookKeeping.Core\BookKeeping.Core.csproj">
-      <Project>{25165f2f-30cf-48e7-a26d-0bae31581547}</Project>
-      <Name>BookKeeping.Core</Name>
-    </ProjectReference>
-  </ItemGroup>
   <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

@@ -2,7 +2,7 @@
 using System.Diagnostics;
 using System.Windows.Input;
 
-namespace BookKeeping.App
+namespace BookKeeping.App.Common
 {
     public class DelegateCommand : ICommand
     {

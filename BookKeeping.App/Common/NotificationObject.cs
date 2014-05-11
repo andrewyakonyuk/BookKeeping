@@ -4,7 +4,7 @@ using System.Diagnostics;
 using System.Diagnostics.Contracts;
 using System.Linq.Expressions;
 
-namespace BookKeeping
+namespace BookKeeping.App.Common
 {
     [Serializable]
     public abstract class NotificationObject : INotifyPropertyChanged, INotifyPropertyChanging

@@ -1,9 +1,8 @@
 ﻿using System;
 using System.Diagnostics.Contracts;
 using System.Runtime.Caching;
-using BookKeeping.Core;
 
-namespace BookKeeping.Infrastructure
+namespace BookKeeping.App.Common
 {
     public class CacheService : ICacheService
     {
