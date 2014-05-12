@@ -4,7 +4,7 @@
         xmlns:controls="http://metro.mahapps.com/winfx/xaml/controls"
         xmlns:views="clr-namespace:BookKeeping.App.Views"
         xmlns:viewmodels="clr-namespace:BookKeeping.App.ViewModels"
-        xmlns:extension="clr-namespace:BookKeeping.App.XamlExtensions"
+        xmlns:converters="clr-namespace:BookKeeping.App.Converters"
         xmlns:p="clr-namespace:BookKeeping.App.Properties"
         Title="{Binding Path=DisplayName}" Height="400" Width="800"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 

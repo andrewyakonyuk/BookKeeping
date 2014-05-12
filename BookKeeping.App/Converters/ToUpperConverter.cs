@@ -3,7 +3,7 @@ using System;
 using System.Globalization;
 using System.Windows.Data;
 
-namespace BookKeeping.App.XamlExtensions
+namespace BookKeeping.App.Converters
 {
     public class ToLowerConverter : MarkupConverter
     {

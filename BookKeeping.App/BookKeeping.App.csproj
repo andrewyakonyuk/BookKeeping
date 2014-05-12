@@ -78,6 +78,18 @@
     <Compile Include="Behaviors\TabControlBehavior.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="Domain\Aggregates\Order\OrderLineCollection.cs" />
+    <Compile Include="Domain\Barcode.cs" />
+    <Compile Include="Domain\Currency.cs" />
+    <Compile Include="Domain\CurrencyAmount.cs" />
+    <Compile Include="Domain\IEntity.cs" />
+    <Compile Include="Domain\Aggregates\Order\Order.cs" />
+    <Compile Include="Domain\Aggregates\Order\OrderLine.cs" />
+    <Compile Include="Domain\Aggregates\Product\Product.cs" />
+    <Compile Include="Domain\Repositories\IProductRepository.cs" />
+    <Compile Include="Domain\Services\IProductService.cs" />
+    <Compile Include="Domain\Services\ProductService.cs" />
+    <Compile Include="Domain\VatRate.cs" />
     <Compile Include="Infrastructure\Current.cs" />
     <Compile Include="Common\DelegateCommand.cs" />
     <Compile Include="Common\NotificationObject.cs" />
@@ -110,7 +122,7 @@
     <Compile Include="Views\Workspace.xaml.cs">
       <DependentUpon>Workspace.xaml</DependentUpon>
     </Compile>
-    <Compile Include="XamlExtensions\ToUpperConverter.cs" />
+    <Compile Include="Converters\ToUpperConverter.cs" />
     <Page Include="Resources\DataGrid.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>

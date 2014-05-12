@@ -5,6 +5,8 @@ VisualStudioVersion = 12.0.21005.1
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BookKeeping.App", "BookKeeping.App\BookKeeping.App.csproj", "{08A56326-DE4E-4F0F-A4C8-A0FDA3DA30CD}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BookKeeping.App.Tests", "BookKeeping.App.Tests\BookKeeping.App.Tests.csproj", "{47DBD3FE-75F4-4C5F-BC92-BC34D9AE2651}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -15,6 +17,10 @@ Global
 		{08A56326-DE4E-4F0F-A4C8-A0FDA3DA30CD}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{08A56326-DE4E-4F0F-A4C8-A0FDA3DA30CD}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{08A56326-DE4E-4F0F-A4C8-A0FDA3DA30CD}.Release|Any CPU.Build.0 = Release|Any CPU
+		{47DBD3FE-75F4-4C5F-BC92-BC34D9AE2651}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{47DBD3FE-75F4-4C5F-BC92-BC34D9AE2651}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{47DBD3FE-75F4-4C5F-BC92-BC34D9AE2651}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{47DBD3FE-75F4-4C5F-BC92-BC34D9AE2651}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
