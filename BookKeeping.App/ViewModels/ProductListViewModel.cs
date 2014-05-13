@@ -10,6 +10,7 @@ using BookKeeping.App.Domain;
 using BookKeeping.App.Domain.Aggregates;
 using BookKeeping.App.Domain.Repositories;
 using BookKeeping.App.Domain.Services;
+using BookKeeping.App.Domain.Factories;
 
 namespace BookKeeping.App.ViewModels
 {
@@ -20,18 +21,18 @@ namespace BookKeeping.App.ViewModels
         bool _showProductDetail = false;
         object _selectedItem;
         IList _selectedItems;
+        readonly ServiceFactory _serviceFactory;
 
         public ProductListViewModel()
         {
-            //Order order = new Order(new OrderCalculator(), new ProductService());
+            _serviceFactory = new ServiceFactory();
 
             SearchButtonCmd = new DelegateCommand(_ => DoSearch(SearchText), _ => true);
             EditProductCmd = new DelegateCommand(_ => ShowProductDetail = !ShowProductDetail, _ => SelectedItems.Count == 1);
 
             DisplayName = BookKeeping.App.Properties.Resources.Product_List;
 
-            //TODO: retrieve products
-            Source = null;
+            Source = _serviceFactory.Create<IProductService>().GetAll();
         }
 
         public string SearchText

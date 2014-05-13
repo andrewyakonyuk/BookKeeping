@@ -10,7 +10,7 @@ namespace BookKeeping.App.Domain.Factories
         IFactoryMethod<IOrderService>,
         IFactoryMethod<IProductService>
     {
-        static RepositoryFactory _repositoryFactory;
+        static RepositoryFactory _repositoryFactory = new RepositoryFactory();
         static IOrderCalculator _orderCalculator;
         static IOrderService _orderService;
         static IProductService _productService;
