@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-namespace BookKeeping.App.Domain
+namespace BookKeeping.App.Domain.Aggregates
 {
     public class Product : IEntity
     {

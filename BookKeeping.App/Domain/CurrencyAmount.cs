@@ -81,6 +81,16 @@ namespace BookKeeping.App.Domain
             return left.Amount > right.Amount;
         }
 
+        public static CurrencyAmount operator *(CurrencyAmount left, decimal right)
+        {
+            return new CurrencyAmount(left.Amount * right, left.Currency);
+        }
+
+        public static CurrencyAmount operator *(decimal left, CurrencyAmount right)
+        {
+            return new CurrencyAmount(right.Amount * left, right.Currency);
+        }
+
         public override string ToString()
         {
             return string.Format("{0:0.##} {1}", Amount, Currency.ToString().ToUpper());

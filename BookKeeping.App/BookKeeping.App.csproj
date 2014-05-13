@@ -86,8 +86,13 @@
     <Compile Include="Domain\Aggregates\Order\Order.cs" />
     <Compile Include="Domain\Aggregates\Order\OrderLine.cs" />
     <Compile Include="Domain\Aggregates\Product\Product.cs" />
+    <Compile Include="Domain\Repositories\IOrderRepository.cs" />
     <Compile Include="Domain\Repositories\IProductRepository.cs" />
+    <Compile Include="Domain\Repositories\OrderRepository.cs" />
+    <Compile Include="Domain\Repositories\ProductRepository.cs" />
+    <Compile Include="Domain\Services\IOrderCalculator.cs" />
     <Compile Include="Domain\Services\IProductService.cs" />
+    <Compile Include="Domain\Services\OrderCalculator.cs" />
     <Compile Include="Domain\Services\ProductService.cs" />
     <Compile Include="Domain\VatRate.cs" />
     <Compile Include="Infrastructure\Current.cs" />
@@ -97,7 +102,7 @@
     <Compile Include="Infrastructure\Caching\ICachingService.cs" />
     <Compile Include="Infrastructure\Logging\ILogger.cs" />
     <Compile Include="Infrastructure\Logging\NullLogger.cs" />
-    <Compile Include="Maybe.cs" />
+    <Compile Include="Domain\Maybe.cs" />
     <Compile Include="Properties\Resources.uk-Ua.Designer.cs">
       <DependentUpon>Resources.uk-Ua.resx</DependentUpon>
       <AutoGen>True</AutoGen>

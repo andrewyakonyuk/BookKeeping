@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Diagnostics.Contracts;
 
-namespace BookKeeping.App.Domain.Aggregates.Order
+namespace BookKeeping.App.Domain.Aggregates
 {
     public class OrderLine : IEntity
     {
@@ -11,7 +11,6 @@ namespace BookKeeping.App.Domain.Aggregates.Order
             this.Title = string.Empty;
             this.VatRate = Domain.VatRate.Zero;
             this.UnitPrice = CurrencyAmount.Unspecifined;
-            this.TotalPrice = CurrencyAmount.Unspecifined;
         }
 
         public OrderLine(Product product)
@@ -24,35 +23,50 @@ namespace BookKeeping.App.Domain.Aggregates.Order
             : this()
         {
             Contract.Requires<ArgumentNullException>(product != null, "product");
-            this.ItemNo = !string.IsNullOrEmpty(product.ItemNo) ? product.ItemNo : product.Id.ToString(); //TODO: format product id
+            this.ItemNo = product.ItemNo;
             this.Title = product.Title;
             this.ProductId = product.Id;
             this.VatRate = product.VatRate;
             this.UnitPrice = product.Price;
             this.Quantity = quantity;
-            this.TotalPrice = new CurrencyAmount(product.Price.Amount * quantity, product.Price.Currency);
         }
 
         public long Id { get; set; }
 
-        public long ProductId { get; set; }
+        public long ProductId { get; protected set; }
 
-        public string ItemNo { get; set; }
+        public string ItemNo { get; protected set; }
 
         public string Title { get; set; }
 
         public Decimal Quantity { get; set; }
 
-        public VatRate VatRate { get; set; }
+        public VatRate VatRate { get; protected set; }
 
-        public CurrencyAmount UnitPrice { get; set; }
+        public CurrencyAmount UnitPrice { get; protected set; }
 
-        public CurrencyAmount TotalPrice { get; protected set; }
-
-        public void ChangeQuantity(decimal quantity)
+        public CurrencyAmount UnitPriceInclVat
         {
-            this.Quantity = quantity;
-            this.TotalPrice = new CurrencyAmount(UnitPrice.Amount * quantity, UnitPrice.Currency);
+            get
+            {
+                return UnitPrice + UnitPrice * (VatRate.VatPersentage / 100M);
+            }
+        }
+
+        public CurrencyAmount TotalPrice
+        {
+            get
+            {
+                return UnitPrice * Quantity;
+            }
+        }
+
+        public CurrencyAmount TotalPriceInclVat
+        {
+            get
+            {
+                return UnitPriceInclVat * Quantity;
+            }
         }
     }
 }

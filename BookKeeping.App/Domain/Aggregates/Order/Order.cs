@@ -4,49 +4,25 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace BookKeeping.App.Domain.Aggregates.Order
+namespace BookKeeping.App.Domain.Aggregates
 {
     public class Order : IEntity
     {
+        readonly IOrderCalculator _calculator;
+        readonly IProductService _productService;
+        const string OrderNumberPrefix = "order no.";
+
         public long Id { get; set; }
 
-        public string CartNumber
-        {
-            get;
-            set;
-        }
+        public string OrderNumber { get; set; }
 
-        public string OrderNumber
-        {
-            get;
-            set;
-        }
+        public DateTime DateCreated { get; protected set; }
 
-        public DateTime DateCreated
-        {
-            get;
-            set;
-        }
+        public DateTime DateModified { get; set; }
 
-        public DateTime DateModified
-        {
-            get;
-            set;
-        }
+        public DateTime? DateFinalized { get; protected set; }
 
-        public DateTime? DateFinalized
-        {
-            get;
-            set;
-        }
-
-        public bool IsFinalized
-        {
-            get
-            {
-                return this.DateFinalized.HasValue;
-            }
-        }
+        public bool IsFinalized { get { return DateFinalized.HasValue; } }
 
         public decimal TotalQuantity
         {
@@ -56,45 +32,43 @@ namespace BookKeeping.App.Domain.Aggregates.Order
             }
         }
 
-        public OrderLineCollection OrderLines
-        {
-            get;
-            set;
-        }
+        public OrderLineCollection OrderLines { get; protected set; }
 
-        public VatRate VatRate
-        {
-            get;
-            set;
-        }
+        public VatRate VatRate { get; protected set; }
 
-        public CurrencyAmount SubtotalPrice
-        {
-            get;
-            set;
-        }
+        public CurrencyAmount TotalPriceInclVat { get; protected set; }
 
-        public CurrencyAmount TotalPrice
-        {
-            get;
-            set;
-        }
+        public CurrencyAmount TotalPrice { get; protected set; }
 
-        public Order()
+        public Order(IOrderCalculator calculator, IProductService productService)
         {
+            _calculator = calculator;
+            _productService = productService;
+
+            this.OrderNumber = string.Empty;
             this.OrderLines = new OrderLineCollection();
             this.VatRate = Domain.VatRate.Zero;
-            this.SubtotalPrice = CurrencyAmount.Unspecifined;
+            this.TotalPriceInclVat = CurrencyAmount.Unspecifined;
             this.TotalPrice = CurrencyAmount.Unspecifined;
+            this.DateCreated = Current.UtcNow;
         }
 
-        public void Finalize(IProductService productService)
+        public void Calculate()
+        {
+            var result = _calculator.CalculateOrder(this);
+            TotalPrice = result.TotalPrice;
+            TotalPriceInclVat = result.TotalPriceInclVat;
+            VatRate = result.VatRate;
+        }
+
+        public void Finalize()
         {
             if (!this.IsFinalized)
             {
+                Calculate();
                 this.DateFinalized = Current.UtcNow;
-                //TODO: this.OrderNumber = store.OrderNumberPrefix + store.GetNextOrderNumber(true);
-                this.RemoveItemsFromStock(this.OrderLines, 1m, productService);
+                this.OrderNumber = string.Format("{0}{1:##########}", OrderNumberPrefix, Id);
+                this.RemoveItemsFromStock(this.OrderLines, 1m, _productService);
             }
         }
 
@@ -115,7 +89,6 @@ namespace BookKeeping.App.Domain.Aggregates.Order
             Order order = obj as Order;
             return order != null
                 && (this.Id == order.Id
-                && this.CartNumber == order.CartNumber
                 && this.OrderNumber == order.OrderNumber
                 && this.DateCreated.AddTicks(-(this.DateCreated.Ticks % 10000000L)) == order.DateCreated.AddTicks(-(order.DateCreated.Ticks % 10000000L))
                 && this.DateModified.AddTicks(-(this.DateModified.Ticks % 10000000L)) == order.DateModified.AddTicks(-(order.DateModified.Ticks % 10000000L))
@@ -123,7 +96,7 @@ namespace BookKeeping.App.Domain.Aggregates.Order
                 && this.DateFinalized.Value.AddTicks(-(this.DateFinalized.Value.Ticks % 10000000L)) == order.DateFinalized.Value.AddTicks(-(order.DateFinalized.Value.Ticks % 10000000L))))
                 && this.OrderLines.Equals(order.OrderLines)
                 && this.VatRate.Equals(order.VatRate)
-                && this.SubtotalPrice.Equals(order.SubtotalPrice)
+                && this.TotalPriceInclVat.Equals(order.TotalPriceInclVat)
                 && this.TotalPrice.Equals(order.TotalPrice));
         }
 

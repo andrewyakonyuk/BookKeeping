@@ -6,6 +6,10 @@ using System.Collections.ObjectModel;
 using System.Linq;
 using System.Windows.Data;
 using ICommand = System.Windows.Input.ICommand;
+using BookKeeping.App.Domain;
+using BookKeeping.App.Domain.Aggregates;
+using BookKeeping.App.Domain.Repositories;
+using BookKeeping.App.Domain.Services;
 
 namespace BookKeeping.App.ViewModels
 {
@@ -19,6 +23,9 @@ namespace BookKeeping.App.ViewModels
 
         public ProductListViewModel()
         {
+            Order order = new Order(new OrderCalculator(), new ProductService());
+            order.
+
             SearchButtonCmd = new DelegateCommand(_ => DoSearch(SearchText), _ => true);
             EditProductCmd = new DelegateCommand(_ => ShowProductDetail = !ShowProductDetail, _ => SelectedItems.Count == 1);
 

@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 
-namespace BookKeeping.App.Domain.Aggregates.Order
+namespace BookKeeping.App.Domain.Aggregates
 {
     public class OrderLineCollection : List<OrderLine>
     {
@@ -52,7 +52,7 @@ namespace BookKeeping.App.Domain.Aggregates.Order
             }
             if (quantity.HasValue)
             {
-                orderLine.ChangeQuantity(overwriteQuantity ? quantity.Value : orderLine.Quantity + quantity.Value);
+                orderLine.Quantity = overwriteQuantity ? quantity.Value : orderLine.Quantity + quantity.Value;
             }
         }
 
