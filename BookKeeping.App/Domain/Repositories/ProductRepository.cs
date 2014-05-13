@@ -8,22 +8,22 @@ namespace BookKeeping.App.Domain.Repositories
 {
     public class ProductRepository : IProductRepository
     {
-        public decimal GetStock(string itemNo)
+        public decimal GetStock(long productId)
         {
             throw new NotImplementedException();
         }
 
-        public void SetStock(string itemNo, decimal stock)
+        public void SetStock(long productId, decimal stock)
         {
             throw new NotImplementedException();
         }
 
-        public Maybe<Product> Get(string itemNo)
+        public Maybe<Product> Get(long productId)
         {
             throw new NotImplementedException();
         }
 
-        public void Save(Product product)
+        public IEnumerable<Product> GetAll()
         {
             throw new NotImplementedException();
         }

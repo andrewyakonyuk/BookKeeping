@@ -1,5 +1,7 @@
 ﻿using BookKeeping.App.Domain.Aggregates;
 using System;
+using System.Collections.Generic;
+using System.Collections.ObjectModel;
 
 namespace BookKeeping.App.Domain.Repositories
 {
@@ -10,12 +12,7 @@ namespace BookKeeping.App.Domain.Repositories
             throw new NotImplementedException();
         }
 
-        public Order Load(long orderId)
-        {
-            throw new NotImplementedException();
-        }
-
-        public void Save(Order order)
+        public IEnumerable<Order> GetAll()
         {
             throw new NotImplementedException();
         }

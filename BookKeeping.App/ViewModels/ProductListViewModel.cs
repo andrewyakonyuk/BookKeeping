@@ -23,8 +23,7 @@ namespace BookKeeping.App.ViewModels
 
         public ProductListViewModel()
         {
-            Order order = new Order(new OrderCalculator(), new ProductService());
-            order.
+            //Order order = new Order(new OrderCalculator(), new ProductService());
 
             SearchButtonCmd = new DelegateCommand(_ => DoSearch(SearchText), _ => true);
             EditProductCmd = new DelegateCommand(_ => ShowProductDetail = !ShowProductDetail, _ => SelectedItems.Count == 1);

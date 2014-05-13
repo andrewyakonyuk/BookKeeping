@@ -1,14 +1,16 @@
 ﻿using BookKeeping.App.Domain.Aggregates;
+using System.Collections.Generic;
+
 namespace BookKeeping.App.Domain.Repositories
 {
     public interface IProductRepository
     {
-        decimal GetStock(string itemNo);
+        decimal GetStock(long productId);
 
-        void SetStock(string itemNo, decimal stock);
+        void SetStock(long productId, decimal stock);
 
-        Maybe<Product> Get(string itemNo);
+        Maybe<Product> Get(long productId);
 
-        void Save(Product product);
+        IEnumerable<Product> GetAll();
     }
 }

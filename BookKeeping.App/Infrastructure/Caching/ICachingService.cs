@@ -1,4 +1,5 @@
-﻿namespace BookKeeping.App.Infrastructure.Caching
+﻿using System;
+namespace BookKeeping.App.Infrastructure.Caching
 {
     public interface ICacheService
     {

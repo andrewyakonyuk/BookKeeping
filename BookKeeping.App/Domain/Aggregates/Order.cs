@@ -76,10 +76,10 @@ namespace BookKeeping.App.Domain.Aggregates
         {
             foreach (OrderLine current in orderLines)
             {
-                decimal? stock = productService.GetStock(current.ItemNo);
+                decimal? stock = productService.GetStock(current.ProductId);
                 if (stock.HasValue)
                 {
-                    productService.SetStock(current.ItemNo, stock.Value - current.Quantity * parentOrderLineQuantity);
+                    productService.SetStock(current.ProductId, stock.Value - current.Quantity * parentOrderLineQuantity);
                 }
             }
         }

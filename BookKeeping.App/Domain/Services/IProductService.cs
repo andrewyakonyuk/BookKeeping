@@ -1,11 +1,17 @@
-﻿using System;
+﻿using BookKeeping.App.Domain.Aggregates;
+using System;
+using System.Collections.Generic;
 
 namespace BookKeeping.App.Domain.Services
 {
     public interface IProductService
     {
-        Decimal? GetStock(string itemNo);
+        Decimal? GetStock(long productId);
 
-        void SetStock(string itemNo, Decimal? stock);
+        void SetStock(long productId, Decimal stock);
+
+        Maybe<Product> Get(long productId);
+
+        IEnumerable<Product> GetAll();
     }
 }
