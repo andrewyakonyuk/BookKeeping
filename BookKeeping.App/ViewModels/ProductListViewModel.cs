@@ -6,11 +6,11 @@ using System.Collections.ObjectModel;
 using System.Linq;
 using System.Windows.Data;
 using ICommand = System.Windows.Input.ICommand;
-using BookKeeping.App.Domain;
-using BookKeeping.App.Domain.Aggregates;
-using BookKeeping.App.Domain.Repositories;
-using BookKeeping.App.Domain.Services;
-using BookKeeping.App.Domain.Factories;
+using BookKeeping.Domain;
+using BookKeeping.Domain.Aggregates;
+using BookKeeping.Domain.Repositories;
+using BookKeeping.Domain.Services;
+using BookKeeping.Domain.Factories;
 
 namespace BookKeeping.App.ViewModels
 {

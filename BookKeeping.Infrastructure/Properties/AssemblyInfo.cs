@@ -5,11 +5,11 @@ using System.Runtime.InteropServices;
 // Управление общими сведениями о сборке осуществляется с помощью 
 // набора атрибутов. Измените значения этих атрибутов, чтобы изменить сведения,
 // связанные со сборкой.
-[assembly: AssemblyTitle("BookKeeping.Domain")]
+[assembly: AssemblyTitle("BookKeeping.Infrastructure")]
 [assembly: AssemblyDescription("")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("")]
-[assembly: AssemblyProduct("BookKeeping.Domain")]
+[assembly: AssemblyProduct("BookKeeping.Infrastructure")]
 [assembly: AssemblyCopyright("Copyright ©  2014")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
@@ -20,7 +20,7 @@ using System.Runtime.InteropServices;
 [assembly: ComVisible(false)]
 
 // Следующий GUID служит для идентификации библиотеки типов, если этот проект будет видимым для COM
-[assembly: Guid("e20ef729-665a-4916-9717-062f888a7fcc")]
+[assembly: Guid("1fd7bee6-7583-49a5-9dc0-edf3792e57de")]
 
 // Сведения о версии сборки состоят из следующих четырех значений:
 //

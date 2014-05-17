@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using MahApps.Metro.Converters;
 using System.Globalization;
-using BookKeeping.App.Domain;
+using BookKeeping.Domain;
 using System.Windows.Data;
 
 namespace BookKeeping.App.Converters.Domain

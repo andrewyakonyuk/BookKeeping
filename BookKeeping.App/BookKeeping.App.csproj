@@ -118,38 +118,8 @@
     </Compile>
     <Compile Include="Converters\Domain\BarcodeConverter.cs" />
     <Compile Include="Converters\SecurityLevelToVisibilityConverter.cs" />
-    <Compile Include="Domain\Aggregates\OrderLineCollection.cs" />
-    <Compile Include="Domain\Barcode.cs" />
-    <Compile Include="Domain\Currency.cs" />
-    <Compile Include="Domain\CurrencyAmount.cs" />
-    <Compile Include="Domain\Factories\AggregateFactory.cs" />
-    <Compile Include="Domain\Factories\RepositoryFactory.cs" />
-    <Compile Include="Domain\Factories\ServiceFactory.cs" />
-    <Compile Include="Domain\IEntity.cs" />
-    <Compile Include="Domain\Aggregates\Order.cs" />
-    <Compile Include="Domain\Aggregates\OrderLine.cs" />
-    <Compile Include="Domain\Aggregates\Product.cs" />
-    <Compile Include="Domain\Repositories\IOrderRepository.cs" />
-    <Compile Include="Domain\Repositories\IProductRepository.cs" />
-    <Compile Include="Domain\Repositories\OrderRepository.cs" />
-    <Compile Include="Domain\Repositories\ProductRepository.cs" />
-    <Compile Include="Domain\Services\IOrderCalculator.cs" />
-    <Compile Include="Domain\Services\IOrderService.cs" />
-    <Compile Include="Domain\Services\IProductService.cs" />
-    <Compile Include="Domain\Services\OrderCalculator.cs" />
-    <Compile Include="Domain\Services\OrderService.cs" />
-    <Compile Include="Domain\Services\ProductService.cs" />
-    <Compile Include="Domain\VatRate.cs" />
-    <Compile Include="Infrastructure\Caching\CacheServiceExtensions.cs" />
-    <Compile Include="Infrastructure\Current.cs" />
     <Compile Include="Common\DelegateCommand.cs" />
     <Compile Include="Common\NotificationObject.cs" />
-    <Compile Include="Infrastructure\Caching\CachingService.cs" />
-    <Compile Include="Infrastructure\Caching\ICachingService.cs" />
-    <Compile Include="Infrastructure\AbstractFactory.cs" />
-    <Compile Include="Infrastructure\Logging\ILogger.cs" />
-    <Compile Include="Infrastructure\Logging\NullLogger.cs" />
-    <Compile Include="Domain\Maybe.cs" />
     <Compile Include="Properties\Resources.uk-Ua.Designer.cs">
       <DependentUpon>Resources.uk-Ua.resx</DependentUpon>
       <AutoGen>True</AutoGen>
@@ -160,7 +130,6 @@
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
     </Compile>
-    <Compile Include="Infrastructure\SystemObserver.cs" />
     <Compile Include="ViewModels\MainWindowViewModel.cs" />
     <Compile Include="ViewModels\ProductListViewModel.cs" />
     <Compile Include="ViewModels\ViewModelBase.cs" />
@@ -316,7 +285,16 @@
       <Install>true</Install>
     </BootstrapperPackage>
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <ProjectReference Include="..\BookKeeping.Domain\BookKeeping.Domain.csproj">
+      <Project>{9DBD5C57-7F4A-4C79-BFB1-BA241D21C2C6}</Project>
+      <Name>BookKeeping.Domain</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\BookKeeping.Infrastructure\BookKeeping.Infrastructure.csproj">
+      <Project>{8DA3D35C-EB9B-4126-8BD9-D82E7445A334}</Project>
+      <Name>BookKeeping.Infrastructure</Name>
+    </ProjectReference>
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
