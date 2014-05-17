@@ -32,7 +32,7 @@ namespace BookKeeping.App.ViewModels
 
             DisplayName = BookKeeping.App.Properties.Resources.Product_List;
 
-            Source = _serviceFactory.Create<IProductService>().GetAll();
+            Source = new ObservableCollection<Product>(_serviceFactory.Create<IProductService>().GetAll());
         }
 
         public string SearchText

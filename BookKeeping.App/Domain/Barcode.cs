@@ -1,4 +1,6 @@
-﻿
+﻿using System;
+using System.Globalization;
+
 namespace BookKeeping.App.Domain
 {
     public struct Barcode
@@ -35,14 +37,27 @@ namespace BookKeeping.App.Domain
             }
         }
 
+        public static bool operator ==(Barcode left, Barcode right)
+        {
+            return left.Equals(right);
+        }
+
+        public static bool operator !=(Barcode left, Barcode right)
+        {
+            return !left.Equals(right);
+        }
+
         public override string ToString()
         {
-            return string.Format("{0}", Code);
+            return string.Format(CultureInfo.InvariantCulture, "{0} {1}", Code, Type);
         }
     }
 
    public enum BarcodeType
    {
-       Undefined
+       Undefined,
+       EAN8,
+       EAN13,
+       CODE128
    }
 }

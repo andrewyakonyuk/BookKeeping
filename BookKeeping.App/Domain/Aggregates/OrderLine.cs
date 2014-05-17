@@ -16,7 +16,7 @@ namespace BookKeeping.App.Domain.Aggregates
         public OrderLine(Product product)
             : this(product, 1)
         {
-
+            Contract.Requires<ArgumentNullException>(product != null, "product");
         }
 
         public OrderLine(Product product, decimal quantity)
@@ -66,6 +66,30 @@ namespace BookKeeping.App.Domain.Aggregates
             get
             {
                 return UnitPriceInclVat * Quantity;
+            }
+        }
+
+        public override bool Equals(object obj)
+        {
+            var orderLine = obj as OrderLine;
+            if (orderLine == null)
+            {
+                return false;
+            }
+            return this.Id == orderLine.Id
+                && this.ItemNo == orderLine.ItemNo
+            && this.ProductId == orderLine.ProductId
+            && this.Quantity == orderLine.Quantity
+            && this.Title == orderLine.Title
+            && this.UnitPrice.Equals(orderLine.UnitPrice)
+            && this.VatRate.Equals(orderLine.VatRate);
+        }
+
+        public override int GetHashCode()
+        {
+            unchecked
+            {
+                return (int)(this.Id + this.ProductId) * 107;
             }
         }
     }

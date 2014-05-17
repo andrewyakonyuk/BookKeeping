@@ -16,5 +16,10 @@ namespace BookKeeping.App.Domain.Repositories
         {
             throw new NotImplementedException();
         }
+
+        public void Dispose()
+        {
+            throw new NotImplementedException();
+        }
     }
 }

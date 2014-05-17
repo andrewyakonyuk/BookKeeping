@@ -5,11 +5,14 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              mc:Ignorable="d" 
              xmlns:p="clr-namespace:BookKeeping.App.Properties"
+             xmlns:converters.domain="BookKeeping.App.Converters.Domain"
              d:DesignHeight="130" d:DesignWidth="600">
     <UserControl.Resources>
             <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
                 <ResourceDictionary Source="pack://application:,,,/BookKeeping.App;component/Styles/TextBox.xaml" />
+                <ResourceDictionary>
+                </ResourceDictionary>
             </ResourceDictionary.MergedDictionaries>
         </ResourceDictionary>
     </UserControl.Resources>

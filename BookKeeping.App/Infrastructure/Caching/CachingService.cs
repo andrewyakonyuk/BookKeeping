@@ -38,8 +38,8 @@ namespace BookKeeping.App.Infrastructure.Caching
 
         public void Set(string cacheKey, object cacheValue)
         {
-            Contract.Requires(string.IsNullOrEmpty(cacheKey), "cacheKey");
-            Contract.Requires(cacheValue == null, "cacheValue");
+            Contract.Requires(!string.IsNullOrEmpty(cacheKey), "cacheKey");
+            Contract.Requires(cacheValue != null, "cacheValue");
             this._cache.Set(cacheKey, cacheValue, new CacheItemPolicy()
             {
                 SlidingExpiration = TimeSpan.FromMinutes(5.0)

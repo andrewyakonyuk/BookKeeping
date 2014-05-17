@@ -3,59 +3,51 @@ using System.Diagnostics.Contracts;
 
 namespace BookKeeping.App.Domain
 {
-    public class VatRate
+    public struct VatRate
     {
-        public virtual Decimal VatPersentage { get; set; }
+        public readonly Decimal VatPersentage;
         static VatRate _zero = new VatRate(0);
-
-        public VatRate()
-        {
-            this.VatPersentage = new Decimal(0);
-        }
 
         public VatRate(Decimal value)
         {
-            this.VatPersentage = value;
+            VatPersentage = value;
         }
 
         public static VatRate Zero { get { return _zero; } }
 
         public static Decimal operator +(Decimal value, VatRate vatRate)
         {
-            Contract.Requires<ArgumentNullException>(vatRate != null, "vatRate");
             return value + vatRate.VatPersentage;
         }
 
         public static Decimal operator +(VatRate vatRate, Decimal value)
         {
-            Contract.Requires<ArgumentNullException>(vatRate != null, "vatRate");
             return value + vatRate.VatPersentage;
         }
 
         public static Decimal operator *(Decimal value, VatRate vatRate)
         {
-            Contract.Requires<ArgumentNullException>(vatRate != null, "vatRate");
             return value * vatRate.VatPersentage;
         }
 
         public static Decimal operator *(VatRate vatRate, Decimal value)
         {
-            Contract.Requires<ArgumentNullException>(vatRate != null, "vatRate");
             return value * vatRate.VatPersentage;
         }
 
         public override string ToString()
         {
-            return this.VatPersentage.ToString("p");
+            return this.VatPersentage.ToString("p", System.Globalization.CultureInfo.CurrentCulture);
         }
 
         public override bool Equals(object obj)
         {
-            VatRate vatRate = obj as VatRate;
-            if (vatRate == null)
-                return false;
-            else
+            if (obj is VatRate)
+            {
+                var vatRate = (VatRate)obj;
                 return this.VatPersentage == vatRate.VatPersentage;
+            }
+            return false;
         }
 
         public override int GetHashCode()
@@ -64,6 +56,16 @@ namespace BookKeeping.App.Domain
             {
                 return (int)VatPersentage * 321;
             }
+        }
+
+        public static bool operator ==(VatRate left, VatRate right)
+        {
+            return left.Equals(right);
+        }
+
+        public static bool operator !=(VatRate left, VatRate right)
+        {
+            return !left.Equals(right);
         }
     }
 }

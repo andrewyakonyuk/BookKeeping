@@ -6,7 +6,7 @@ namespace BookKeeping.App.Domain.Services
 {
     public interface IProductService
     {
-        Decimal? GetStock(long productId);
+        Decimal GetStock(long productId);
 
         void SetStock(long productId, Decimal stock);
 

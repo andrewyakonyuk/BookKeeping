@@ -32,7 +32,7 @@ namespace BookKeeping.App.Domain.Aggregates
             }
             else
             {
-                this.Update(orderLine, quantity, overwriteQuantity);
+                Update(orderLine, quantity, overwriteQuantity);
             }
             return orderLine;
         }
@@ -40,11 +40,11 @@ namespace BookKeeping.App.Domain.Aggregates
         public OrderLine Update(long orderLineId, decimal? quantity = null, bool overwriteQuantity = false)
         {
             OrderLine orderLine = this.Get(orderLineId);
-            this.Update(orderLine, quantity, overwriteQuantity);
+            Update(orderLine, quantity, overwriteQuantity);
             return orderLine;
         }
 
-        private void Update(OrderLine orderLine, decimal? quantity, bool overwriteQuantity)
+        static void Update(OrderLine orderLine, decimal? quantity, bool overwriteQuantity)
         {
             if (orderLine == null)
             {

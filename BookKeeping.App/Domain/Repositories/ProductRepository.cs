@@ -1,8 +1,7 @@
-﻿using BookKeeping.App.Domain.Aggregates;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
+using BookKeeping.App.Domain.Aggregates;
 
 namespace BookKeeping.App.Domain.Repositories
 {
@@ -10,22 +9,43 @@ namespace BookKeeping.App.Domain.Repositories
     {
         public decimal GetStock(long productId)
         {
-            throw new NotImplementedException();
+            return Get(productId).Convert(t => t.Stock, 0);
         }
 
         public void SetStock(long productId, decimal stock)
         {
-            throw new NotImplementedException();
+            Get(productId).IfValue(t => t.Stock = stock);
         }
 
         public Maybe<Product> Get(long productId)
         {
-            throw new NotImplementedException();
+            return Maybe<Product>.Empty;
         }
 
         public IEnumerable<Product> GetAll()
         {
-            throw new NotImplementedException();
+            var random = new Random();
+            for (int i = 0; i < 10; i++)
+            {
+                yield return new Product
+                {
+                    Id = i,
+                    Barcode = Barcode.Undefined,
+                    IsOrderable = true,
+                    ItemNo = "item no. " + (i + 1),
+                    Price = new CurrencyAmount(random.Next(10, 100), Currency.Eur),
+                    Stock = random.Next(1, 1000),
+                    Title = new string("qwertyuiopasdfghjklzxcvbnm".Substring(random.Next(0, 12)).OrderBy(t => Guid.NewGuid()).ToArray()),
+                    UnitOfMeasure = "m2",
+                    VatRate = new VatRate(random.Next(0, 50))
+                };
+            }
+           
+        }
+
+        public void Dispose()
+        {
+            GC.SuppressFinalize(this);
         }
     }
 }

@@ -17,7 +17,7 @@ namespace BookKeeping.App.Domain.Aggregates
 
         public CurrencyAmount Price { get; set; }
 
-        public double Stock { get; set; }
+        public decimal Stock { get; set; }
 
         public string UnitOfMeasure { get; set; }
 

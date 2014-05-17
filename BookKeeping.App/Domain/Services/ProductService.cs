@@ -1,7 +1,6 @@
 ﻿using BookKeeping.App.Domain.Aggregates;
 using BookKeeping.App.Domain.Repositories;
 using BookKeeping.App.Infrastructure.Caching;
-using System;
 using System.Collections.Generic;
 
 namespace BookKeeping.App.Domain.Services
@@ -17,7 +16,7 @@ namespace BookKeeping.App.Domain.Services
             _cache = cache;
         }
 
-        public decimal? GetStock(long productId)
+        public decimal GetStock(long productId)
         {
             return this._repository.GetStock(productId);
         }

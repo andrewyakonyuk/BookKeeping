@@ -61,18 +61,18 @@ namespace BookKeeping.App.Domain.Aggregates
             VatRate = result.VatRate;
         }
 
-        public void Finalize()
+        public void Complete()
         {
             if (!this.IsFinalized)
             {
                 Calculate();
                 this.DateFinalized = Current.UtcNow;
                 this.OrderNumber = string.Format("{0}{1:##########}", OrderNumberPrefix, Id);
-                this.RemoveItemsFromStock(this.OrderLines, 1m, _productService);
+                RemoveItemsFromStock(this.OrderLines, 1m, _productService);
             }
         }
 
-        private void RemoveItemsFromStock(IEnumerable<OrderLine> orderLines, decimal parentOrderLineQuantity, IProductService productService)
+        private static void RemoveItemsFromStock(IEnumerable<OrderLine> orderLines, decimal parentOrderLineQuantity, IProductService productService)
         {
             foreach (OrderLine current in orderLines)
             {

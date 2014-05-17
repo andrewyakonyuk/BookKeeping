@@ -12,8 +12,6 @@ namespace BookKeeping.App.Domain.Factories
     {
         static RepositoryFactory _repositoryFactory = new RepositoryFactory();
         static IOrderCalculator _orderCalculator;
-        static IOrderService _orderService;
-        static IProductService _productService;
 
         IOrderCalculator IFactoryMethod<IOrderCalculator>.Create()
         {
@@ -26,20 +24,18 @@ namespace BookKeeping.App.Domain.Factories
 
         IOrderService IFactoryMethod<IOrderService>.Create()
         {
-            if (_orderService == null)
+            using (var repository = _repositoryFactory.Create<IOrderRepository>())
             {
-                _orderService = new OrderService(_repositoryFactory.Create<IOrderRepository>(), CacheService.Current);
+                return new OrderService(repository, CacheService.Current);
             }
-            return _orderService;
         }
 
         IProductService IFactoryMethod<IProductService>.Create()
         {
-            if (_productService == null)
+            using (var repository = _repositoryFactory.Create<IProductRepository>())
             {
-                _productService = new ProductService(_repositoryFactory.Create<IProductRepository>(), CacheService.Current);
+                return new ProductService(repository, CacheService.Current);
             }
-            return _productService;
         }
     }
 }

@@ -11,6 +11,7 @@ namespace BookKeeping.App.Infrastructure
         {
             return new DateTime(DateTime.UtcNow.Ticks, DateTimeKind.Unspecified);
         }
+
         static Guid GetGuid()
         {
             return Guid.NewGuid();
@@ -23,15 +24,14 @@ namespace BookKeeping.App.Infrastructure
 
         public static readonly DateTime MaxValue = new DateTime(9999, 12, 31, 0, 0, 0, DateTimeKind.Unspecified);
 
-
         public static void DateIs(int year, int month = 1, int day = 1)
         {
             DateIs(new DateTime(year, month, day));
         }
 
-        public static void GuidIs(Guid guid)
+        public static void GuidIs(Guid value)
         {
-            _getGuid = () => guid;
+            _getGuid = () => value;
         }
         public static void GuidIs(string guid)
         {

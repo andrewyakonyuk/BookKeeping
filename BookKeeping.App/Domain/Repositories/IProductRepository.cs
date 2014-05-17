@@ -1,9 +1,10 @@
 ﻿using BookKeeping.App.Domain.Aggregates;
+using System;
 using System.Collections.Generic;
 
 namespace BookKeeping.App.Domain.Repositories
 {
-    public interface IProductRepository
+    public interface IProductRepository : IDisposable
     {
         decimal GetStock(long productId);
 
