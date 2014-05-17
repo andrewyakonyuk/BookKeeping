@@ -29,12 +29,12 @@ namespace BookKeeping.Infrastructure.Caching
             this._cache = MemoryCache.Default;
         }
 
-        public T Get<T>(string cacheKey)
+        public T GetValue<T>(string cacheKey)
         {
             return (T)this._cache.Get(cacheKey);
         }
 
-        public void Set(string cacheKey, object cacheValue)
+        public void SetValue(string cacheKey, object cacheValue)
         {
             this._cache.Set(cacheKey, cacheValue, new CacheItemPolicy()
             {

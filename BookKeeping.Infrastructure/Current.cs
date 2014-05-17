@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Diagnostics.Contracts;
 
 namespace BookKeeping.Infrastructure
 {
@@ -26,6 +27,9 @@ namespace BookKeeping.Infrastructure
 
         public static void DateIs(int year, int month = 1, int day = 1)
         {
+            Contract.Requires<ArgumentException>(year >= 1 && year <= 9999);
+            Contract.Requires<ArgumentException>(month >= 1 && month <= 12);
+            Contract.Requires<ArgumentException>(day >= 1 && day <= 31);
             DateIs(new DateTime(year, month, day));
         }
 
@@ -35,6 +39,7 @@ namespace BookKeeping.Infrastructure
         }
         public static void GuidIs(string guid)
         {
+            Contract.Requires<ArgumentNullException>(!string.IsNullOrWhiteSpace(guid));
             var g = Guid.Parse(guid);
             _getGuid = () => g;
         }

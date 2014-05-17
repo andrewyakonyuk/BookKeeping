@@ -7,6 +7,7 @@ using System.Diagnostics.Contracts;
 using System.Linq;
 using System.Windows.Data;
 using System.Windows.Input;
+using System.Globalization;
 using ICommand = System.Windows.Input.ICommand;
 
 namespace BookKeeping.App.ViewModels
@@ -76,7 +77,7 @@ namespace BookKeeping.App.ViewModels
             var workspace = (WorkspaceViewModel)CollectionViewSource.GetDefaultView(Workspaces).CurrentItem;
             if (workspace == null)
                 return;
-            DisplayName = string.Format("{0} - {1}", BookKeeping.App.Properties.Resources.MainWindow_Title, workspace.DisplayName); ;
+            DisplayName = string.Format(CultureInfo.CurrentCulture, "{0} - {1}", BookKeeping.App.Properties.Resources.MainWindow_Title, workspace.DisplayName); ;
         }
 
         private TViewModel CreateOrGetExistWorkspace<TViewModel>(out bool isExist)

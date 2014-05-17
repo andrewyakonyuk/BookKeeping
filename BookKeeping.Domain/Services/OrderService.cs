@@ -1,7 +1,9 @@
-﻿using BookKeeping.Domain.Aggregates;
+﻿using System;
+using System.Collections.Generic;
+using System.Diagnostics.Contracts;
+using BookKeeping.Domain.Aggregates;
 using BookKeeping.Domain.Repositories;
 using BookKeeping.Infrastructure.Caching;
-using System.Collections.Generic;
 
 namespace BookKeeping.Domain.Services
 {
@@ -12,6 +14,8 @@ namespace BookKeeping.Domain.Services
 
        public OrderService(IOrderRepository repository, ICacheService cache)
        {
+           Contract.Requires<ArgumentNullException>(repository != null);
+           Contract.Requires<ArgumentNullException>(cache != null);
            _repository = repository;
            _cache = cache;
        }

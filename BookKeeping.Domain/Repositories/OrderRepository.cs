@@ -2,24 +2,24 @@
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Linq;
 
 namespace BookKeeping.Domain.Repositories
 {
-    public class OrderRepository : IOrderRepository
+    public sealed class OrderRepository : IOrderRepository
     {
         public Maybe<Order> Get(long orderId)
         {
-            throw new NotImplementedException();
+           return Maybe<Order>.Empty;
         }
 
         public IEnumerable<Order> GetAll()
         {
-            throw new NotImplementedException();
+            return Enumerable.Empty<Order>();
         }
 
         public void Dispose()
         {
-            throw new NotImplementedException();
         }
     }
 }

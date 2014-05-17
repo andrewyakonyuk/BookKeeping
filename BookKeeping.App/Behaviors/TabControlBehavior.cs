@@ -8,6 +8,7 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;
 using System.Windows.Markup;
+using System.Diagnostics.Contracts;
 
 namespace BookKeeping.App.Behaviors
 {
@@ -21,11 +22,13 @@ namespace BookKeeping.App.Behaviors
     {
         public static bool GetIsCached(DependencyObject obj)
         {
+            Contract.Requires<ArgumentNullException>(obj != null);
             return (bool)obj.GetValue(IsCachedProperty);
         }
 
         public static void SetIsCached(DependencyObject obj, bool value)
         {
+            Contract.Requires<ArgumentNullException>(obj != null);
             obj.SetValue(IsCachedProperty, value);
         }
 
@@ -39,11 +42,13 @@ namespace BookKeeping.App.Behaviors
 
         public static DataTemplate GetTemplate(DependencyObject obj)
         {
+            Contract.Requires<ArgumentNullException>(obj != null);
             return (DataTemplate)obj.GetValue(TemplateProperty);
         }
 
         public static void SetTemplate(DependencyObject obj, DataTemplate value)
         {
+            Contract.Requires<ArgumentNullException>(obj != null);
             obj.SetValue(TemplateProperty, value);
         }
 
@@ -56,11 +61,13 @@ namespace BookKeeping.App.Behaviors
 
         public static DataTemplateSelector GetTemplateSelector(DependencyObject obj)
         {
+            Contract.Requires<ArgumentNullException>(obj != null);
             return (DataTemplateSelector)obj.GetValue(TemplateSelectorProperty);
         }
 
         public static void SetTemplateSelector(DependencyObject obj, DataTemplateSelector value)
         {
+            Contract.Requires<ArgumentNullException>(obj != null);
             obj.SetValue(TemplateSelectorProperty, value);
         }
 
@@ -73,12 +80,14 @@ namespace BookKeeping.App.Behaviors
         [EditorBrowsable(EditorBrowsableState.Never)]
         public static TabControl GetInternalTabControl(DependencyObject obj)
         {
+            Contract.Requires<ArgumentNullException>(obj != null);
             return (TabControl)obj.GetValue(InternalTabControlProperty);
         }
 
         [EditorBrowsable(EditorBrowsableState.Never)]
         public static void SetInternalTabControl(DependencyObject obj, TabControl value)
         {
+            Contract.Requires<ArgumentNullException>(obj != null);
             obj.SetValue(InternalTabControlProperty, value);
         }
 
@@ -91,12 +100,14 @@ namespace BookKeeping.App.Behaviors
         [EditorBrowsable(EditorBrowsableState.Never)]
         public static ContentControl GetInternalCachedContent(DependencyObject obj)
         {
+            Contract.Requires<ArgumentNullException>(obj != null);
             return (ContentControl)obj.GetValue(InternalCachedContentProperty);
         }
 
         [EditorBrowsable(EditorBrowsableState.Never)]
         public static void SetInternalCachedContent(DependencyObject obj, ContentControl value)
         {
+            Contract.Requires<ArgumentNullException>(obj != null);
             obj.SetValue(InternalCachedContentProperty, value);
         }
 
@@ -108,12 +119,14 @@ namespace BookKeeping.App.Behaviors
         [EditorBrowsable(EditorBrowsableState.Never)]
         public static object GetInternalContentManager(DependencyObject obj)
         {
+            Contract.Requires<ArgumentNullException>(obj != null);
             return (object)obj.GetValue(InternalContentManagerProperty);
         }
 
         [EditorBrowsable(EditorBrowsableState.Never)]
         public static void SetInternalContentManager(DependencyObject obj, object value)
         {
+             Contract.Requires<ArgumentNullException>(obj != null);
             obj.SetValue(InternalContentManagerProperty, value);
         }
 
@@ -235,6 +248,9 @@ namespace BookKeeping.App.Behaviors
 
             public ContentManager(TabControl tabControl, Decorator border)
             {
+                Contract.Requires<ArgumentNullException>(tabControl != null);
+                Contract.Requires<ArgumentNullException>(border != null);
+
                 _tabControl = tabControl;
                 _border = border;
                 _tabControl.SelectionChanged += (sender, args) => { UpdateSelectedTab(); };

@@ -8,9 +8,14 @@ namespace BookKeeping.App.ViewModels
     {
         public string Error { get; set; }
 
-        public virtual string this[string columnName]
+        public string this[string columnName]
         {
-            get { throw new NotImplementedException(); }
+            get { return GetErrorMessage(columnName); }
+        }
+
+        protected virtual string GetErrorMessage(string columnName)
+        {
+            return null;
         }
 
         private object _source;

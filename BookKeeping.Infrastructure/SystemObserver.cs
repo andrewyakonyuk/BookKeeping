@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Diagnostics;
 using System.Globalization;
+using System.Diagnostics.Contracts;
 
 namespace BookKeeping.Infrastructure
 {
@@ -44,6 +45,8 @@ namespace BookKeeping.Infrastructure
 
         public static void Notify(string message, params object[] args)
         {
+            Contract.Requires<ArgumentNullException>(message != null);
+            Contract.Requires<ArgumentNullException>(args != null);
             Notify(new MessageEvent(string.Format(CultureInfo.InvariantCulture, message, args)));
         }
 
@@ -61,16 +64,21 @@ namespace BookKeeping.Infrastructure
 
         public sealed class MessageEvent : ISystemEvent
         {
-            public readonly string Message;
+            readonly string _message;
+
+            public string Message
+            {
+                get { return _message; }
+            }
 
             public MessageEvent(string message)
             {
-                Message = message;
+                _message = message;
             }
 
             public override string ToString()
             {
-                return Message;
+                return _message;
             }
         }
 

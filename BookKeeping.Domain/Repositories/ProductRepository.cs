@@ -5,7 +5,7 @@ using BookKeeping.Domain.Aggregates;
 
 namespace BookKeeping.Domain.Repositories
 {
-    public class ProductRepository : IProductRepository
+    public sealed class ProductRepository : IProductRepository
     {
         public decimal GetStock(long productId)
         {

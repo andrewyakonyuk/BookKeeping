@@ -68,11 +68,6 @@ namespace BookKeeping.App.ViewModels
             get { return _selectedItem; }
             set
             {
-                if (ShowProductDetail)
-                {
-                    //TODO: wtf?
-                    var currentItem = CollectionView.CurrentItem;
-                }
                 ShowProductDetail = false;
                 OnPropertyChanging(() => SelectedItem);
                 _selectedItem = value;

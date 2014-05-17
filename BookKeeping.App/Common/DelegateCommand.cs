@@ -9,12 +9,17 @@ namespace BookKeeping.App.Common
         private readonly Predicate<object> _canExecute;
         private readonly Action<object> _execute;
 
-        public DelegateCommand(Action<object> execute, Predicate<object> canExecute = null)
+        public DelegateCommand(Action<object> execute, Predicate<object> canExecute)
         {
             if (execute == null)
                 throw new ArgumentNullException("execute");
             _execute = execute;
             _canExecute = canExecute;
+        }
+
+        public DelegateCommand(Action<object> execute)
+            : this(execute, null)
+        {
         }
 
         [DebuggerStepThrough]

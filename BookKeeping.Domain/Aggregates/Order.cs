@@ -3,6 +3,7 @@ using BookKeeping.Infrastructure;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Diagnostics.Contracts;
 
 namespace BookKeeping.Domain.Aggregates
 {
@@ -42,6 +43,9 @@ namespace BookKeeping.Domain.Aggregates
 
         public Order(IOrderCalculator calculator, IProductService productService)
         {
+            Contract.Requires<ArgumentNullException>(calculator != null);
+            Contract.Requires<ArgumentNullException>(productService != null);
+
             _calculator = calculator;
             _productService = productService;
 

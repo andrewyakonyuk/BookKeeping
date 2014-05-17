@@ -13,6 +13,7 @@ namespace BookKeeping.App.Common
 
         public virtual event PropertyChangedEventHandler PropertyChanged;
 
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design","CA1006")]
         protected void OnPropertyChanged<T>(Expression<Func<T>> action)
         {
             Contract.Requires(action != null);
@@ -41,6 +42,7 @@ namespace BookKeeping.App.Common
             if (handler != null) handler(this, new PropertyChangingEventArgs(propertyName));
         }
 
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1006")]
         protected void OnPropertyChanging<T>(Expression<Func<T>> action)
         {
             Contract.Requires(action != null);
@@ -68,10 +70,9 @@ namespace BookKeeping.App.Common
             {
                 string msg = "Неверное имя свойства: " + propertyName;
                 if (ThrowOnInvalidPropertyName)
-                    throw new Exception(msg);
+                    throw new ArgumentException(msg);
                 else
                     Debug.Fail(msg);
-                Debug.Fail(msg);
             }
         }
 
