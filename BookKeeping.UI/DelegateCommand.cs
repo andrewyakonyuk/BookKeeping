@@ -2,14 +2,20 @@
 using System.Diagnostics;
 using System.Windows.Input;
 
-namespace BookKeeping.App.Common
+namespace BookKeeping.UI
 {
     public class DelegateCommand : ICommand
     {
+        #region Fields
+
         private readonly Predicate<object> _canExecute;
         private readonly Action<object> _execute;
 
-        public DelegateCommand(Action<object> execute, Predicate<object> canExecute)
+        #endregion Fields
+
+        #region Constructors
+
+        public DelegateCommand(Action<object> execute, Predicate<object> canExecute = null)
         {
             if (execute == null)
                 throw new ArgumentNullException("execute");
@@ -17,10 +23,9 @@ namespace BookKeeping.App.Common
             _canExecute = canExecute;
         }
 
-        public DelegateCommand(Action<object> execute)
-            : this(execute, null)
-        {
-        }
+        #endregion Constructors
+
+        #region ICommand Members
 
         [DebuggerStepThrough]
         public bool CanExecute(object parameter)
@@ -38,5 +43,7 @@ namespace BookKeeping.App.Common
         {
             _execute(parameter);
         }
+
+        #endregion ICommand Members
     }
 }

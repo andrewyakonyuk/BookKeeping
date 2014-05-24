@@ -1,14 +1,22 @@
-﻿using BookKeeping.App.Common;
-using System;
+﻿using System;
 using System.ComponentModel;
+using BookKeeping.UI.Localization;
 
-namespace BookKeeping.App.ViewModels
+namespace BookKeeping.UI.ViewModels
 {
-    public class ViewModelBase : NotificationObject, IDataErrorInfo
+    public abstract class ViewModelBase :  NotificationObject, IDataErrorInfo
     {
+
+        public ViewModelBase()
+        {
+            T = ResourceLocalizer.Instance;
+        }
+
+        #region Реализация интерфейса IDataErrorInfo 
+
         public string Error { get; set; }
 
-        public string this[string columnName]
+        public virtual string this[string columnName]
         {
             get { return GetErrorMessage(columnName); }
         }
@@ -17,6 +25,10 @@ namespace BookKeeping.App.ViewModels
         {
             return null;
         }
+
+        public virtual Localizer T { get; set; }
+
+        #endregion
 
         private object _source;
 
@@ -31,5 +43,6 @@ namespace BookKeeping.App.ViewModels
                 OnPropertyChanged(() => Source);
             }
         }
+
     }
 }

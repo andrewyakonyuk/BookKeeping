@@ -1,8 +1,7 @@
-﻿using BookKeeping.App.Common;
-using System.Windows;
+﻿using System.Windows;
 using System.Windows.Input;
 
-namespace BookKeeping.App.ViewModels
+namespace BookKeeping.UI.ViewModels
 {
     public class WorkspaceViewModel : ViewModelBase
     {
@@ -19,9 +18,9 @@ namespace BookKeeping.App.ViewModels
             set
             {
                 if (string.Equals(_displayName, value)) return;
-                OnPropertyChanging(() => DisplayName);
+                OnPropertyChanging("DisplayName");
                 _displayName = value;
-                OnPropertyChanged(() => DisplayName);
+                OnPropertyChanged("DisplayName");
             }
         }
 

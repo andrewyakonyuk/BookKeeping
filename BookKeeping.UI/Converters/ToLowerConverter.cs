@@ -1,22 +1,21 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using MahApps.Metro.Converters;
 using System.Globalization;
+using System.Windows.Data;
+using MahApps.Metro.Converters;
 
-namespace BookKeeping.App.Converters
+namespace BookKeeping.UI.Converters
 {
-    public class SecurityLevelToVisibilityConverter : MarkupConverter
+    public class ToLowerConverter : MarkupConverter
     {
         protected override object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
-            throw new NotImplementedException();
+            var val = value as string;
+            return val != null ? val.ToLower() : value;
         }
 
         protected override object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
         {
-            return null;
+            return Binding.DoNothing;
         }
     }
 }

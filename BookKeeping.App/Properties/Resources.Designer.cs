@@ -79,6 +79,24 @@ namespace BookKeeping.App.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Main window.
+        /// </summary>
+        public static string Application_Name {
+            get {
+                return ResourceManager.GetString("Application_Name", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Ready.
+        /// </summary>
+        public static string Application_Ready {
+            get {
+                return ResourceManager.GetString("Application_Ready", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Balance.
         /// </summary>
         public static string Balance {
@@ -192,15 +210,6 @@ namespace BookKeeping.App.Properties {
         public static string ItemNo {
             get {
                 return ResourceManager.GetString("ItemNo", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Main window.
-        /// </summary>
-        public static string MainWindow_Title {
-            get {
-                return ResourceManager.GetString("MainWindow_Title", resourceCulture);
             }
         }
         

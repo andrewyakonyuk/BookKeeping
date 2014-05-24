@@ -1,6 +1,7 @@
 ﻿using BookKeeping.App.ViewModels;
 using BookKeeping.App.Views;
 using System.Windows;
+using BookKeeping.UI.Localization;
 
 namespace BookKeeping.App
 {
@@ -14,6 +15,8 @@ namespace BookKeeping.App
             base.OnStartup(e);
 
             System.Threading.Thread.CurrentThread.CurrentUICulture = System.Globalization.CultureInfo.CurrentCulture;
+
+            ResourceLocalizer.Initialize(BookKeeping.App.Properties.Resources.ResourceManager);
 
             MainWindow window = new MainWindow();
             var viewModel = new MainWindowViewModel();

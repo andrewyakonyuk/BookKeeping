@@ -1,23 +1,17 @@
 ﻿using System;
 using System.ComponentModel;
 using System.Diagnostics;
-using System.Diagnostics.Contracts;
 using System.Linq.Expressions;
 
-namespace BookKeeping.App.Common
+namespace BookKeeping.UI.ViewModels
 {
-    [Serializable]
-    public abstract class NotificationObject : INotifyPropertyChanged, INotifyPropertyChanging
+    public class MenuTreeNodeBase<T> : TreeNode<T>
+        where T : TreeNode<T>
     {
-        #region Реализация интерфейса INotifyPropertyChanged
+        public event PropertyChangedEventHandler PropertyChanged;
 
-        public virtual event PropertyChangedEventHandler PropertyChanged;
-
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design","CA1006")]
-        protected void OnPropertyChanged<T>(Expression<Func<T>> action)
+        protected void OnPropertyChanged<S>(Expression<Func<S>> action)
         {
-            Contract.Requires(action != null);
-
             var propertyName = GetPropertyName(action);
             OnPropertyChanged(propertyName);
         }
@@ -29,11 +23,7 @@ namespace BookKeeping.App.Common
             if (handler != null) handler(this, new PropertyChangedEventArgs(propertyName));
         }
 
-        #endregion Реализация интерфейса INotifyPropertyChanged
-
-        #region Реализация интерфейса INotifyPropertyChanging
-
-        public virtual event PropertyChangingEventHandler PropertyChanging;
+        public event PropertyChangingEventHandler PropertyChanging;
 
         protected void OnPropertyChanging(string propertyName)
         {
@@ -42,20 +32,13 @@ namespace BookKeeping.App.Common
             if (handler != null) handler(this, new PropertyChangingEventArgs(propertyName));
         }
 
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1006")]
-        protected void OnPropertyChanging<T>(Expression<Func<T>> action)
+        protected void OnPropertyChanging<S>(Expression<Func<S>> action)
         {
-            Contract.Requires(action != null);
-
             var propertyName = GetPropertyName(action);
             OnPropertyChanging(propertyName);
         }
 
-        #endregion Реализация интерфейса INotifyPropertyChanging
-
-        #region Вспомогательные члены класса
-
-        private static string GetPropertyName<T>(Expression<Func<T>> action)
+        private static string GetPropertyName<S>(Expression<Func<S>> action)
         {
             var expression = (MemberExpression)action.Body;
             var propertyName = expression.Member.Name;
@@ -68,16 +51,15 @@ namespace BookKeeping.App.Common
         {
             if (TypeDescriptor.GetProperties(this)[propertyName] == null)
             {
-                string msg = "Неверное имя свойства: " + propertyName;
+                string msg = "Invalid property name: " + propertyName;
                 if (ThrowOnInvalidPropertyName)
-                    throw new ArgumentException(msg);
+                    throw new InvalidOperationException(msg);
                 else
                     Debug.Fail(msg);
+                Debug.Fail(msg);
             }
         }
 
         protected bool ThrowOnInvalidPropertyName { get; set; }
-
-        #endregion Вспомогательные члены класса
     }
 }

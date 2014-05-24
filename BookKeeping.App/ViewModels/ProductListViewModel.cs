@@ -1,5 +1,4 @@
-﻿using BookKeeping.App.Common;
-using System;
+﻿using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -11,6 +10,8 @@ using BookKeeping.Domain.Aggregates;
 using BookKeeping.Domain.Repositories;
 using BookKeeping.Domain.Services;
 using BookKeeping.Domain.Factories;
+using BookKeeping.UI;
+using BookKeeping.UI.ViewModels;
 
 namespace BookKeeping.App.ViewModels
 {
@@ -32,7 +33,23 @@ namespace BookKeeping.App.ViewModels
 
             DisplayName = BookKeeping.App.Properties.Resources.Product_List;
 
-            Source = new ObservableCollection<Product>(_serviceFactory.Create<IProductService>().GetAll());
+            Source = new ObservableCollection<ProductViewModel>(GetProducts());
+        }
+
+        protected virtual IEnumerable<ProductViewModel> GetProducts()
+        {
+            return _serviceFactory.Create<IProductService>().GetAll().Select(p => new ProductViewModel
+                 {
+                     Id = p.Id,
+                     Barcode = p.Barcode,
+                     IsOrderable = p.IsOrderable,
+                     ItemNo = p.ItemNo,
+                     Price = p.Price,
+                     Stock = p.Stock,
+                     Title = p.Title,
+                     UnitOfMeasure = p.UnitOfMeasure,
+                     VatRate = p.VatRate
+                 });
         }
 
         public string SearchText
