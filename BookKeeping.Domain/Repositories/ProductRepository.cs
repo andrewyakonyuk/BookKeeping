@@ -25,22 +25,21 @@ namespace BookKeeping.Domain.Repositories
         public IEnumerable<Product> GetAll()
         {
             var random = new Random();
-            for (int i = 0; i < 10; i++)
+            for (int i = 0; i < 100; i++)
             {
                 yield return new Product
                 {
                     Id = i,
-                    Barcode = Barcode.Undefined,
+                    Barcode = new Barcode("12342323", BarcodeType.EAN13),
                     IsOrderable = true,
                     ItemNo = "item no. " + (i + 1),
                     Price = new CurrencyAmount(random.Next(10, 100), Currency.Eur),
                     Stock = random.Next(1, 1000),
                     Title = new string("qwertyuiopasdfghjklzxcvbnm".Substring(random.Next(0, 12)).OrderBy(t => Guid.NewGuid()).ToArray()),
                     UnitOfMeasure = "m2",
-                    VatRate = new VatRate(random.Next(0, 50))
+                    VatRate = new VatRate(new decimal(random.NextDouble())),
                 };
             }
-           
         }
 
         public void Dispose()

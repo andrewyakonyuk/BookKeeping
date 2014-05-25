@@ -49,6 +49,8 @@ namespace BookKeeping.Domain
 
         public override string ToString()
         {
+            if (Type == BarcodeType.Undefined)
+                return Code;
             return string.Format(CultureInfo.InvariantCulture, "{0} {1}", Code, Type);
         }
     }

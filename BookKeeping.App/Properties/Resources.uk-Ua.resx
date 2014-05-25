@@ -127,7 +127,7 @@
     <value>Баланс</value>
   </data>
   <data name="Barcode" xml:space="preserve">
-    <value>Barcode</value>
+    <value>Штирх-код</value>
   </data>
   <data name="Capacity" xml:space="preserve">
     <value>Кількість</value>
@@ -139,7 +139,10 @@
     <value>Копіювати</value>
   </data>
   <data name="Cut" xml:space="preserve">
-    <value>Cut</value>
+    <value>Вирізати</value>
+  </data>
+  <data name="DoFilter" xml:space="preserve">
+    <value>Фільтрувати...</value>
   </data>
   <data name="DoSearch" xml:space="preserve">
     <value>Пошук...</value>
@@ -152,6 +155,9 @@
   </data>
   <data name="File" xml:space="preserve">
     <value>Файл</value>
+  </data>
+  <data name="FIlter" xml:space="preserve">
+    <value>Фільтрувати</value>
   </data>
   <data name="Find" xml:space="preserve">
     <value>Знайти</value>
@@ -169,7 +175,7 @@
     <value>Назва</value>
   </data>
   <data name="Paste" xml:space="preserve">
-    <value>Paste</value>
+    <value>Вставити</value>
   </data>
   <data name="Price" xml:space="preserve">
     <value>Ціна</value>
@@ -181,7 +187,7 @@
     <value>Перелік продуктів</value>
   </data>
   <data name="Redo" xml:space="preserve">
-    <value>Redo</value>
+    <value>Повторити</value>
   </data>
   <data name="Save" xml:space="preserve">
     <value>Зберегти</value>
@@ -205,12 +211,12 @@
     <value>Назва</value>
   </data>
   <data name="Undo" xml:space="preserve">
-    <value>Undo</value>
+    <value>Відмінити</value>
   </data>
-  <data name="Unit_of_measure" xml:space="preserve">
-    <value>Unit of measure</value>
+  <data name="UnitOfMeasure" xml:space="preserve">
+    <value>Одиниця вимірювання</value>
   </data>
-  <data name="Vat" xml:space="preserve">
-    <value>VAT</value>
+  <data name="VatRate" xml:space="preserve">
+    <value>ПДВ</value>
   </data>
 </root>

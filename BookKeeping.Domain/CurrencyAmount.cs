@@ -93,6 +93,8 @@ namespace BookKeeping.Domain
 
         public override string ToString()
         {
+            if (this.Currency == Domain.Currency.Undefined)
+                return string.Format("{0:0.##}", Amount);
             return string.Format("{0:0.##} {1}", Amount, Currency.ToString().ToUpper());
         }
     }

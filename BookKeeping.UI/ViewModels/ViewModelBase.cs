@@ -6,14 +6,12 @@ namespace BookKeeping.UI.ViewModels
 {
     public abstract class ViewModelBase :  NotificationObject, IDataErrorInfo
     {
+        private bool _isValid = true;
 
         public ViewModelBase()
         {
             T = ResourceLocalizer.Instance;
         }
-
-        #region Реализация интерфейса IDataErrorInfo 
-
         public string Error { get; set; }
 
         public virtual string this[string columnName]
@@ -28,8 +26,6 @@ namespace BookKeeping.UI.ViewModels
 
         public virtual Localizer T { get; set; }
 
-        #endregion
-
         private object _source;
 
         public object Source
@@ -41,6 +37,19 @@ namespace BookKeeping.UI.ViewModels
                 OnPropertyChanging(() => Source);
                 _source = value;
                 OnPropertyChanged(() => Source);
+            }
+        }
+
+        public bool IsValid
+        {
+            get
+            {
+                return _isValid;
+            }
+            protected set
+            {
+                _isValid = value;
+                OnPropertyChanged(() => IsValid);
             }
         }
 

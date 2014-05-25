@@ -3,18 +3,20 @@ using BookKeeping.UI.ViewModels;
 
 namespace BookKeeping.App.ViewModels
 {
-   public class ProductViewModel : ViewModelBase
+    public class ProductViewModel : ViewModelBase
     {
-        private long _id;
-
-        public long Id
+        public ProductViewModel()
         {
-            get { return _id; }
-            set
-            {
-                _id = value;
-                OnPropertyChanged(() => Id);
-            }
+            this.PropertyChanged += ProductViewModel_PropertyChanged;
+        }
+
+        void ProductViewModel_PropertyChanged(object sender, System.ComponentModel.PropertyChangedEventArgs e)
+        {
+            if (e.PropertyName == GetPropertyName(() => HasChanges) 
+                || e.PropertyName == GetPropertyName(() => IsHighlight)
+                || e.PropertyName == GetPropertyName(()=>IsValid))
+                return;
+            HasChanges = true;
         }
 
         private string _title;
@@ -109,6 +111,82 @@ namespace BookKeeping.App.ViewModels
             {
                 _isOrderable = value;
                 OnPropertyChanged(() => IsOrderable);
+            }
+        }
+
+        private bool _hasChanges;
+
+        public bool HasChanges
+        {
+            get { return _hasChanges; }
+            set
+            {
+                _hasChanges = value;
+                OnPropertyChanged(() => HasChanges);
+            }
+        }
+        
+
+        protected override string GetErrorMessage(string columnName)
+        {
+            switch (columnName)
+            {
+                case "Stock":
+                    if (Stock < 0)
+                    {
+                        IsValid = false;
+                        return T("ShouldBeMoreOrEqualZero");
+                    }
+                    break;
+                case "VatRate":
+                    if (VatRate < 0M)
+                    {
+                        IsValid = false;
+                        return T("ShouldBeMoreOrEqualZero");
+                    }
+                    break;
+                case "Price":
+                    if (Price.Amount < 0)
+                    {
+                        IsValid = false;
+                        return T("ShouldBeMoreOrEqualZero");
+                    }
+                    if (Price.Currency == Currency.Undefined)
+                    {
+                        IsValid = false;
+                        return T("CurrencyShouldBeNotUndefined");
+                    }
+                    break;
+                case "ItemNo":
+                    if (string.IsNullOrWhiteSpace(ItemNo))
+                    {
+                        IsValid = false;
+                        return T("ShouldBeNotEmpty");
+                    }
+                    break;
+                case "Barcode":
+                    if (Barcode.Type == BarcodeType.Undefined)
+                    {
+                        IsValid = false;
+                        return T("BarcodeShouldBeNotUndefined");
+                    }
+                    break;
+                default:
+                    return null;
+            }
+            IsValid = true;
+            return null;
+        }
+
+        private bool _isHighlight;
+
+        public bool IsHighlight
+        {
+            get { return _isHighlight; }
+            set
+            {
+                _isHighlight = value;
+                OnPropertyChanged(() => IsHighlight);
             }
         }
         

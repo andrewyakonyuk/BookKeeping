@@ -8,6 +8,6 @@ namespace BookKeeping.Domain
         Undefined,
         Eur,
         Usd,
-        Rur
+        Uan
     }
 }

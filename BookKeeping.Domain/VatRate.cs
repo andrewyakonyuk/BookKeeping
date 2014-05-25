@@ -37,7 +37,12 @@ namespace BookKeeping.Domain
 
         public override string ToString()
         {
-            return this.VatPersentage.ToString("p", System.Globalization.CultureInfo.CurrentCulture);
+            return this.ToString(System.Globalization.CultureInfo.CurrentCulture);
+        }
+
+        public string ToString(System.Globalization.CultureInfo culture)
+        {
+            return this.VatPersentage.ToString("p", culture);
         }
 
         public override bool Equals(object obj)
@@ -66,6 +71,46 @@ namespace BookKeeping.Domain
         public static bool operator !=(VatRate left, VatRate right)
         {
             return !left.Equals(right);
+        }
+
+        public static bool operator >(VatRate left, VatRate right)
+        {
+            return left.VatPersentage > right.VatPersentage;
+        }
+
+        public static bool operator >(VatRate left, decimal right)
+        {
+            return left.VatPersentage > right;
+        }
+
+        public static bool operator >=(VatRate left, VatRate right)
+        {
+            return left.VatPersentage >= right.VatPersentage;
+        }
+
+        public static bool operator >=(VatRate left, decimal right)
+        {
+            return left.VatPersentage >= right;
+        }
+
+        public static bool operator <(VatRate left, VatRate right)
+        {
+            return left.VatPersentage < right.VatPersentage;
+        }
+
+        public static bool operator <(VatRate left, decimal right)
+        {
+            return left.VatPersentage < right;
+        }
+
+        public static bool operator <=(VatRate left, VatRate right)
+        {
+            return left.VatPersentage <= right.VatPersentage;
+        }
+
+        public static bool operator <=(VatRate left, decimal right)
+        {
+            return left.VatPersentage <= right;
         }
     }
 }

@@ -3,9 +3,10 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:System.Globalization="clr-namespace:System.Globalization;assembly=mscorlib"
              mc:Ignorable="d" 
              xmlns:p="clr-namespace:BookKeeping.App.Properties"
-             xmlns:converters.domain="BookKeeping.App.Converters.Domain"
+             xmlns:converters.domain="clr-namespace:BookKeeping.App.Converters"
              d:DesignHeight="130" d:DesignWidth="600">
     <UserControl.Resources>
             <ResourceDictionary>
@@ -45,19 +46,39 @@
             </Style>
         </Grid.Resources>
         <TextBlock Text="{x:Static p:Resources.Title}" Grid.Row="0" Grid.Column="0"></TextBlock>
-        <TextBox Text="{Binding Path=Title, Mode=TwoWay}" Grid.Row="0" Grid.Column="1"></TextBox>
+        <TextBox Text="{Binding Path=Title, Mode=TwoWay, UpdateSourceTrigger=LostFocus, NotifyOnValidationError=True,
+            ValidatesOnExceptions=True, ValidatesOnDataErrors=True}" Grid.Row="0" Grid.Column="1"
+            Validation.ErrorTemplate="{DynamicResource ValidationErrorTemplate}"></TextBox>
         <TextBlock Text="{x:Static p:Resources.Barcode}" Grid.Row="1" Grid.Column="0"></TextBlock>
-        <TextBox Text="{Binding Path=Barcode, Mode=TwoWay}" Grid.Row="1" Grid.Column="1"></TextBox>
+        <TextBox Text="{Binding Path=Barcode, Mode=TwoWay, Converter={converters.domain:BarcodeConverter},
+            UpdateSourceTrigger=LostFocus, NotifyOnValidationError=True, ValidatesOnExceptions=True, ValidatesOnDataErrors=True}"
+                 Grid.Row="1" Grid.Column="1"
+                 Validation.ErrorTemplate="{DynamicResource ValidationErrorTemplate}"></TextBox>
         <TextBlock Text="{x:Static p:Resources.ItemNo}" Grid.Row="2" Grid.Column="0"></TextBlock>
-        <TextBox Text="{Binding Path=ItemNo, Mode=TwoWay}" Grid.Row="2" Grid.Column="1"></TextBox>
+        <TextBox Text="{Binding Path=ItemNo, Mode=TwoWay, UpdateSourceTrigger=LostFocus, NotifyOnValidationError=True,
+            ValidatesOnExceptions=True, ValidatesOnDataErrors=True}"
+                 Validation.ErrorTemplate="{DynamicResource ValidationErrorTemplate}"
+                 Grid.Row="2" Grid.Column="1"></TextBox>
         <TextBlock Text="{x:Static p:Resources.Price}" Grid.Row="3" Grid.Column="0"></TextBlock>
-        <TextBox Text="{Binding Price, Mode=TwoWay}" Grid.Row="3" Grid.Column="1"></TextBox>
-
+        <TextBox Text="{Binding Price, Mode=TwoWay, Converter={converters.domain:PriceConverter},
+            ConverterCulture={x:Static System.Globalization:CultureInfo.CurrentCulture}, UpdateSourceTrigger=LostFocus,
+            NotifyOnValidationError=True, ValidatesOnExceptions=True, ValidatesOnDataErrors=True}"
+            Validation.ErrorTemplate="{DynamicResource ValidationErrorTemplate}"
+            Grid.Row="3" Grid.Column="1"></TextBox>
+        
         <TextBlock Text="{x:Static p:Resources.Stock}" Grid.Row="0" Grid.Column="2"></TextBlock>
-        <TextBox Text="{Binding Path=Stock, Mode=TwoWay}" Grid.Row="0" Grid.Column="3"></TextBox>
+        <TextBox Text="{Binding Path=Stock, Mode=TwoWay, UpdateSourceTrigger=LostFocus, NotifyOnValidationError=True,
+            ValidatesOnExceptions=True, ValidatesOnDataErrors=True}" Grid.Row="0" Grid.Column="3"
+                 Validation.ErrorTemplate="{DynamicResource ValidationErrorTemplate}"></TextBox>
         <TextBlock Text="{x:Static p:Resources.UnitOfMeasure}" Grid.Row="1" Grid.Column="2"></TextBlock>
-        <TextBox Text="{Binding Path=UOM, Mode=TwoWay}" Grid.Row="1" Grid.Column="3"></TextBox>
+        <TextBox Text="{Binding Path=UnitOfMeasure, Mode=TwoWay, UpdateSourceTrigger=LostFocus, NotifyOnValidationError=True,
+            ValidatesOnExceptions=True, ValidatesOnDataErrors=True}" Grid.Row="1" Grid.Column="3"
+                 Validation.ErrorTemplate="{DynamicResource ValidationErrorTemplate}"></TextBox>
         <TextBlock Text="{x:Static p:Resources.VatRate}" Grid.Row="2" Grid.Column="2"></TextBlock>
-        <TextBox Text="{Binding Path=VAT, Mode=TwoWay}" Grid.Row="2" Grid.Column="3"></TextBox>
+        <TextBox Text="{Binding Path=VatRate, Mode=TwoWay, Converter={converters.domain:VatRateConverter},
+            ConverterCulture={x:Static System.Globalization:CultureInfo.CurrentCulture}, UpdateSourceTrigger=LostFocus,
+            NotifyOnValidationError=True, ValidatesOnExceptions=True, ValidatesOnDataErrors=True}"
+                 Validation.ErrorTemplate="{DynamicResource ValidationErrorTemplate}"
+                 Grid.Row="2" Grid.Column="3"></TextBox>
     </Grid>
 </UserControl>

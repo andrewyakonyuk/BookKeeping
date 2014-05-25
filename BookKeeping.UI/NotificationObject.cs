@@ -50,7 +50,7 @@ namespace BookKeeping.UI
 
         #region Вспомогательные члены класса
 
-        private static string GetPropertyName<T>(Expression<Func<T>> action)
+        protected static string GetPropertyName<T>(Expression<Func<T>> action)
         {
             var expression = (MemberExpression)action.Body;
             var propertyName = expression.Member.Name;

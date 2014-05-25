@@ -29,6 +29,8 @@
     <ApplicationVersion>1.0.0.%2a</ApplicationVersion>
     <UseApplicationTrust>false</UseApplicationTrust>
     <BootstrapperEnabled>true</BootstrapperEnabled>
+    <TargetFrameworkProfile>
+    </TargetFrameworkProfile>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <PlatformTarget>AnyCPU</PlatformTarget>
@@ -45,7 +47,7 @@
     <CodeContractsRuntimeThrowOnFailure>False</CodeContractsRuntimeThrowOnFailure>
     <CodeContractsRuntimeCallSiteRequires>False</CodeContractsRuntimeCallSiteRequires>
     <CodeContractsRuntimeSkipQuantifiers>False</CodeContractsRuntimeSkipQuantifiers>
-    <CodeContractsRunCodeAnalysis>True</CodeContractsRunCodeAnalysis>
+    <CodeContractsRunCodeAnalysis>False</CodeContractsRunCodeAnalysis>
     <CodeContractsNonNullObligations>True</CodeContractsNonNullObligations>
     <CodeContractsBoundsObligations>True</CodeContractsBoundsObligations>
     <CodeContractsArithmeticObligations>True</CodeContractsArithmeticObligations>
@@ -93,7 +95,6 @@
     <Reference Include="System" />
     <Reference Include="System.configuration" />
     <Reference Include="System.Data" />
-    <Reference Include="System.Runtime.Caching" />
     <Reference Include="System.Windows.Interactivity, Version=4.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <HintPath>..\packages\MahApps.Metro.0.13.1.0\lib\net40\System.Windows.Interactivity.dll</HintPath>
     </Reference>
@@ -113,6 +114,9 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="Converters\BarcodeConverter.cs" />
+    <Compile Include="Converters\PriceConverter.cs" />
+    <Compile Include="Converters\VatRateConverter.cs" />
     <Compile Include="Properties\Resources.uk-Ua.Designer.cs">
       <DependentUpon>Resources.uk-Ua.resx</DependentUpon>
       <AutoGen>True</AutoGen>
@@ -240,6 +244,7 @@
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
       <SubType>Designer</SubType>
     </EmbeddedResource>
+    <None Include="app.config" />
     <None Include="packages.config" />
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>

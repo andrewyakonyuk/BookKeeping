@@ -151,6 +151,15 @@ namespace BookKeeping.App.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Filter....
+        /// </summary>
+        public static string DoFilter {
+            get {
+                return ResourceManager.GetString("DoFilter", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Search....
         /// </summary>
         public static string DoSearch {
@@ -183,6 +192,15 @@ namespace BookKeeping.App.Properties {
         public static string File {
             get {
                 return ResourceManager.GetString("File", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Filter.
+        /// </summary>
+        public static string Filter {
+            get {
+                return ResourceManager.GetString("Filter", resourceCulture);
             }
         }
         

@@ -15,6 +15,7 @@
                       xmlns:behaviors="clr-namespace:BookKeeping.UI.Behaviors;assembly=TimeTable.UI"
         mc:Ignorable="d"
         d:DesignHeight="400" d:DesignWidth="500"
+        Closing="MetroWindow_Closing"
         d:DataContext="{Binding viewmodels:MainWindowViewModel}"
                         WindowStartupLocation="CenterScreen"
                       Style="{DynamicResource VSWindowStyleKey}">
@@ -29,31 +30,15 @@
     <DockPanel>
         <Menu DockPanel.Dock="Top"
               SnapsToDevicePixels="True"
-              Margin="2,0,0,0">
-            <MenuItem Header="{x:Static p:Resources.File}">
-                <MenuItem Header="Rocket slot 1">
-                    <MenuItem Header="Open product list" Command="{Binding OpenProductList}"/>
-                    <MenuItem Header="Report damage to control room" />
-                </MenuItem>
-                <MenuItem Header="Rocket slot 2">
-                    <MenuItem Header="damaged .. being repaired" IsEnabled="False" />
-                </MenuItem>
-                <Separator></Separator>
-                <MenuItem Header="{x:Static p:Resources.Exit}" Command="{Binding Exit}"></MenuItem>
-            </MenuItem>
-            <MenuItem Header="{x:Static p:Resources.Edit}">
-                <MenuItem Command="Undo" Header="{x:Static p:Resources.Undo}"></MenuItem>
-                <MenuItem Command="Redo" Header="{x:Static p:Resources.Redo}"></MenuItem>
-                <Separator></Separator>
-                <MenuItem Command="Cut" Header="{x:Static p:Resources.Cut}"></MenuItem>
-                <MenuItem Command="Copy" Header="{x:Static p:Resources.Copy}"></MenuItem>
-                <MenuItem Command="Paste" Header="{x:Static p:Resources.Paste}"></MenuItem>
-                <Separator></Separator>
-                <MenuItem Command="SelectAll" Header="{x:Static p:Resources.Select_All}"></MenuItem>
-                <Separator></Separator>
-                <MenuItem Command="Find" Header="{x:Static p:Resources.Find}"></MenuItem>
-            </MenuItem>
-
+              Margin="2,0,0,0" ItemsSource="{Binding Path=MainMenu, Mode=OneWay}">
+            <Menu.Resources>
+                <Style TargetType="{x:Type Menu}" BasedOn="{StaticResource {x:Type Menu}}"></Style>
+                <Style TargetType="{x:Type MenuItem}" BasedOn="{StaticResource {x:Type MenuItem}}">
+                    <Setter Property="Command" Value="{Binding Command}" />
+                    <Setter Property="Header" Value="{Binding Title}" />
+                    <Setter Property="ItemsSource" Value="{Binding Children}"/>
+                </Style>
+            </Menu.Resources>
         </Menu>
         <StatusBar DockPanel.Dock="Bottom" Height="30" Background="Transparent">
             <StatusBarItem>
