@@ -32,6 +32,29 @@
             FocusManager.FocusedElement="{Binding ElementName=txtSearchBox}"
             BorderBrush="{DynamicResource BackgroundSelected}">
             <DockPanel LastChildFill="True" >
+                <Button DockPanel.Dock="Right" Width="22" Height="22" VerticalContentAlignment="Center"
+                        VerticalAlignment="Center" HorizontalAlignment="Center" HorizontalContentAlignment="Center"
+                        Background="Transparent" BorderThickness="0"
+                        Command="Find">
+                    <Button.Style>
+                        <Style TargetType="{x:Type Button}" BasedOn="{StaticResource {x:Type Button}}">
+                            <Style.Triggers>
+                                <Trigger Property="IsMouseOver" Value="True">
+                                    <Setter Property="Opacity" Value="1" />
+                                </Trigger>
+                                <Trigger Property="IsMouseOver" Value="False">
+                                    <Setter Property="Opacity" Value=".5" />
+                                </Trigger>
+                            </Style.Triggers>
+                        </Style>
+                    </Button.Style>
+                    <Rectangle Width="12" Height="12" Fill="Black">
+                        <Rectangle.OpacityMask>
+                            <VisualBrush Stretch="Fill"
+                                     Visual="{DynamicResource appbar_close}" />
+                        </Rectangle.OpacityMask>
+                    </Rectangle>
+                </Button>
                 <TextBox
                  Controls:TextboxHelper.Watermark="{x:Static p:Resources.DoSearch}"
                  BorderThickness="0"
@@ -55,6 +78,29 @@
             FocusManager.FocusedElement="{Binding ElementName=txtFilterBox}"
             BorderBrush="{DynamicResource BackgroundSelected}">
             <DockPanel LastChildFill="True" >
+                <Button DockPanel.Dock="Right" Width="22" Height="22" VerticalContentAlignment="Center"
+                        VerticalAlignment="Center" HorizontalAlignment="Center" HorizontalContentAlignment="Center"
+                        Background="Transparent" BorderThickness="0"
+                        Command="{Binding Path=FilterPopupCmd}">
+                    <Button.Style>
+                        <Style TargetType="{x:Type Button}" BasedOn="{StaticResource {x:Type Button}}">
+                            <Style.Triggers>
+                                <Trigger Property="IsMouseOver" Value="True">
+                                    <Setter Property="Opacity" Value="1" />
+                                </Trigger>
+                                <Trigger Property="IsMouseOver" Value="False">
+                                    <Setter Property="Opacity" Value=".5" />
+                                </Trigger>
+                            </Style.Triggers>
+                        </Style>
+                    </Button.Style>
+                    <Rectangle Width="12" Height="12" Fill="Black">
+                        <Rectangle.OpacityMask>
+                            <VisualBrush Stretch="Fill"
+                                     Visual="{DynamicResource appbar_close}" />
+                        </Rectangle.OpacityMask>
+                    </Rectangle>
+                </Button>
                 <TextBox
                  Controls:TextboxHelper.Watermark="{x:Static p:Resources.DoFilter}"
                  BorderThickness="0"

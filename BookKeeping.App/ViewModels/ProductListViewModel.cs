@@ -26,6 +26,7 @@ namespace BookKeeping.App.ViewModels
         object _selectedItem;
         IList _selectedItems;
         readonly ServiceFactory _serviceFactory;
+        readonly Regex filterExpressionRegex = new Regex(@"^(\s*)(?<field>\w+)(\s*)(?<operator>\W+)(\s*)(?<value>.+)", RegexOptions.Compiled);
 
         public ProductListViewModel()
         {
@@ -106,6 +107,12 @@ namespace BookKeeping.App.ViewModels
                     if (CollectionView.NeedsRefresh)
                         CollectionView.Refresh();
                 }
+                if (value)
+                    ShowFilterPopup = false;
+                else
+                {
+                    SearchText = string.Empty;
+                }
                 OnPropertyChanging(() => ShowFindPopup);
                 _showFindPopup = value;
                 OnPropertyChanged(() => ShowFindPopup);
@@ -117,6 +124,12 @@ namespace BookKeeping.App.ViewModels
             get { return _showFilterPopup; }
             set
             {
+                if (value)
+                    ShowFindPopup = false;
+                else
+                {
+                    ResetFilter();
+                }
                 OnPropertyChanging(() => ShowFilterPopup);
                 _showFilterPopup = value;
                 OnPropertyChanged(() => ShowFilterPopup);
@@ -169,13 +182,12 @@ namespace BookKeeping.App.ViewModels
 
         protected void DoFilter(string filterExpression)
         {
-            var regex = new Regex(@"^(\s*)(?<field>\w+)(\s*)(?<operator>\W+)(\s*)(?<value>.+)");
             Func<ProductViewModel, bool> selector = (p) => false;
             try
             {
-                if (regex.IsMatch(filterExpression))
+                if (!string.IsNullOrWhiteSpace(filterExpression) && filterExpressionRegex.IsMatch(filterExpression))
                 {
-                    var groups = regex.Match(filterExpression).Groups;
+                    var groups = filterExpressionRegex.Match(filterExpression).Groups;
                     selector = CreateFilterFunc<ProductViewModel>(groups["field"].Value.Trim(),
                         groups["operator"].Value.Trim(),
                         groups["value"].Value.Trim());
@@ -192,6 +204,15 @@ namespace BookKeeping.App.ViewModels
                         item.IsHighlight = true;
                     else item.IsHighlight = false;
                 }
+            }
+        }
+
+        protected void ResetFilter()
+        {
+            FilterText = string.Empty;
+            foreach (var item in ((IEnumerable<ProductViewModel>)Source))
+            {
+                item.IsHighlight = false;
             }
         }
 
