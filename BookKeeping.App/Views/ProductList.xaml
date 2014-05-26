@@ -106,7 +106,7 @@
                  BorderThickness="0"
                  Margin="3,1,0,1"
                  x:Name="txtFilterBox"
-                 Text="{Binding Path=FilterText, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                 Text="{Binding Path=FilterText, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged, NotifyOnTargetUpdated=True, NotifyOnSourceUpdated=True}"
                  Controls:TextboxHelper.ButtonCommand="{Binding FilterButtonCmd}">
                     <TextBox.Style>
                         <Style TargetType="{x:Type TextBox}"
@@ -157,16 +157,18 @@
             </DockPanel>
         </Border>
         <DataGrid ItemsSource="{Binding Path=Source}" IsSynchronizedWithCurrentItem="True"
-                  IsReadOnly="True" SelectedItem="{Binding Path=SelectedItem}" AreRowDetailsFrozen="True"
+                  IsReadOnly="False" SelectedItem="{Binding Path=SelectedItem}" AreRowDetailsFrozen="True"
                   SelectionChanged="DataGrid_SelectionChanged"
                   AutoGenerateColumns="False">
             <DataGrid.ContextMenu>
                 <ContextMenu>
                     <MenuItem Command="{Binding Path=EditProductCmd}" Header="{x:Static p:Resources.Edit}">
                     </MenuItem>
+                    <Separator></Separator>
                     <MenuItem Command="Cut" Header="{x:Static p:Resources.Cut}"></MenuItem>
                     <MenuItem Command="Copy" Header="{x:Static p:Resources.Copy}"></MenuItem>
                     <MenuItem Command="Paste" Header="{x:Static p:Resources.Paste}"></MenuItem>
+                    <MenuItem Command="Delete" Header="{x:Static p:Resources.Delete}"></MenuItem>
                     <Separator></Separator>
                     <MenuItem Command="SelectAll" Header="{x:Static p:Resources.Select_All}"></MenuItem>
                     <Separator></Separator>
@@ -190,11 +192,41 @@
                         </DataTemplate>
                     </DataGridTemplateColumn.CellTemplate>
                 </DataGridTemplateColumn>
-                <DataGridTextColumn Header="{x:Static p:Resources.Title}" Binding="{Binding Title}" Width="*" MaxWidth="200" MinWidth="100"/>
-                <DataGridTextColumn Header="{x:Static p:Resources.ItemNo}" Binding="{Binding ItemNo}" Width="*" MaxWidth="200" MinWidth="100"></DataGridTextColumn>
-                <DataGridTextColumn Header="{x:Static p:Resources.Price}" Binding="{Binding Price}" Width="*" MaxWidth="200" MinWidth="100"></DataGridTextColumn>
-                <DataGridTextColumn Header="{x:Static p:Resources.Stock}" Binding="{Binding Stock}" Width="*" MaxWidth="200" MinWidth="100" />
-                <DataGridTextColumn Header="{x:Static p:Resources.UnitOfMeasure}" Binding="{Binding UnitOfMeasure}" Width="*" MaxWidth="200" MinWidth="100" />
+                <DataGridTemplateColumn Header="{x:Static p:Resources.Title}" Width="*" MaxWidth="200" MinWidth="100">
+                    <DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate>
+                            <TextBlock Text="{Binding Title}"></TextBlock>
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellTemplate>
+                </DataGridTemplateColumn>
+                <DataGridTemplateColumn Header="{x:Static p:Resources.ItemNo}" Width="*" MaxWidth="200" MinWidth="100">
+                    <DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate>
+                            <TextBlock Text="{Binding ItemNo}"></TextBlock>
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellTemplate>
+                </DataGridTemplateColumn>
+                <DataGridTemplateColumn Header="{x:Static p:Resources.Price}" Width="*" MaxWidth="200" MinWidth="100">
+                    <DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate>
+                            <TextBlock Text="{Binding Price}"></TextBlock>
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellTemplate>
+                </DataGridTemplateColumn>
+                <DataGridTemplateColumn Header="{x:Static p:Resources.Stock}" Width="*" MaxWidth="200" MinWidth="100" >
+                    <DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate>
+                            <TextBlock Text="{Binding Stock}"></TextBlock>
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellTemplate>
+                </DataGridTemplateColumn>
+                <DataGridTemplateColumn Header="{x:Static p:Resources.UnitOfMeasure}" Width="*" MaxWidth="200" MinWidth="100" >
+                    <DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate>
+                            <TextBlock Text="{Binding UnitOfMeasure}"></TextBlock>
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellTemplate>
+                </DataGridTemplateColumn>
             </DataGrid.Columns>
             <DataGrid.RowDetailsTemplate>
                 <DataTemplate>
@@ -207,6 +239,7 @@
                     <Setter Property="Foreground" Value="{DynamicResource BlackBrush}" />
                     <Setter Property="MinHeight"   Value="25" />
                     <Setter Property="Padding" Value="2" />
+                    <EventSetter Event="MouseDoubleClick" Handler="ProductList_MouseDoubleClick"></EventSetter>
                     <Style.Triggers>
                         <DataTrigger Binding="{Binding IsHighlight}" Value="True">
                             <Setter Property="Background" Value="#99FA6800"></Setter>

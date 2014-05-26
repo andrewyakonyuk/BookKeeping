@@ -14,6 +14,8 @@ using BookKeeping.UI;
 using BookKeeping.UI.ViewModels;
 using System.Text.RegularExpressions;
 using System.Linq.Expressions;
+using System.Collections.Specialized;
+using System.ComponentModel;
 
 namespace BookKeeping.App.ViewModels
 {
@@ -25,7 +27,9 @@ namespace BookKeeping.App.ViewModels
         bool _showProductDetail = false;
         object _selectedItem;
         IList _selectedItems;
+        bool _hasChanges = false;
         readonly ServiceFactory _serviceFactory;
+        private string _filterText;
         readonly Regex filterExpressionRegex = new Regex(@"^(\s*)(?<field>\w+)(\s*)(?<operator>\W+)(\s*)(?<value>.+)", RegexOptions.Compiled);
 
         public ProductListViewModel()
@@ -36,40 +40,29 @@ namespace BookKeeping.App.ViewModels
             FilterButtonCmd = new DelegateCommand(_ => DoFilter(FilterText), _ => true);
             FilterPopupCmd = new DelegateCommand(_ => ShowFilterPopup = !ShowFilterPopup);
             EditProductCmd = new DelegateCommand(_ => ShowProductDetail = !ShowProductDetail, _ => SelectedItems.Count == 1);
+            SaveCmd = new DelegateCommand(_ => SaveChanges(), _ => HasChanges && IsValid && CollectionView.OfType<ProductViewModel>().All(t => t.IsValid));
 
             DisplayName = BookKeeping.App.Properties.Resources.Product_List;
 
-            Source = new ObservableCollection<ProductViewModel>(GetProducts());
-
+            var tempSource = new ObservableCollection<ProductViewModel>();
+            Source = tempSource;
+            tempSource.CollectionChanged += tempSource_CollectionChanged;
+            foreach (var item in GetProducts())
+            {
+                tempSource.Add(item);
+            }
             this.PropertyChanged += ProductListViewModel_PropertyChanged;
+            HasChanges = false;
         }
 
-        void ProductListViewModel_PropertyChanged(object sender, System.ComponentModel.PropertyChangedEventArgs e)
+        public bool HasChanges
         {
-            //switch (e.PropertyName)
-            //{
-            //    case "SearchText":
-            //        SearchButtonCmd.Execute(null);
-            //        break;
-            //    default:
-            //        break;
-            //}
-        }
-
-        protected virtual IEnumerable<ProductViewModel> GetProducts()
-        {
-            return _serviceFactory.Create<IProductService>().GetAll().Select((p, i) => new ProductViewModel
-                 {
-                     Barcode = p.Barcode,
-                     IsOrderable = p.IsOrderable,
-                     ItemNo = p.ItemNo,
-                     Price = p.Price,
-                     Stock = p.Stock,
-                     Title = p.Title,
-                     UnitOfMeasure = p.UnitOfMeasure,
-                     VatRate = p.VatRate,
-                     HasChanges = false
-                 });
+            get { return _hasChanges; }
+            set
+            {
+                _hasChanges = value;
+                OnPropertyChanged(() => HasChanges);
+            }
         }
 
         public string SearchText
@@ -83,8 +76,6 @@ namespace BookKeeping.App.ViewModels
             }
         }
 
-        private string _filterText;
-
         public string FilterText
         {
             get { return _filterText; }
@@ -94,19 +85,12 @@ namespace BookKeeping.App.ViewModels
                 OnPropertyChanged(() => FilterText);
             }
         }
-        
 
         public bool ShowFindPopup
         {
             get { return _showFindPopup; }
             set
             {
-                if (!value && CollectionView.IsEditingItem)
-                {
-                    CollectionView.CommitEdit();
-                    if (CollectionView.NeedsRefresh)
-                        CollectionView.Refresh();
-                }
                 if (value)
                     ShowFilterPopup = false;
                 else
@@ -136,8 +120,6 @@ namespace BookKeeping.App.ViewModels
             }
         }
 
-        public ICommand FilterPopupCmd { get; private set; }
-
         public object SelectedItem
         {
             get { return _selectedItem; }
@@ -161,13 +143,54 @@ namespace BookKeeping.App.ViewModels
             }
         }
 
+        public bool ShowProductDetail
+        {
+            get { return _showProductDetail; }
+            set
+            {
+                OnPropertyChanging(() => ShowProductDetail);
+                _showProductDetail = value;
+                OnPropertyChanged(() => ShowProductDetail);
+            }
+        }
+
         public ICommand SearchButtonCmd { get; private set; }
 
         public ICommand FilterButtonCmd { get; private set; }
 
         public ICommand EditProductCmd { get; private set; }
 
+        public ICommand FilterPopupCmd { get; private set; }
+
+        public ICommand SaveCmd { get; private set; }
+
         public ListCollectionView CollectionView { get { return (ListCollectionView)CollectionViewSource.GetDefaultView(Source); } }
+
+        protected void SaveChanges()
+        {
+            HasChanges = false;
+            foreach (var item in Source as IEnumerable<ProductViewModel>)
+            {
+                item.HasChanges = false;
+            }
+        }
+
+        protected virtual IEnumerable<ProductViewModel> GetProducts()
+        {
+            return _serviceFactory.Create<IProductService>().GetAll().Select((p, i) => new ProductViewModel
+            {
+                Barcode = p.Barcode,
+                IsOrderable = p.IsOrderable,
+                ItemNo = p.ItemNo,
+                Price = p.Price,
+                Stock = p.Stock,
+                Title = p.Title,
+                UnitOfMeasure = p.UnitOfMeasure,
+                VatRate = p.VatRate,
+                HasChanges = false,
+                IsValid = true
+            });
+        }
 
         protected void DoSearch(string searchText)
         {
@@ -256,16 +279,59 @@ namespace BookKeeping.App.ViewModels
             return Expression.Lambda<Func<T, bool>>(@operator, parameter).Compile();
         }
 
-        public bool ShowProductDetail
+        void tempSource_CollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
         {
-            get { return _showProductDetail; }
-            set
+            switch (e.Action)
             {
-                OnPropertyChanging(() => ShowProductDetail);
-                _showProductDetail = value;
-                OnPropertyChanged(() => ShowProductDetail);
+                case NotifyCollectionChangedAction.Add:
+                case NotifyCollectionChangedAction.Remove:
+                case NotifyCollectionChangedAction.Replace:
+                    HasChanges = true;
+                    break;
+                default:
+                    break;
+            }
+
+            if (e.OldItems != null)
+            {
+                foreach (ProductViewModel item in e.OldItems)
+                {
+                    item.PropertyChanged -= item_PropertyChanged;
+                }
+            }
+            if (e.NewItems != null)
+            {
+                foreach (ProductViewModel item in e.NewItems)
+                {
+                    item.PropertyChanged += item_PropertyChanged;
+                }
             }
         }
 
+        void item_PropertyChanged(object sender, PropertyChangedEventArgs e)
+        {
+            if (e.PropertyName == "HasChanges")
+            {
+                var item = (ProductViewModel)sender;
+                if (item.HasChanges)
+                    this.HasChanges = true;
+            }
+        }
+
+        void ProductListViewModel_PropertyChanged(object sender, PropertyChangedEventArgs e)
+        {
+            if (e.PropertyName == GetPropertyName(() => HasChanges))
+            {
+                var end = " *";
+                if (HasChanges && !DisplayName.EndsWith(end))
+                {
+                    DisplayName = DisplayName + end;
+                }
+                else if (!HasChanges && DisplayName.EndsWith(end))
+                {
+                    DisplayName = DisplayName.Substring(0, DisplayName.Length - 2);
+                }
+            }
+        }
     }
 }

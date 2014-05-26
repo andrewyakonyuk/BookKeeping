@@ -24,7 +24,7 @@ namespace BookKeeping.Domain.Repositories
 
         public IEnumerable<Product> GetAll()
         {
-            var random = new Random();
+            var random = new Random(100);
             for (int i = 0; i < 100; i++)
             {
                 yield return new Product

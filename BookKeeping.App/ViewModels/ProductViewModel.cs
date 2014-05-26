@@ -5,16 +5,27 @@ namespace BookKeeping.App.ViewModels
 {
     public class ProductViewModel : ViewModelBase
     {
+        int _countOfErrors = 0;
+
         public ProductViewModel()
         {
             this.PropertyChanged += ProductViewModel_PropertyChanged;
+            Price = CurrencyAmount.Unspecifined;
+            Barcode = Domain.Barcode.Undefined;
+            VatRate = Domain.VatRate.Zero;
+            Title = string.Empty;
+            ItemNo = string.Empty;
+            UnitOfMeasure = string.Empty;
+            IsOrderable = true;
+            IsValid = false;
+            HasChanges = true;
         }
 
         void ProductViewModel_PropertyChanged(object sender, System.ComponentModel.PropertyChangedEventArgs e)
         {
-            if (e.PropertyName == GetPropertyName(() => HasChanges) 
+            if (e.PropertyName == GetPropertyName(() => HasChanges)
                 || e.PropertyName == GetPropertyName(() => IsHighlight)
-                || e.PropertyName == GetPropertyName(()=>IsValid))
+                || e.PropertyName == GetPropertyName(() => IsValid))
                 return;
             HasChanges = true;
         }
@@ -125,57 +136,66 @@ namespace BookKeeping.App.ViewModels
                 OnPropertyChanged(() => HasChanges);
             }
         }
-        
+
 
         protected override string GetErrorMessage(string columnName)
         {
+            string error = null;
             switch (columnName)
             {
                 case "Stock":
                     if (Stock < 0)
                     {
-                        IsValid = false;
-                        return T("ShouldBeMoreOrEqualZero");
+                        _countOfErrors++;
+                        error = T("ShouldBeMoreOrEqualZero");
                     }
+                    else _countOfErrors--;
                     break;
                 case "VatRate":
                     if (VatRate < 0M)
                     {
-                        IsValid = false;
-                        return T("ShouldBeMoreOrEqualZero");
+                        _countOfErrors++;
+                        error = T("ShouldBeMoreOrEqualZero");
                     }
+                    else _countOfErrors--;
                     break;
                 case "Price":
                     if (Price.Amount < 0)
                     {
-                        IsValid = false;
-                        return T("ShouldBeMoreOrEqualZero");
+                        _countOfErrors++;
+                       error = T("ShouldBeMoreOrEqualZero");
                     }
-                    if (Price.Currency == Currency.Undefined)
+                    else if (Price.Currency == Currency.Undefined)
                     {
-                        IsValid = false;
-                        return T("CurrencyShouldBeNotUndefined");
+                        _countOfErrors++;
+                        error = T("CurrencyShouldBeNotUndefined");
                     }
+                    else _countOfErrors--;
                     break;
                 case "ItemNo":
                     if (string.IsNullOrWhiteSpace(ItemNo))
                     {
-                        IsValid = false;
-                        return T("ShouldBeNotEmpty");
+                        _countOfErrors++;
+                        error = T("ShouldBeNotEmpty");
                     }
+                    else _countOfErrors--;
                     break;
                 case "Barcode":
                     if (Barcode.Type == BarcodeType.Undefined)
                     {
-                        IsValid = false;
-                        return T("BarcodeShouldBeNotUndefined");
+                        _countOfErrors++;
+                        error = T("BarcodeShouldBeNotUndefined");
                     }
+                    else _countOfErrors--;
                     break;
                 default:
-                    return null;
+                    error = null;
+                    break;
             }
-            IsValid = true;
-            return null;
+            //if (_countOfErrors > 0)
+            //    IsValid = false;
+            //else IsValid = true;
+            return error;
         }
 
         private bool _isHighlight;

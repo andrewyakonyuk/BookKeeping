@@ -1,4 +1,5 @@
-﻿using System;
+﻿using BookKeeping.UI.ViewModels;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -19,9 +20,21 @@ namespace BookKeeping.App.Views
     /// </summary>
     public partial class ProductDetailView : UserControl
     {
+        int _countOfErrors = 0;
+
         public ProductDetailView()
         {
             InitializeComponent();
+        }
+
+        private void TextBox_Error(object sender, ValidationErrorEventArgs e)
+        {
+            if (e.Action == ValidationErrorEventAction.Added)
+                _countOfErrors++;
+            else if (e.Action == ValidationErrorEventAction.Removed)
+                _countOfErrors--;
+
+            ((ViewModelBase)DataContext).IsValid = _countOfErrors <= 0;
         }
     }
 }

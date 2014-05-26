@@ -29,6 +29,25 @@ namespace BookKeeping.App.ViewModels
 
             CollectionViewSource.GetDefaultView(Workspaces).MoveCurrentToFirst();
             Exit = ApplicationCommands.Close;
+
+            SaveCmd = new DelegateCommand(_ =>
+            {
+                if (CurrentWorkspace is ProductListViewModel)
+                {
+                    ((ProductListViewModel)CurrentWorkspace).SaveCmd.Execute(_);
+                }
+            },
+            _ =>
+            {
+                if (CurrentWorkspace is ProductListViewModel)
+                {
+                    return ((ProductListViewModel)CurrentWorkspace).SaveCmd.CanExecute(_);
+                }
+                return false;
+            });
+
+            MainMenu.Clear();
+            BuildMainMenu();
         }
 
         public ICommand AddProduct { get; set; }
@@ -48,16 +67,19 @@ namespace BookKeeping.App.ViewModels
             }
         }
 
+        public ICommand SaveCmd { get; private set; }
+
         protected override void BuildMainMenu()
         {
             base.BuildMainMenu();
 
             var fileNode = new MenuTreeNode(T("File"), null);
-            fileNode.AddChild(new MenuTreeNode(T("ProductList"), new DelegateCommand(_ =>
+            fileNode.AddChild(new MenuTreeNode(T("Product_List"), new DelegateCommand(_ =>
             {
                 var viewModel = CreateOrExistWorkspace<ProductListViewModel>();
                 SetActiveWorkspace(viewModel);
             })));
+            fileNode.AddChild(new MenuTreeNode(T("Save"), SaveCmd));
 
             var editNode = new MenuTreeNode(T("Edit"), null);
             editNode.AddChild(new MenuTreeNode(T("Undo"), ApplicationCommands.Undo));

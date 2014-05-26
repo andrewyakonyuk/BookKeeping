@@ -12,6 +12,7 @@ namespace BookKeeping.UI.ViewModels
     {
         private string _statusMessage;
         private ObservableCollection<WorkspaceViewModel> _workspaces;
+        private WorkspaceViewModel _currentWorkspace;
         private readonly IList<ToolbarCommandViewModel> _toolbarCommands = new ObservableCollection<ToolbarCommandViewModel>();
         private readonly IList<MenuTreeNode> _mainMenuCommands = new ObservableCollection<MenuTreeNode>();
 
@@ -63,6 +64,16 @@ namespace BookKeeping.UI.ViewModels
             }
         }
 
+        public WorkspaceViewModel CurrentWorkspace
+        {
+            get { return _currentWorkspace; }
+            set
+            {
+                _currentWorkspace = value;
+                OnPropertyChanged(() => CurrentWorkspace);
+            }
+        }
+
         protected virtual void OnWorkspacesChanged(object sender, NotifyCollectionChangedEventArgs e)
         {
             if (e.NewItems != null && e.NewItems.Count != 0)
@@ -102,6 +113,7 @@ namespace BookKeeping.UI.ViewModels
         private void _workspacesCollectionView_CurrentChanged(object sender, EventArgs e)
         {
             var workspace = _workspacesCollectionView.CurrentItem as WorkspaceViewModel;
+            CurrentWorkspace = workspace;
 
             DisplayName = GetDisplayName(ApplicationName, workspace.DisplayName);
 

@@ -120,6 +120,9 @@
   <data name="Actions" xml:space="preserve">
     <value>Actions</value>
   </data>
+  <data name="AddNew" xml:space="preserve">
+    <value>Add new</value>
+  </data>
   <data name="Add_Product" xml:space="preserve">
     <value>Add product</value>
   </data>
@@ -146,6 +149,9 @@
   </data>
   <data name="Cut" xml:space="preserve">
     <value>Cut</value>
+  </data>
+  <data name="Delete" xml:space="preserve">
+    <value>Delete</value>
   </data>
   <data name="DoFilter" xml:space="preserve">
     <value>Filter...</value>

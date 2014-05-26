@@ -53,7 +53,8 @@
         <TextBox Text="{Binding Path=Barcode, Mode=TwoWay, Converter={converters.domain:BarcodeConverter},
             UpdateSourceTrigger=LostFocus, NotifyOnValidationError=True, ValidatesOnExceptions=True, ValidatesOnDataErrors=True}"
                  Grid.Row="1" Grid.Column="1"
-                 Validation.ErrorTemplate="{DynamicResource ValidationErrorTemplate}"></TextBox>
+                 Validation.ErrorTemplate="{DynamicResource ValidationErrorTemplate}"
+                  Validation.Error="TextBox_Error"></TextBox>
         <TextBlock Text="{x:Static p:Resources.ItemNo}" Grid.Row="2" Grid.Column="0"></TextBlock>
         <TextBox Text="{Binding Path=ItemNo, Mode=TwoWay, UpdateSourceTrigger=LostFocus, NotifyOnValidationError=True,
             ValidatesOnExceptions=True, ValidatesOnDataErrors=True}"
@@ -64,6 +65,7 @@
             ConverterCulture={x:Static System.Globalization:CultureInfo.CurrentCulture}, UpdateSourceTrigger=LostFocus,
             NotifyOnValidationError=True, ValidatesOnExceptions=True, ValidatesOnDataErrors=True}"
             Validation.ErrorTemplate="{DynamicResource ValidationErrorTemplate}"
+            Validation.Error="TextBox_Error"
             Grid.Row="3" Grid.Column="1"></TextBox>
         
         <TextBlock Text="{x:Static p:Resources.Stock}" Grid.Row="0" Grid.Column="2"></TextBlock>
@@ -76,9 +78,11 @@
                  Validation.ErrorTemplate="{DynamicResource ValidationErrorTemplate}"></TextBox>
         <TextBlock Text="{x:Static p:Resources.VatRate}" Grid.Row="2" Grid.Column="2"></TextBlock>
         <TextBox Text="{Binding Path=VatRate, Mode=TwoWay, Converter={converters.domain:VatRateConverter},
-            ConverterCulture={x:Static System.Globalization:CultureInfo.CurrentCulture}, UpdateSourceTrigger=LostFocus,
+            ConverterCulture={x:Static System.Globalization:CultureInfo.CurrentCulture},
+            UpdateSourceTrigger=LostFocus,
             NotifyOnValidationError=True, ValidatesOnExceptions=True, ValidatesOnDataErrors=True}"
                  Validation.ErrorTemplate="{DynamicResource ValidationErrorTemplate}"
+                 Validation.Error="TextBox_Error"
                  Grid.Row="2" Grid.Column="3"></TextBox>
     </Grid>
 </UserControl>

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.ComponentModel;
 using BookKeeping.UI.Localization;
+using System.Linq.Expressions;
 
 namespace BookKeeping.UI.ViewModels
 {
@@ -46,7 +47,7 @@ namespace BookKeeping.UI.ViewModels
             {
                 return _isValid;
             }
-            protected set
+            set
             {
                 _isValid = value;
                 OnPropertyChanged(() => IsValid);
