@@ -33,7 +33,7 @@ namespace BookKeeping.App.Views
         {
             var viewModel = this.DataContext as ProductListViewModel;
             if (viewModel.EditProductCmd.CanExecute(null))
-                viewModel.EditProductCmd.Execute(null);
+                viewModel.EditProductCmd.Execute(((Control)sender).DataContext);
         }
 
         void txtFilterBox_KeyUp(object sender, KeyEventArgs e)
@@ -56,16 +56,12 @@ namespace BookKeeping.App.Views
                 viewModel.ShowFindPopup = !viewModel.ShowFindPopup;
                 args.Handled = true;
             }));
-
         }
 
         private void DataGrid_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            //TODO: should refact
             var datagrid = (DataGrid)sender;
             ((ProductListViewModel)DataContext).SelectedItems = datagrid.SelectedItems;
-            if (datagrid.SelectedItems.Count != 1)
-                ((ProductListViewModel)DataContext).ShowProductDetail = false;
         }
 
 

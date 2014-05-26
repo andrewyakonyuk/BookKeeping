@@ -162,7 +162,7 @@
                   AutoGenerateColumns="False">
             <DataGrid.ContextMenu>
                 <ContextMenu>
-                    <MenuItem Command="{Binding Path=EditProductCmd}" Header="{x:Static p:Resources.Edit}">
+                    <MenuItem Command="{Binding Path=EditProductCmd}" CommandParameter="{Binding Path=SelectedItem}" Header="{x:Static p:Resources.Edit}">
                     </MenuItem>
                     <Separator></Separator>
                     <MenuItem Command="Cut" Header="{x:Static p:Resources.Cut}"></MenuItem>
@@ -250,10 +250,18 @@
                         </DataTrigger>
                         <MultiDataTrigger>
                             <MultiDataTrigger.Conditions>
-                                <Condition Binding="{Binding Path=DataContext.ShowProductDetail, Mode=TwoWay, RelativeSource={RelativeSource AncestorType={x:Type views:ProductList}}}" Value="True"></Condition>
-                                <Condition Binding="{Binding IsSelected, RelativeSource={RelativeSource Self}}" Value="True" />
+                                <Condition Binding="{Binding Path=IsEdit, Mode=TwoWay}" Value="True"></Condition>
                             </MultiDataTrigger.Conditions>
                             <Setter Property="DetailsVisibility" Value="Visible"></Setter>
+                        </MultiDataTrigger>
+                        <MultiDataTrigger>
+                            <MultiDataTrigger.Conditions>
+                                <Condition Binding="{Binding IsSelected, RelativeSource={RelativeSource Self}}" Value="False" />
+                                <Condition Binding="{Binding Path=IsEdit, Mode=TwoWay}" Value="True"></Condition>
+                            </MultiDataTrigger.Conditions>
+                            <Setter Property="Background" Value="{DynamicResource AccentColorBrush}" />
+                            <Setter Property="Foreground" Value="{DynamicResource AccentSelectedColorBrush}" />
+                            <Setter Property="Opacity" Value=".8"></Setter>
                         </MultiDataTrigger>
                         <Trigger Property="IsSelected" Value="True">
                             <Setter Property="Background" Value="{DynamicResource AccentColorBrush}" />

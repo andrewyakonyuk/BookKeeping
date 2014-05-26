@@ -25,7 +25,8 @@ namespace BookKeeping.App.ViewModels
         {
             if (e.PropertyName == GetPropertyName(() => HasChanges)
                 || e.PropertyName == GetPropertyName(() => IsHighlight)
-                || e.PropertyName == GetPropertyName(() => IsValid))
+                || e.PropertyName == GetPropertyName(() => IsValid)
+                || e.PropertyName == GetPropertyName(() => IsEdit))
                 return;
             HasChanges = true;
         }
@@ -163,7 +164,7 @@ namespace BookKeeping.App.ViewModels
                     if (Price.Amount < 0)
                     {
                         _countOfErrors++;
-                       error = T("ShouldBeMoreOrEqualZero");
+                        error = T("ShouldBeMoreOrEqualZero");
                     }
                     else if (Price.Currency == Currency.Undefined)
                     {
@@ -209,6 +210,18 @@ namespace BookKeeping.App.ViewModels
                 OnPropertyChanged(() => IsHighlight);
             }
         }
-        
+
+        private bool _isEdit = false;
+
+        public bool IsEdit
+        {
+            get { return _isEdit; }
+            set
+            {
+                _isEdit = value;
+                OnPropertyChanged(() => IsEdit);
+            }
+        }
+
     }
 }

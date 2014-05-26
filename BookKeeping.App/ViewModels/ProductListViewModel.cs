@@ -2,35 +2,33 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.Linq;
-using System.Windows.Data;
-using ICommand = System.Windows.Input.ICommand;
-using BookKeeping.Domain;
-using BookKeeping.Domain.Aggregates;
-using BookKeeping.Domain.Repositories;
-using BookKeeping.Domain.Services;
-using BookKeeping.Domain.Factories;
-using BookKeeping.UI;
-using BookKeeping.UI.ViewModels;
-using System.Text.RegularExpressions;
-using System.Linq.Expressions;
 using System.Collections.Specialized;
 using System.ComponentModel;
+using System.Linq;
+using System.Linq.Expressions;
+using System.Text.RegularExpressions;
+using System.Windows.Data;
+using BookKeeping.Domain.Factories;
+using BookKeeping.Domain.Services;
+using BookKeeping.UI;
+using BookKeeping.UI.ViewModels;
+using ICommand = System.Windows.Input.ICommand;
 
 namespace BookKeeping.App.ViewModels
 {
     public class ProductListViewModel : WorkspaceViewModel
     {
-        string _searchText = string.Empty;
-        bool _showFindPopup = false;
-        bool _showFilterPopup = false;
-        bool _showProductDetail = false;
-        object _selectedItem;
-        IList _selectedItems;
-        bool _hasChanges = false;
-        readonly ServiceFactory _serviceFactory;
-        private string _filterText;
-        readonly Regex filterExpressionRegex = new Regex(@"^(\s*)(?<field>\w+)(\s*)(?<operator>\W+)(\s*)(?<value>.+)", RegexOptions.Compiled);
+        private string _searchText = string.Empty;
+        private bool _showFindPopup = false;
+        private bool _showFilterPopup = false;
+        private object _selectedItem;
+        private IList _selectedItems;
+        private bool _hasChanges = false;
+        private readonly ServiceFactory _serviceFactory;
+        private string _filterText = string.Empty;
+        private readonly Regex filterExpressionRegex = new Regex(@"^(\s*)(?<field>\w+)(\s*)(?<operator>\W+)(\s*)(?<value>.+)", RegexOptions.Compiled);
+        private ProductViewModel _editingItem;
+        private ProductViewModel _previousEditingItem;
 
         public ProductListViewModel()
         {
@@ -39,7 +37,7 @@ namespace BookKeeping.App.ViewModels
             SearchButtonCmd = new DelegateCommand(_ => DoSearch(SearchText), _ => true);
             FilterButtonCmd = new DelegateCommand(_ => DoFilter(FilterText), _ => true);
             FilterPopupCmd = new DelegateCommand(_ => ShowFilterPopup = !ShowFilterPopup);
-            EditProductCmd = new DelegateCommand(_ => ShowProductDetail = !ShowProductDetail, _ => SelectedItems.Count == 1);
+            EditProductCmd = new DelegateCommand(item => { EditingItem = (ProductViewModel)item; }, _ => SelectedItems.Count == 1);
             SaveCmd = new DelegateCommand(_ => SaveChanges(), _ => HasChanges && IsValid && CollectionView.OfType<ProductViewModel>().All(t => t.IsValid));
 
             DisplayName = BookKeeping.App.Properties.Resources.Product_List;
@@ -125,7 +123,6 @@ namespace BookKeeping.App.ViewModels
             get { return _selectedItem; }
             set
             {
-                ShowProductDetail = false;
                 OnPropertyChanging(() => SelectedItem);
                 _selectedItem = value;
                 OnPropertyChanged(() => SelectedItem);
@@ -143,14 +140,21 @@ namespace BookKeeping.App.ViewModels
             }
         }
 
-        public bool ShowProductDetail
+        public ProductViewModel EditingItem
         {
-            get { return _showProductDetail; }
+            get { return _editingItem; }
             set
             {
-                OnPropertyChanging(() => ShowProductDetail);
-                _showProductDetail = value;
-                OnPropertyChanged(() => ShowProductDetail);
+                _previousEditingItem = _editingItem;
+                _editingItem = value;
+
+                if (_editingItem != null)
+                    _editingItem.IsEdit = true;
+
+                OnPropertyChanged(() => EditingItem);
+
+                if (_previousEditingItem != null)
+                    _previousEditingItem.IsEdit = false;
             }
         }
 
@@ -262,15 +266,19 @@ namespace BookKeeping.App.ViewModels
                 case "<":
                     @operator = Expression.LessThan(field, value);
                     break;
+
                 case "<=":
                     @operator = Expression.LessThanOrEqual(field, value);
                     break;
+
                 case "=":
                     @operator = Expression.Equal(field, value);
                     break;
+
                 case ">":
                     @operator = Expression.GreaterThan(field, value);
                     break;
+
                 case ">=":
                     @operator = Expression.GreaterThanOrEqual(field, value);
                     break;
@@ -279,7 +287,7 @@ namespace BookKeeping.App.ViewModels
             return Expression.Lambda<Func<T, bool>>(@operator, parameter).Compile();
         }
 
-        void tempSource_CollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
+        private void tempSource_CollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
         {
             switch (e.Action)
             {
@@ -288,6 +296,7 @@ namespace BookKeeping.App.ViewModels
                 case NotifyCollectionChangedAction.Replace:
                     HasChanges = true;
                     break;
+
                 default:
                     break;
             }
@@ -308,7 +317,7 @@ namespace BookKeeping.App.ViewModels
             }
         }
 
-        void item_PropertyChanged(object sender, PropertyChangedEventArgs e)
+        private void item_PropertyChanged(object sender, PropertyChangedEventArgs e)
         {
             if (e.PropertyName == "HasChanges")
             {
@@ -318,7 +327,7 @@ namespace BookKeeping.App.ViewModels
             }
         }
 
-        void ProductListViewModel_PropertyChanged(object sender, PropertyChangedEventArgs e)
+        private void ProductListViewModel_PropertyChanged(object sender, PropertyChangedEventArgs e)
         {
             if (e.PropertyName == GetPropertyName(() => HasChanges))
             {
