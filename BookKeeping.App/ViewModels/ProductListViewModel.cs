@@ -37,7 +37,7 @@ namespace BookKeeping.App.ViewModels
             SearchButtonCmd = new DelegateCommand(_ => DoSearch(SearchText), _ => true);
             FilterButtonCmd = new DelegateCommand(_ => DoFilter(FilterText), _ => true);
             FilterPopupCmd = new DelegateCommand(_ => ShowFilterPopup = !ShowFilterPopup);
-            EditProductCmd = new DelegateCommand(item => { EditingItem = (ProductViewModel)item; }, _ => SelectedItems.Count == 1);
+            EditProductCmd = new DelegateCommand(item => { EditingItem = item == EditingItem ? null : item as ProductViewModel; }, _ => SelectedItems.Count == 1);
             SaveCmd = new DelegateCommand(_ => SaveChanges(), _ => HasChanges && IsValid && CollectionView.OfType<ProductViewModel>().All(t => t.IsValid));
 
             DisplayName = BookKeeping.App.Properties.Resources.Product_List;
