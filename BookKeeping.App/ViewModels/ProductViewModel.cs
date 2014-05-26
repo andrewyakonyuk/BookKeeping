@@ -193,9 +193,6 @@ namespace BookKeeping.App.ViewModels
                     error = null;
                     break;
             }
-            //if (_countOfErrors > 0)
-            //    IsValid = false;
-            //else IsValid = true;
             return error;
         }
 

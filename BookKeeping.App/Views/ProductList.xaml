@@ -180,7 +180,7 @@
                 <DataGridTemplateColumn Width="30">
                     <DataGridTemplateColumn.CellTemplate>
                         <DataTemplate>
-                            <Rectangle Width="14"
+                            <Rectangle Width="14" x:Name="EditLabel"
                            Height="14"
                            Fill="{Binding Path=Foreground, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type DataGridCell}}}"
                                        Visibility="{Binding Path=HasChanges,Converter={StaticResource BooleanToVisibilityConverter}}">
@@ -189,6 +189,15 @@
                                      Visual="{DynamicResource appbar_edit_add}" />
                                 </Rectangle.OpacityMask>
                             </Rectangle>
+                            <DataTemplate.Triggers>
+                                <MultiDataTrigger>
+                                    <MultiDataTrigger.Conditions>
+                                        <Condition Binding="{Binding IsEdit}" Value="True"></Condition>
+                                        <Condition Binding="{Binding IsValid}" Value="False"></Condition>
+                                    </MultiDataTrigger.Conditions>
+                                    <Setter Property="Fill" Value="#99D80073" TargetName="EditLabel"></Setter>
+                                </MultiDataTrigger>
+                            </DataTemplate.Triggers>
                         </DataTemplate>
                     </DataGridTemplateColumn.CellTemplate>
                 </DataGridTemplateColumn>
@@ -230,7 +239,7 @@
             </DataGrid.Columns>
             <DataGrid.RowDetailsTemplate>
                 <DataTemplate>
-                    <views:ProductDetailView Margin="10,10,10,10" Padding="2"></views:ProductDetailView>
+                    <views:ProductDetailView Margin="25,10,10,10" Padding="2"></views:ProductDetailView>
                 </DataTemplate>
             </DataGrid.RowDetailsTemplate>
         <DataGrid.RowStyle>
