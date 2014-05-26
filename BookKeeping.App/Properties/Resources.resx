@@ -117,6 +117,9 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
+  <data name="AboutApplication" xml:space="preserve">
+    <value>About application</value>
+  </data>
   <data name="Actions" xml:space="preserve">
     <value>Actions</value>
   </data>
@@ -174,14 +177,50 @@
   <data name="Find" xml:space="preserve">
     <value>Find</value>
   </data>
+  <data name="Goods" xml:space="preserve">
+    <value>Goods</value>
+  </data>
   <data name="Help" xml:space="preserve">
     <value>Help</value>
+  </data>
+  <data name="HistoryOfGoods" xml:space="preserve">
+    <value>History of goods</value>
   </data>
   <data name="ItemNo" xml:space="preserve">
     <value>Item no.</value>
   </data>
+  <data name="ListOfCustomers" xml:space="preserve">
+    <value>List of customers</value>
+  </data>
+  <data name="ListOfProducts" xml:space="preserve">
+    <value>List of products</value>
+  </data>
   <data name="Name" xml:space="preserve">
     <value>Name</value>
+  </data>
+  <data name="Order" xml:space="preserve">
+    <value>Order</value>
+  </data>
+  <data name="OrderOverview" xml:space="preserve">
+    <value>Order overview</value>
+  </data>
+  <data name="Order_Calculate" xml:space="preserve">
+    <value>Recalculate</value>
+  </data>
+  <data name="Order_PlaceOrder" xml:space="preserve">
+    <value>Place order</value>
+  </data>
+  <data name="Order_SearchPlaceholder" xml:space="preserve">
+    <value>Enter item no., barcode or title of product</value>
+  </data>
+  <data name="Order_Subtotal" xml:space="preserve">
+    <value>Total</value>
+  </data>
+  <data name="Order_Total" xml:space="preserve">
+    <value>Incl. VAT Total</value>
+  </data>
+  <data name="Order_TotalVatRate" xml:space="preserve">
+    <value>Total VAT</value>
   </data>
   <data name="Paste" xml:space="preserve">
     <value>Paste</value>
@@ -192,11 +231,32 @@
   <data name="Print" xml:space="preserve">
     <value>Print</value>
   </data>
-  <data name="Product_List" xml:space="preserve">
-    <value>Product list</value>
+  <data name="PurchaseOfGoods" xml:space="preserve">
+    <value>Purchase of goods</value>
+  </data>
+  <data name="Quantity" xml:space="preserve">
+    <value>Quantity</value>
+  </data>
+  <data name="QuantityByDefault" xml:space="preserve">
+    <value>Quantity by default</value>
   </data>
   <data name="Redo" xml:space="preserve">
     <value>Redo</value>
+  </data>
+  <data name="RemainsOfGoods" xml:space="preserve">
+    <value>Remains of goods</value>
+  </data>
+  <data name="ReportOnSeller" xml:space="preserve">
+    <value>Report on the seller</value>
+  </data>
+  <data name="Reports" xml:space="preserve">
+    <value>Reports</value>
+  </data>
+  <data name="SaleOfGoods" xml:space="preserve">
+    <value>Sale of goods</value>
+  </data>
+  <data name="SalesForPeriod" xml:space="preserve">
+    <value>Sales for the period</value>
   </data>
   <data name="Save" xml:space="preserve">
     <value>Save</value>
@@ -207,11 +267,23 @@
   <data name="Select_All" xml:space="preserve">
     <value>Select all</value>
   </data>
+  <data name="Service" xml:space="preserve">
+    <value>Service</value>
+  </data>
+  <data name="Settings" xml:space="preserve">
+    <value>Settings</value>
+  </data>
   <data name="Stock" xml:space="preserve">
     <value>Stock</value>
   </data>
+  <data name="Subtotal" xml:space="preserve">
+    <value>Subtotal</value>
+  </data>
   <data name="Tables" xml:space="preserve">
     <value>Tables</value>
+  </data>
+  <data name="Thesaurus" xml:space="preserve">
+    <value>Thesaurus</value>
   </data>
   <data name="Time_Utc" xml:space="preserve">
     <value>Time_Utc</value>
@@ -227,5 +299,8 @@
   </data>
   <data name="VatRate" xml:space="preserve">
     <value>Vat rate</value>
+  </data>
+  <data name="VendorList" xml:space="preserve">
+    <value>Vendor list</value>
   </data>
 </root>

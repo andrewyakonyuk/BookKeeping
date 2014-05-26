@@ -17,9 +17,9 @@ namespace BookKeeping.App.Views
     /// <summary>
     /// Interaction logic for BasketView.xaml
     /// </summary>
-    public partial class BasketView : UserControl
+    public partial class OrderView : UserControl
     {
-        public BasketView()
+        public OrderView()
         {
             InitializeComponent();
         }

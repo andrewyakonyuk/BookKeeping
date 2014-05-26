@@ -40,7 +40,7 @@ namespace BookKeeping.App.ViewModels
             EditProductCmd = new DelegateCommand(item => { EditingItem = item == EditingItem ? null : item as ProductViewModel; }, _ => SelectedItems.Count == 1);
             SaveCmd = new DelegateCommand(_ => SaveChanges(), _ => HasChanges && IsValid && CollectionView.OfType<ProductViewModel>().All(t => t.IsValid));
 
-            DisplayName = BookKeeping.App.Properties.Resources.Product_List;
+            DisplayName = T("ListOfProducts");
 
             var tempSource = new ObservableCollection<ProductViewModel>();
             Source = tempSource;

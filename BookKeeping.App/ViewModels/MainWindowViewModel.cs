@@ -50,11 +50,25 @@ namespace BookKeeping.App.ViewModels
             BuildMainMenu();
         }
 
-        public ICommand AddProduct { get; set; }
-
         public ICommand CloseTabItem { get; set; }
 
         public ICommand Exit { get; set; }
+
+        public ICommand ListOfProductsCmd { get; private set; }
+
+        public ICommand ListOfCustomersCmd { get; private set; }
+
+        public ICommand VendorListCmd { get; private set; }
+
+        public ICommand SaleOfGoodsCmd { get; private set; }
+
+        public ICommand PurchaseOfGoodsCmd { get; private set; }
+
+        public ICommand SettingsCmd { get; private set; }
+
+        public ICommand RemainsOfGoodsReportCmd { get; private set; }
+
+        public ICommand HistoryOfGoodsReportCmd { get; private set; }
 
         public bool QuitConfirmationEnabled
         {
@@ -73,30 +87,39 @@ namespace BookKeeping.App.ViewModels
         {
             base.BuildMainMenu();
 
-            var fileNode = new MenuTreeNode(T("File"), null);
-            fileNode.AddChild(new MenuTreeNode(T("Product_List"), new DelegateCommand(_ =>
-            {
-                var viewModel = CreateOrExistWorkspace<ProductListViewModel>();
-                SetActiveWorkspace(viewModel);
-            })));
-            fileNode.AddChild(new MenuTreeNode(T("Basket"), new DelegateCommand(_ =>
-            {
-                var viewModel = CreateOrExistWorkspace<BasketViewModel>();
-                SetActiveWorkspace(viewModel);
-            })));
+            ListOfProductsCmd = new DelegateCommand(_ => SetActiveWorkspace(CreateOrRetrieveWorkspace<ProductListViewModel>()));
+            SaleOfGoodsCmd = new DelegateCommand(_ => SetActiveWorkspace(CreateOrRetrieveWorkspace<OrderViewModel>()));
 
-            fileNode.AddChild(new MenuTreeNode(T("Save"), SaveCmd));
+            //var fileNode = new MenuTreeNode(T("File"), null);
+            //fileNode.AddChild(new MenuTreeNode(T("Product_List"), new DelegateCommand(_ =>
+            //{
+            //    var viewModel = CreateOrExistWorkspace<ProductListViewModel>();
+            //    SetActiveWorkspace(viewModel);
+            //})));
+            //fileNode.AddChild(new MenuTreeNode(T("Basket"), new DelegateCommand(_ =>
+            //{
+            //    var viewModel = CreateOrExistWorkspace<OrderViewModel>();
+            //    SetActiveWorkspace(viewModel);
+            //})));
 
-            var editNode = new MenuTreeNode(T("Edit"), null);
-            editNode.AddChild(new MenuTreeNode(T("Undo"), ApplicationCommands.Undo));
-            editNode.AddChild(new MenuTreeNode(T("Redo"), ApplicationCommands.Redo));
-            editNode.AddChild(new MenuTreeNode(T("Cut"), ApplicationCommands.Cut));
-            editNode.AddChild(new MenuTreeNode(T("Copy"), ApplicationCommands.Copy));
-            editNode.AddChild(new MenuTreeNode(T("Paste"), ApplicationCommands.Paste));
-            editNode.AddChild(new MenuTreeNode(T("Find"), ApplicationCommands.Find));
+            //fileNode.AddChild(new MenuTreeNode(T("Save"), SaveCmd));
 
-            MainMenu.Add(fileNode);
-            MainMenu.Add(editNode);
+            //var editNode = new MenuTreeNode(T("Edit"), null);
+            //editNode.AddChild(new MenuTreeNode(T("Undo"), ApplicationCommands.Undo));
+            //editNode.AddChild(new MenuTreeNode(T("Redo"), ApplicationCommands.Redo));
+            //editNode.AddChild(new MenuTreeNode(T("Cut"), ApplicationCommands.Cut));
+            //editNode.AddChild(new MenuTreeNode(T("Copy"), ApplicationCommands.Copy));
+            //editNode.AddChild(new MenuTreeNode(T("Paste"), ApplicationCommands.Paste));
+            //editNode.AddChild(new MenuTreeNode(T("Find"), ApplicationCommands.Find));
+
+            //var serviceNode = new MenuTreeNode(T("Service"), null);
+
+            //var reportsNode = new MenuTreeNode(T("Reports"), null);
+            //reportsNode.AddChild(new MenuTreeNode(T("RemainsOfGoods"), RemainsOfGoodsReportCmd));
+            //reportsNode.AddChild(new MenuTreeNode(T("HistoryOfGoods")))
+
+            //MainMenu.Add(fileNode);
+            //MainMenu.Add(editNode);
         }
 
     }

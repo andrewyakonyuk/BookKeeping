@@ -270,7 +270,7 @@
                             </MultiDataTrigger.Conditions>
                             <Setter Property="Background" Value="{DynamicResource AccentColorBrush}" />
                             <Setter Property="Foreground" Value="{DynamicResource AccentSelectedColorBrush}" />
-                            <Setter Property="Opacity" Value=".85"></Setter>
+                            <Setter Property="Opacity" Value=".75"></Setter>
                         </MultiDataTrigger>
                         <Trigger Property="IsSelected" Value="True">
                             <Setter Property="Background" Value="{DynamicResource AccentColorBrush}" />

@@ -61,6 +61,15 @@ namespace BookKeeping.App.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to About application.
+        /// </summary>
+        public static string AboutApplication {
+            get {
+                return ResourceManager.GetString("AboutApplication", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Actions.
         /// </summary>
         public static string Actions {
@@ -232,11 +241,29 @@ namespace BookKeeping.App.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Goods.
+        /// </summary>
+        public static string Goods {
+            get {
+                return ResourceManager.GetString("Goods", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Help.
         /// </summary>
         public static string Help {
             get {
                 return ResourceManager.GetString("Help", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to History of goods.
+        /// </summary>
+        public static string HistoryOfGoods {
+            get {
+                return ResourceManager.GetString("HistoryOfGoods", resourceCulture);
             }
         }
         
@@ -250,11 +277,101 @@ namespace BookKeeping.App.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to List of customers.
+        /// </summary>
+        public static string ListOfCustomers {
+            get {
+                return ResourceManager.GetString("ListOfCustomers", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to List of products.
+        /// </summary>
+        public static string ListOfProducts {
+            get {
+                return ResourceManager.GetString("ListOfProducts", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Name.
         /// </summary>
         public static string Name {
             get {
                 return ResourceManager.GetString("Name", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Order.
+        /// </summary>
+        public static string Order {
+            get {
+                return ResourceManager.GetString("Order", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Recalculate.
+        /// </summary>
+        public static string Order_Calculate {
+            get {
+                return ResourceManager.GetString("Order_Calculate", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Place order.
+        /// </summary>
+        public static string Order_PlaceOrder {
+            get {
+                return ResourceManager.GetString("Order_PlaceOrder", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Enter item no., barcode or title of product.
+        /// </summary>
+        public static string Order_SearchPlaceholder {
+            get {
+                return ResourceManager.GetString("Order_SearchPlaceholder", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Total.
+        /// </summary>
+        public static string Order_Subtotal {
+            get {
+                return ResourceManager.GetString("Order_Subtotal", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Incl. VAT Total.
+        /// </summary>
+        public static string Order_Total {
+            get {
+                return ResourceManager.GetString("Order_Total", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Total VAT.
+        /// </summary>
+        public static string Order_TotalVatRate {
+            get {
+                return ResourceManager.GetString("Order_TotalVatRate", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Order overview.
+        /// </summary>
+        public static string OrderOverview {
+            get {
+                return ResourceManager.GetString("OrderOverview", resourceCulture);
             }
         }
         
@@ -286,11 +403,29 @@ namespace BookKeeping.App.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Product list.
+        ///   Looks up a localized string similar to Purchase of goods.
         /// </summary>
-        public static string Product_List {
+        public static string PurchaseOfGoods {
             get {
-                return ResourceManager.GetString("Product_List", resourceCulture);
+                return ResourceManager.GetString("PurchaseOfGoods", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Quantity.
+        /// </summary>
+        public static string Quantity {
+            get {
+                return ResourceManager.GetString("Quantity", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Quantity by default.
+        /// </summary>
+        public static string QuantityByDefault {
+            get {
+                return ResourceManager.GetString("QuantityByDefault", resourceCulture);
             }
         }
         
@@ -300,6 +435,51 @@ namespace BookKeeping.App.Properties {
         public static string Redo {
             get {
                 return ResourceManager.GetString("Redo", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Remains of goods.
+        /// </summary>
+        public static string RemainsOfGoods {
+            get {
+                return ResourceManager.GetString("RemainsOfGoods", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Report on the seller.
+        /// </summary>
+        public static string ReportOnSeller {
+            get {
+                return ResourceManager.GetString("ReportOnSeller", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Reports.
+        /// </summary>
+        public static string Reports {
+            get {
+                return ResourceManager.GetString("Reports", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Sale of goods.
+        /// </summary>
+        public static string SaleOfGoods {
+            get {
+                return ResourceManager.GetString("SaleOfGoods", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Sales for the period.
+        /// </summary>
+        public static string SalesForPeriod {
+            get {
+                return ResourceManager.GetString("SalesForPeriod", resourceCulture);
             }
         }
         
@@ -331,6 +511,24 @@ namespace BookKeeping.App.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Service.
+        /// </summary>
+        public static string Service {
+            get {
+                return ResourceManager.GetString("Service", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Settings.
+        /// </summary>
+        public static string Settings {
+            get {
+                return ResourceManager.GetString("Settings", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Stock.
         /// </summary>
         public static string Stock {
@@ -340,11 +538,29 @@ namespace BookKeeping.App.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Subtotal.
+        /// </summary>
+        public static string Subtotal {
+            get {
+                return ResourceManager.GetString("Subtotal", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Tables.
         /// </summary>
         public static string Tables {
             get {
                 return ResourceManager.GetString("Tables", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Thesaurus.
+        /// </summary>
+        public static string Thesaurus {
+            get {
+                return ResourceManager.GetString("Thesaurus", resourceCulture);
             }
         }
         
@@ -390,6 +606,15 @@ namespace BookKeeping.App.Properties {
         public static string VatRate {
             get {
                 return ResourceManager.GetString("VatRate", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Vendor list.
+        /// </summary>
+        public static string VendorList {
+            get {
+                return ResourceManager.GetString("VendorList", resourceCulture);
             }
         }
     }

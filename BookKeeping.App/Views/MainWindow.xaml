@@ -17,8 +17,7 @@
         d:DesignHeight="400" d:DesignWidth="500"
         Closing="MetroWindow_Closing"
         d:DataContext="{Binding viewmodels:MainWindowViewModel}"
-                        WindowStartupLocation="CenterScreen"
-                      Style="{DynamicResource VSWindowStyleKey}">
+                        WindowStartupLocation="CenterScreen">
     <Window.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
@@ -30,15 +29,51 @@
     <DockPanel>
         <Menu DockPanel.Dock="Top"
               SnapsToDevicePixels="True"
-              Margin="2,0,0,0" ItemsSource="{Binding Path=MainMenu, Mode=OneWay}">
-            <Menu.Resources>
+              Margin="2,0,0,0">
+            <!--<Menu.Resources>
                 <Style TargetType="{x:Type Menu}" BasedOn="{StaticResource {x:Type Menu}}"></Style>
                 <Style TargetType="{x:Type MenuItem}" BasedOn="{StaticResource {x:Type MenuItem}}">
                     <Setter Property="Command" Value="{Binding Command}" />
                     <Setter Property="Header" Value="{Binding Title}" />
                     <Setter Property="ItemsSource" Value="{Binding Children}"/>
                 </Style>
-            </Menu.Resources>
+            </Menu.Resources>-->
+            <MenuItem Header="{x:Static p:Resources.File}">
+                <MenuItem Header="{x:Static p:Resources.Thesaurus}">
+                    <MenuItem Header="{x:Static p:Resources.ListOfProducts}" Command="{Binding Path=ListOfProductsCmd}"></MenuItem>
+                    <MenuItem Header="{x:Static p:Resources.ListOfCustomers}" Command="{Binding Path=ListOfCustomersCmd}"></MenuItem>
+                    <MenuItem Header="{x:Static p:Resources.VendorList}" Command="{Binding Path=VendorListCmd}"></MenuItem>
+                </MenuItem>
+                <MenuItem Header="{x:Static p:Resources.Goods}">
+                    <MenuItem Header="{x:Static p:Resources.SaleOfGoods}" Command="{Binding Path=SaleOfGoodsCmd}"></MenuItem>
+                    <MenuItem Header="{x:Static p:Resources.PurchaseOfGoods}" Command="{Binding Path=PurchaseofGoodsCmd}"></MenuItem>
+                </MenuItem>
+                <Separator></Separator>
+                <MenuItem Header="{x:Static p:Resources.Settings}"></MenuItem>
+                <Separator></Separator>
+                <MenuItem Header="{x:Static p:Resources.Exit}"></MenuItem>
+            </MenuItem>
+            <MenuItem Header="{x:Static p:Resources.Edit}">
+                <MenuItem Header="{x:Static p:Resources.Undo}" Command="Undo"></MenuItem>
+                <MenuItem Header="{x:Static p:Resources.Redo}" Command="Redo"></MenuItem>
+                <Separator></Separator>
+                <MenuItem Header="{x:Static p:Resources.Cut}" Command="Cut"></MenuItem>
+                <MenuItem Header="{x:Static p:Resources.Copy}" Command="Copy"></MenuItem>
+                <MenuItem Header="{x:Static p:Resources.Paste}" Command="Paste"></MenuItem>
+                <MenuItem Header="{x:Static p:Resources.Delete}" Command="Delete"></MenuItem>
+                <Separator></Separator>
+                <MenuItem Header="{x:Static p:Resources.Find}" Command="Find"></MenuItem>
+            </MenuItem>
+            <MenuItem Header="{x:Static p:Resources.Service}"></MenuItem>
+            <MenuItem Header="{x:Static p:Resources.Reports}">
+                <MenuItem Header="{x:Static p:Resources.RemainsOfGoods}" Command="{Binding Path=RemainsOfGoodsReportCmd}"></MenuItem>
+                <MenuItem Header="{x:Static p:Resources.HistoryOfGoods}" Command="{Binding Path=HistoryOfGoodsRepostCmd}"></MenuItem>
+                <MenuItem Header="{x:Static p:Resources.ReportOnSeller}" Command="{Binding Path=ReportOnSellerReportCmd}"></MenuItem>
+                <MenuItem Header="{x:Static p:Resources.SalesForPeriod}" Command="{Binding Path=SalesForPeriodReportCmd}"></MenuItem>
+            </MenuItem>
+            <MenuItem Header="{x:Static p:Resources.Help}">
+                <MenuItem Header="{x:Static p:Resources.AboutApplication}"></MenuItem>
+            </MenuItem>
         </Menu>
         <StatusBar DockPanel.Dock="Bottom" Height="30" Background="Transparent">
             <StatusBarItem>
@@ -60,8 +95,8 @@
                     <DataTemplate DataType="{x:Type viewmodels:ProductListViewModel}">
                         <views:ProductList></views:ProductList>
                     </DataTemplate>
-                    <DataTemplate DataType="{x:Type viewmodels:BasketViewModel}">
-                        <views:BasketView></views:BasketView>
+                    <DataTemplate DataType="{x:Type viewmodels:OrderViewModel}">
+                        <views:OrderView></views:OrderView>
                     </DataTemplate>
                 </TabControl.Resources>
             </TabControl>

@@ -132,7 +132,7 @@ namespace BookKeeping.UI.ViewModels
             }
         }
 
-        protected virtual TViewModel CreateOrExistWorkspace<TViewModel>()
+        protected virtual TViewModel CreateOrRetrieveWorkspace<TViewModel>()
             where TViewModel : WorkspaceViewModel, new()
         {
             TViewModel viewModel = Workspaces.OfType<TViewModel>().FirstOrDefault();
