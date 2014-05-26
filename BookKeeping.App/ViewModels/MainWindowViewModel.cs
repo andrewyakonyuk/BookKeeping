@@ -79,6 +79,12 @@ namespace BookKeeping.App.ViewModels
                 var viewModel = CreateOrExistWorkspace<ProductListViewModel>();
                 SetActiveWorkspace(viewModel);
             })));
+            fileNode.AddChild(new MenuTreeNode(T("Basket"), new DelegateCommand(_ =>
+            {
+                var viewModel = CreateOrExistWorkspace<BasketViewModel>();
+                SetActiveWorkspace(viewModel);
+            })));
+
             fileNode.AddChild(new MenuTreeNode(T("Save"), SaveCmd));
 
             var editNode = new MenuTreeNode(T("Edit"), null);

@@ -1,6 +1,6 @@
-﻿using BookKeeping.App.ViewModels;
+﻿using System.Windows;
+using BookKeeping.App.ViewModels;
 using BookKeeping.App.Views;
-using System.Windows;
 using BookKeeping.UI.Localization;
 
 namespace BookKeeping.App

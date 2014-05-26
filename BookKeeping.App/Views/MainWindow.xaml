@@ -60,6 +60,9 @@
                     <DataTemplate DataType="{x:Type viewmodels:ProductListViewModel}">
                         <views:ProductList></views:ProductList>
                     </DataTemplate>
+                    <DataTemplate DataType="{x:Type viewmodels:BasketViewModel}">
+                        <views:BasketView></views:BasketView>
+                    </DataTemplate>
                 </TabControl.Resources>
             </TabControl>
         </Grid>
