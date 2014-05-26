@@ -8,8 +8,6 @@ namespace BookKeeping.Infrastructure.Caching
     {
         public static T Get<T>(this ICacheService cache, string cacheKey, Func<T> defaultValue)
         {
-            Contract.Requires<ArgumentNullException>(cache != null);
-            Contract.Requires<ArgumentNullException>(defaultValue != null);
             var entity = cache.GetValue<T>(cacheKey);
             if (ReferenceEquals(entity, null))
             {
