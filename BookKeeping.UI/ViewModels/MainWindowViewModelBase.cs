@@ -115,7 +115,10 @@ namespace BookKeeping.UI.ViewModels
             var workspace = _workspacesCollectionView.CurrentItem as WorkspaceViewModel;
             CurrentWorkspace = workspace;
 
-            DisplayName = GetDisplayName(ApplicationName, workspace.DisplayName);
+            if (workspace != null)
+            {
+                DisplayName = GetDisplayName(ApplicationName, workspace.DisplayName);
+            }
 
             UpdateToolbar(workspace);
         }

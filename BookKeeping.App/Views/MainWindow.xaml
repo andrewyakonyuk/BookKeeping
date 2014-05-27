@@ -23,9 +23,114 @@
             <ResourceDictionary.MergedDictionaries>
                 <ResourceDictionary Source="pack://application:,,,/BookKeeping.App;component/Styles/Styles.xaml" />
                 <ResourceDictionary Source="pack://application:,,,/BookKeeping.App;component/Styles/Colors.xaml" />
+                <ResourceDictionary Source="/Resources/Icons.xaml" />
+                <ResourceDictionary>
+                    <BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverterKey"/>
+                </ResourceDictionary>
             </ResourceDictionary.MergedDictionaries>
         </ResourceDictionary>
     </Window.Resources>
+
+    <Controls:MetroWindow.Flyouts>
+        <Controls:FlyoutsControl>
+            <!-- login form -->
+            <Controls:Flyout Header="{x:Static p:Resources.LoginForm}" x:Name="Login" Background="#3F3F46"
+                        Position="Right" IsOpen="{Binding Path=Profile.IsAuthorization, Mode=OneWay, Converter={converters:InverseBooleanConverter}}"
+                        Width="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType=Controls:MetroWindow}, Path=ActualWidth}"
+                        CloseCommand="{Binding Path=CloseLoginCmd}">
+                <Grid Margin="10" Width="400" DataContext="{Binding Path=SignIn}" VerticalAlignment="Center">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="Auto" />
+                        <ColumnDefinition Width="*" />
+                    </Grid.ColumnDefinitions>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="Auto"></RowDefinition>
+                        <RowDefinition Height="Auto"></RowDefinition>
+                    </Grid.RowDefinitions>
+                    <Label Margin="5" VerticalAlignment="Center" Content="{x:Static p:Resources.Login}" Foreground="White"/>
+                    <TextBox Margin="5" Grid.Row="0" Grid.Column="1" x:Name="txtLogin" Foreground="Black" 
+                         Background="White"
+                             CaretBrush="Black"
+                         VerticalContentAlignment="Center">
+                        <TextBox.Text>
+                            <Binding Path="Login" Mode="TwoWay">
+                                <Binding.ValidationRules>
+                                    <DataErrorValidationRule></DataErrorValidationRule>
+                                </Binding.ValidationRules>
+                            </Binding>
+                        </TextBox.Text>
+                    </TextBox>
+                    <Label Margin="5" Grid.Row="1" Grid.Column="0" VerticalAlignment="Center" Content="{x:Static p:Resources.Password}"/>
+                    <PasswordBox Margin="5" Controls:TextboxHelper.ClearTextButton="True" Foreground="Black"
+                                 Background="White"
+                                 CaretBrush="Black"
+                                 x:Name="txtPassword" IsEnabled="True" Grid.Row="1" Grid.Column="1"
+                                >
+                    </PasswordBox>
+                    <Label Foreground="Red" Margin="5" Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="2" VerticalAlignment="Center" HorizontalAlignment="Center"
+                          Content="{Binding ElementName=txtLogin, Path=(Validation.Errors)[0].ErrorContent,TargetNullValue={x:Null}}">
+                    </Label>
+                    <Button Grid.Row="3" Grid.Column="1" Width="75" Height="30" VerticalContentAlignment="Center" HorizontalContentAlignment="Center" Foreground="White" Margin="5" HorizontalAlignment="Right" VerticalAlignment="Bottom" 
+                        Content="{x:Static p:Resources.SignIn}" 
+                        Command="{Binding Path=SignInCmd}"
+                        CommandParameter="{Binding ElementName=txtPassword}"
+                        />
+                </Grid>
+            </Controls:Flyout>
+            <!-- account profile-->
+            <Controls:Flyout Header="{x:Static p:Resources.Account}"  Background="#3F3F46" IsOpen="{Binding Path=Profile.IsOpen}" Position="Right" Width="300">
+                <DockPanel LastChildFill="True" DataContext="{Binding Path=Profile}">
+                    <Button Width="75" Height="30" DockPanel.Dock="Bottom" Command="{Binding Path=SignOutCmd}" Content="{x:Static p:Resources.SignOut}" VerticalContentAlignment="Center" HorizontalContentAlignment="Center" HorizontalAlignment="Right" Foreground="White" Margin="5"></Button>
+                    <Grid DataContext="{Binding Path=ChangePassword}" Visibility="{Binding Path=IsVisible, Converter={StaticResource BooleanToVisibilityConverterKey}}">
+                        <!--<StackPanel Orientation="Vertical">
+                            <Label Content="{x:Static p:Resources.AdminsPassword}" Margin="5"></Label>
+                            <PasswordBox Margin="5,0" Background="White" Foreground="Black"></PasswordBox>
+                            <Label Content="{x:Static p:Resources.SelectUser}" Margin="5"></Label>
+                            <ComboBox ItemsSource="{Binding Path=Users}" Background="White" Foreground="Black" DisplayMemberPath="Name" SelectedItem="{Binding Path=User, Mode=TwoWay}" Margin="5,0"></ComboBox>
+                            <Label Content="{x:Static p:Resources.OldPassword}" Margin="5"></Label>
+                            <PasswordBox Margin="5,0" Background="White" Foreground="Black"></PasswordBox>
+                            <Label Content="{x:Static p:Resources.NewPassword}" Margin="5"></Label>
+                            <PasswordBox Margin="5,0" Background="White" Foreground="Black"></PasswordBox>
+                            <Button Margin="5" Width="100" Height="30" Padding="5"
+                                    Foreground="White"
+                                    HorizontalContentAlignment="Center" VerticalContentAlignment="Center" 
+                                    HorizontalAlignment="Center" Content="{x:Static p:Resources.ChangePassword}"></Button>
+                        </StackPanel>-->
+                    </Grid>
+                </DockPanel>
+            </Controls:Flyout>
+            <!-- change password -->
+            <Controls:Flyout>
+
+            </Controls:Flyout>
+        </Controls:FlyoutsControl>
+    </Controls:MetroWindow.Flyouts>
+
+    <Controls:MetroWindow.WindowCommands>
+        <Controls:WindowCommands>
+            <Button Foreground="White" Command="{Binding Path=Profile.OpenProfile}">
+                <StackPanel Orientation="Horizontal">
+                    <Rectangle Width="18"
+                           Height="18"
+                           Fill="White">
+                        <Rectangle.OpacityMask>
+                            <VisualBrush Stretch="Uniform"
+                                     Visual="{DynamicResource appbar_user}" />
+                        </Rectangle.OpacityMask>
+                    </Rectangle>
+                    <TextBlock Text="{Binding Path=Profile.Username, Mode=OneWay}" 
+                               Margin="3,0"
+                               VerticalAlignment="Center"
+                               HorizontalAlignment="Center"
+                               Foreground="White">
+                    </TextBlock>
+                </StackPanel>
+            </Button>
+        </Controls:WindowCommands>
+    </Controls:MetroWindow.WindowCommands>
+
     <DockPanel>
         <Menu DockPanel.Dock="Top"
               SnapsToDevicePixels="True"

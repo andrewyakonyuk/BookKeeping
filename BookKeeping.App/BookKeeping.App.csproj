@@ -132,11 +132,14 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
+    <Compile Include="ViewModels\ChangePasswordViewMode.cs" />
     <Compile Include="ViewModels\OrderLineViewModel.cs" />
     <Compile Include="ViewModels\OrderViewModel.cs" />
     <Compile Include="ViewModels\MainWindowViewModel.cs" />
     <Compile Include="ViewModels\ProductListViewModel.cs" />
     <Compile Include="ViewModels\ProductViewModel.cs" />
+    <Compile Include="ViewModels\ProfileViewModel.cs" />
+    <Compile Include="ViewModels\SignInViewModel.cs" />
     <Compile Include="Views\OrderView.xaml.cs">
       <DependentUpon>OrderView.xaml</DependentUpon>
     </Compile>
@@ -290,6 +293,10 @@
     </BootstrapperPackage>
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\BookKeeping.Auth\BookKeeping.Auth.csproj">
+      <Project>{d2062640-58af-4198-8153-750d0aa21c8c}</Project>
+      <Name>BookKeeping.Auth</Name>
+    </ProjectReference>
     <ProjectReference Include="..\BookKeeping.Domain\BookKeeping.Domain.csproj">
       <Project>{9DBD5C57-7F4A-4C79-BFB1-BA241D21C2C6}</Project>
       <Name>BookKeeping.Domain</Name>

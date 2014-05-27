@@ -10,17 +10,41 @@ using System.Globalization;
 using ICommand = System.Windows.Input.ICommand;
 using BookKeeping.UI.ViewModels;
 using BookKeeping.UI;
+using BookKeeping.Auth;
+using BookKeeping.Domain.Repositories;
+using BookKeeping.Domain.Aggregates;
 
 namespace BookKeeping.App.ViewModels
 {
     public class MainWindowViewModel : MainWindowViewModelBase
     {
         private bool _quitConfirmationEnabled;
+        private IContextUserProvider _contextUserProvider;
+        private readonly IRepository<User> _repostory;
 
         public MainWindowViewModel()
         {
             this.DisplayName = BookKeeping.App.Properties.Resources.Application_Name;
             this.QuitConfirmationEnabled = true;
+
+            var userRepository = new UserRepository();
+            _repostory = userRepository;
+
+            var authService = new AuthenticationService(userRepository);
+            SignIn = new SignInViewModel(authService);
+            SignIn.AuthenticationSuccessful += (sender, e) =>
+            {
+                if (_contextUserProvider == null)
+                    _contextUserProvider = new ContextUserProvider(userRepository);
+
+                Profile.Username = _contextUserProvider.ContextUser().Name;
+                Profile.IsAuthorization = true;
+            };
+
+            Profile = new ProfileViewModel(authService, _contextUserProvider);
+            Profile.PropertyChanged += Profile_PropertyChanged;
+
+            CloseLoginCmd = new DelegateCommand(t => { }, t => Profile.IsAuthorization);
 
             Workspaces.Add(new WorkspaceViewModel
             {
@@ -49,6 +73,31 @@ namespace BookKeeping.App.ViewModels
             MainMenu.Clear();
             BuildMainMenu();
         }
+
+        void Profile_PropertyChanged(object sender, PropertyChangedEventArgs e)
+        {
+            switch (e.PropertyName)
+            {
+                case "IsAuthorization":
+                    if (Profile.IsAuthorization)
+                    {
+                        Profile.ChangePassword = new ChangePasswordViewModel(_repostory);
+                    }
+                    else
+                    {
+                        Workspaces.Clear();
+                    }
+                    break;
+                default:
+                    break;
+            }
+        }
+
+        public SignInViewModel SignIn { get; private set; }
+
+        public ProfileViewModel Profile { get; private set; }
+
+        public ICommand CloseLoginCmd { get; private set; }
 
         public ICommand CloseTabItem { get; set; }
 
@@ -89,37 +138,6 @@ namespace BookKeeping.App.ViewModels
 
             ListOfProductsCmd = new DelegateCommand(_ => SetActiveWorkspace(CreateOrRetrieveWorkspace<ProductListViewModel>()));
             SaleOfGoodsCmd = new DelegateCommand(_ => SetActiveWorkspace(CreateOrRetrieveWorkspace<OrderViewModel>()));
-
-            //var fileNode = new MenuTreeNode(T("File"), null);
-            //fileNode.AddChild(new MenuTreeNode(T("Product_List"), new DelegateCommand(_ =>
-            //{
-            //    var viewModel = CreateOrExistWorkspace<ProductListViewModel>();
-            //    SetActiveWorkspace(viewModel);
-            //})));
-            //fileNode.AddChild(new MenuTreeNode(T("Basket"), new DelegateCommand(_ =>
-            //{
-            //    var viewModel = CreateOrExistWorkspace<OrderViewModel>();
-            //    SetActiveWorkspace(viewModel);
-            //})));
-
-            //fileNode.AddChild(new MenuTreeNode(T("Save"), SaveCmd));
-
-            //var editNode = new MenuTreeNode(T("Edit"), null);
-            //editNode.AddChild(new MenuTreeNode(T("Undo"), ApplicationCommands.Undo));
-            //editNode.AddChild(new MenuTreeNode(T("Redo"), ApplicationCommands.Redo));
-            //editNode.AddChild(new MenuTreeNode(T("Cut"), ApplicationCommands.Cut));
-            //editNode.AddChild(new MenuTreeNode(T("Copy"), ApplicationCommands.Copy));
-            //editNode.AddChild(new MenuTreeNode(T("Paste"), ApplicationCommands.Paste));
-            //editNode.AddChild(new MenuTreeNode(T("Find"), ApplicationCommands.Find));
-
-            //var serviceNode = new MenuTreeNode(T("Service"), null);
-
-            //var reportsNode = new MenuTreeNode(T("Reports"), null);
-            //reportsNode.AddChild(new MenuTreeNode(T("RemainsOfGoods"), RemainsOfGoodsReportCmd));
-            //reportsNode.AddChild(new MenuTreeNode(T("HistoryOfGoods")))
-
-            //MainMenu.Add(fileNode);
-            //MainMenu.Add(editNode);
         }
 
     }

@@ -120,6 +120,9 @@
   <data name="AboutApplication" xml:space="preserve">
     <value>About application</value>
   </data>
+  <data name="Account" xml:space="preserve">
+    <value>Account</value>
+  </data>
   <data name="Actions" xml:space="preserve">
     <value>Actions</value>
   </data>
@@ -195,6 +198,12 @@
   <data name="ListOfProducts" xml:space="preserve">
     <value>List of products</value>
   </data>
+  <data name="Login" xml:space="preserve">
+    <value>Login</value>
+  </data>
+  <data name="LoginForm" xml:space="preserve">
+    <value>Login form</value>
+  </data>
   <data name="Name" xml:space="preserve">
     <value>Name</value>
   </data>
@@ -221,6 +230,9 @@
   </data>
   <data name="Order_TotalVatRate" xml:space="preserve">
     <value>Total VAT</value>
+  </data>
+  <data name="Password" xml:space="preserve">
+    <value>Password</value>
   </data>
   <data name="Paste" xml:space="preserve">
     <value>Paste</value>
@@ -272,6 +284,12 @@
   </data>
   <data name="Settings" xml:space="preserve">
     <value>Settings</value>
+  </data>
+  <data name="SignIn" xml:space="preserve">
+    <value>Sign in</value>
+  </data>
+  <data name="SignOut" xml:space="preserve">
+    <value>Sign out</value>
   </data>
   <data name="Stock" xml:space="preserve">
     <value>Stock</value>

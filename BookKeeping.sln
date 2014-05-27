@@ -11,6 +11,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BookKeeping.Infrastructure"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BookKeeping.UI", "BookKeeping.UI\BookKeeping.UI.csproj", "{2E1190C5-9B81-4633-AE3C-8B12144DCE84}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BookKeeping.Auth", "BookKeeping.Auth\BookKeeping.Auth.csproj", "{D2062640-58AF-4198-8153-750D0AA21C8C}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -33,6 +35,10 @@ Global
 		{2E1190C5-9B81-4633-AE3C-8B12144DCE84}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{2E1190C5-9B81-4633-AE3C-8B12144DCE84}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{2E1190C5-9B81-4633-AE3C-8B12144DCE84}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D2062640-58AF-4198-8153-750D0AA21C8C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D2062640-58AF-4198-8153-750D0AA21C8C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D2062640-58AF-4198-8153-750D0AA21C8C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D2062640-58AF-4198-8153-750D0AA21C8C}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
