@@ -16,6 +16,7 @@
         mc:Ignorable="d"
         d:DesignHeight="400" d:DesignWidth="500"
         Closing="MetroWindow_Closing"
+                      WindowState="Maximized"
         d:DataContext="{Binding viewmodels:MainWindowViewModel}"
                         WindowStartupLocation="CenterScreen">
     <Window.Resources>

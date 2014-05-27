@@ -21,6 +21,7 @@ namespace BookKeeping.App.ViewModels
         private bool _quitConfirmationEnabled;
         private IContextUserProvider _contextUserProvider;
         private readonly IRepository<User> _repostory;
+        private long? _previousUserId;
 
         public MainWindowViewModel()
         {
@@ -39,17 +40,13 @@ namespace BookKeeping.App.ViewModels
 
                 Profile.Username = _contextUserProvider.ContextUser().Name;
                 Profile.IsAuthorization = true;
+                _previousUserId = _contextUserProvider.ContextUser().Id;
             };
 
             Profile = new ProfileViewModel(authService, _contextUserProvider);
             Profile.PropertyChanged += Profile_PropertyChanged;
 
             CloseLoginCmd = new DelegateCommand(t => { }, t => Profile.IsAuthorization);
-
-            Workspaces.Add(new WorkspaceViewModel
-            {
-                DisplayName = "Empty workspace"
-            });
 
             CollectionViewSource.GetDefaultView(Workspaces).MoveCurrentToFirst();
             Exit = ApplicationCommands.Close;
@@ -82,10 +79,11 @@ namespace BookKeeping.App.ViewModels
                     if (Profile.IsAuthorization)
                     {
                         Profile.ChangePassword = new ChangePasswordViewModel(_repostory);
-                    }
-                    else
-                    {
-                        Workspaces.Clear();
+                        if (_contextUserProvider.ContextUser() != null
+                            && _previousUserId != _contextUserProvider.ContextUser().Id)
+                        {
+                            Workspaces.Clear();
+                        }
                     }
                     break;
                 default:

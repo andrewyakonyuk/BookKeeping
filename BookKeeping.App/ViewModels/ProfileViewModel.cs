@@ -23,9 +23,9 @@ namespace BookKeeping.App.ViewModels
             _authService = authService;
             _userProvider = userProvider;
 
-            SignOutCmd = new DelegateCommand(t => SignOut());
+            SignOutCmd = new DelegateCommand(_ => SignOut());
 
-            OpenProfile = new DelegateCommand(t => { IsOpen = true; });
+            OpenProfile = new DelegateCommand(_ => IsOpen = true, _ => IsAuthorization);
         }
 
         public void SignOut()

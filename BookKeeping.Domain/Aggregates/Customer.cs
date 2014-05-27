@@ -1,7 +1,7 @@
 ﻿
 namespace BookKeeping.Domain.Aggregates
 {
-    public class Buyer : IEntity
+    public class Customer : IEntity
     {
         public long Id { get; set; }
         public Address LegalAddress { get; set; }
