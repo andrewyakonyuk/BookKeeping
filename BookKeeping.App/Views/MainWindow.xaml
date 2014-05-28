@@ -155,6 +155,8 @@
                     <MenuItem Header="{x:Static p:Resources.PurchaseOfGoods}" Command="{Binding Path=PurchaseofGoodsCmd}"></MenuItem>
                 </MenuItem>
                 <Separator></Separator>
+                <MenuItem Header="{x:Static p:Resources.Save}" Command="{Binding Path=SaveCmd}"></MenuItem>
+                <Separator></Separator>
                 <MenuItem Header="{x:Static p:Resources.Settings}"></MenuItem>
                 <Separator></Separator>
                 <MenuItem Header="{x:Static p:Resources.Exit}"></MenuItem>
