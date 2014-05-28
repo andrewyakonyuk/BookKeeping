@@ -101,6 +101,19 @@
     <Compile Include="Caching\CachingService.cs" />
     <Compile Include="Caching\ICachingService.cs" />
     <Compile Include="Current.cs" />
+    <Compile Include="Domain\ICommandBus.cs" />
+    <Compile Include="Domain\ICommandHandler.cs" />
+    <Compile Include="Domain\ICriterion.cs" />
+    <Compile Include="Domain\IEventBus.cs" />
+    <Compile Include="Domain\IEventHandler.cs" />
+    <Compile Include="Domain\IQuery.cs" />
+    <Compile Include="Domain\IQueryBuilder.cs" />
+    <Compile Include="Domain\IQueryFactory.cs" />
+    <Compile Include="Domain\IQueryFor.cs" />
+    <Compile Include="Domain\IUnitOfWork.cs" />
+    <Compile Include="Domain\QueryFor.cs" />
+    <Compile Include="Domain\UnregisteredDomainCommandException.cs" />
+    <Compile Include="Domain\UnregisteredDomainEventException.cs" />
     <Compile Include="Logging\ILogger.cs" />
     <Compile Include="Logging\NullLogger.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -127,6 +140,12 @@
       <ProductName>Установщик Windows 3.1</ProductName>
       <Install>true</Install>
     </BootstrapperPackage>
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\BookKeeping.Domain.Contracts\BookKeeping.Domain.Contracts.csproj">
+      <Project>{c5f2deca-02a4-4069-81ae-611c14f0f9f9}</Project>
+      <Name>BookKeeping.Domain.Contracts</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

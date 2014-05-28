@@ -1,10 +1,11 @@
 ﻿using BookKeeping.Domain.Aggregates;
+using BookKeeping.Domain.Contracts;
 
 namespace BookKeeping.Domain.Services
 {
     public interface IOrderCalculator
     {
-        OrderCalculationResult CalculateOrder(Order order);
+        OrderCalculationResult CalculateOrder(Order.Order order);
     }
 
     public struct OrderCalculationResult

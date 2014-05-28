@@ -1,4 +1,4 @@
-﻿using BookKeeping.Domain;
+﻿using BookKeeping.Domain.Contracts;
 using BookKeeping.UI.ViewModels;
 
 namespace BookKeeping.App.ViewModels
@@ -11,8 +11,8 @@ namespace BookKeeping.App.ViewModels
         {
             this.PropertyChanged += ProductViewModel_PropertyChanged;
             Price = CurrencyAmount.Unspecifined;
-            Barcode = Domain.Barcode.Undefined;
-            VatRate = Domain.VatRate.Zero;
+            Barcode = Barcode.Undefined;
+            VatRate = VatRate.Zero;
             Title = string.Empty;
             ItemNo = string.Empty;
             UnitOfMeasure = string.Empty;

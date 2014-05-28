@@ -297,6 +297,10 @@
       <Project>{d2062640-58af-4198-8153-750d0aa21c8c}</Project>
       <Name>BookKeeping.Auth</Name>
     </ProjectReference>
+    <ProjectReference Include="..\BookKeeping.Domain.Contracts\BookKeeping.Domain.Contracts.csproj">
+      <Project>{c5f2deca-02a4-4069-81ae-611c14f0f9f9}</Project>
+      <Name>BookKeeping.Domain.Contracts</Name>
+    </ProjectReference>
     <ProjectReference Include="..\BookKeeping.Domain\BookKeeping.Domain.csproj">
       <Project>{9DBD5C57-7F4A-4C79-BFB1-BA241D21C2C6}</Project>
       <Name>BookKeeping.Domain</Name>
@@ -304,6 +308,14 @@
     <ProjectReference Include="..\BookKeeping.Infrastructure\BookKeeping.Infrastructure.csproj">
       <Project>{8DA3D35C-EB9B-4126-8BD9-D82E7445A334}</Project>
       <Name>BookKeeping.Infrastructure</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\BookKeeping.Persistent\BookKeeping.Persistent.csproj">
+      <Project>{5ce597f2-2322-4156-9d18-aa43e95e38d7}</Project>
+      <Name>BookKeeping.Persistent</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\BookKeeping.Projections\BookKeeping.Projections.csproj">
+      <Project>{8db3b49f-b1c2-45ab-963e-ad6c0e054032}</Project>
+      <Name>BookKeeping.Projections</Name>
     </ProjectReference>
     <ProjectReference Include="..\BookKeeping.UI\BookKeeping.UI.csproj">
       <Project>{2e1190c5-9b81-4633-ae3c-8b12144dce84}</Project>

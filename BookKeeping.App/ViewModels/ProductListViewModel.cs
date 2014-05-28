@@ -8,11 +8,12 @@ using System.Linq;
 using System.Linq.Expressions;
 using System.Text.RegularExpressions;
 using System.Windows.Data;
-using BookKeeping.Domain.Factories;
 using BookKeeping.Domain.Services;
 using BookKeeping.UI;
 using BookKeeping.UI.ViewModels;
 using ICommand = System.Windows.Input.ICommand;
+using BookKeeping.Domain.Contracts;
+using BookKeeping.Projections.ProductsList;
 
 namespace BookKeeping.App.ViewModels
 {
@@ -24,7 +25,6 @@ namespace BookKeeping.App.ViewModels
         private object _selectedItem;
         private IList _selectedItems;
         private bool _hasChanges = false;
-        private readonly ServiceFactory _serviceFactory;
         private string _filterText = string.Empty;
         private readonly Regex filterExpressionRegex = new Regex(@"^(\s*)(?<field>\w+)(\s*)(?<operator>\W+)(\s*)(?<value>.+)", RegexOptions.Compiled);
         private ProductViewModel _editingItem;
@@ -32,8 +32,6 @@ namespace BookKeeping.App.ViewModels
 
         public ProductListViewModel()
         {
-            _serviceFactory = new ServiceFactory();
-
             SearchButtonCmd = new DelegateCommand(_ => DoSearch(SearchText), _ => true);
             FilterButtonCmd = new DelegateCommand(_ => DoFilter(FilterText), _ => true);
             FilterPopupCmd = new DelegateCommand(_ => ShowFilterPopup = !ShowFilterPopup);
@@ -181,7 +179,8 @@ namespace BookKeeping.App.ViewModels
 
         protected virtual IEnumerable<ProductViewModel> GetProducts()
         {
-            return _serviceFactory.Create<IProductService>().GetAll().Select((p, i) => new ProductViewModel
+            var random = new Random(100);
+            return GetProductListProjection().Select((p, i) => new ProductViewModel
             {
                 Barcode = p.Barcode,
                 IsOrderable = p.IsOrderable,
@@ -194,6 +193,26 @@ namespace BookKeeping.App.ViewModels
                 HasChanges = false,
                 IsValid = true
             });
+        }
+
+        private IEnumerable<ProductView> GetProductListProjection()
+        {
+            var random = new Random(100);
+            for (int i = 0; i < 100; i++)
+            {
+                yield return new ProductView
+                   {
+                       Id = new ProductId(i),
+                       Barcode = new Barcode("12342323", BarcodeType.EAN13),
+                       IsOrderable = true,
+                       ItemNo = "item no. " + (i + 1),
+                       Price = new CurrencyAmount(random.Next(10, 100), Currency.Eur),
+                       Stock = random.Next(1, 1000),
+                       Title = new string("qwertyuiopasdfghjklzxcvbnm".Substring(random.Next(0, 12)).OrderBy(t => Guid.NewGuid()).ToArray()),
+                       UnitOfMeasure = "m2",
+                       VatRate = new VatRate(new decimal(random.NextDouble())),
+                   };
+            }
         }
 
         protected void DoSearch(string searchText)

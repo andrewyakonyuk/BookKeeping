@@ -1,0 +1,70 @@
+﻿// main namespace for commands and messages
+namespace BookKeeping.Domain.Contracts
+// define data contract namespace for all classes
+extern "BookKeeping"
+
+// define shortcut for interface IIdentity
+if ! = IIdentity
+
+// define alias
+const name = string name
+const dateUtc = DateTime dateUtc
+
+// Define application service IUniverseApplicationService
+interface Product(ProductId Id)
+{
+    // define shortcut for commands
+    if ? = ICommand<ProductId>
+    // define shortcut for events
+    if ! = IEvent<ProductId>
+
+    CreateProduct?(string title, string itemNo, CurrencyAmount price, decimal stock, string unitOfMeasure, VatRate vatRate, Barcode barcode)
+        explicit "Create product - {title}, {itemNo}, {price}, {stock}, {unitOfMeasure}, {vatRate}, {barcode}"
+        ProductCreated!(string title, string itemNo, CurrencyAmount price, decimal stock, string unitOfMeasure, VatRate vatRate, Barcode barcode, DateTime utc)
+            explicit "Product {itemNo} created, {title}, {price}, {stock}, {unitOfMeasure}, {vatRate}, {barcode}, utc - {utc}"
+
+    ChangeProductBarcode?(Barcode newBarcode)
+        explicit "Change product barcode - {newBarcode}"
+        ProductBarcodeChanged!(Barcode newBarcode, DateTime utc)
+            explicit "Product barcode changed on {newBarcode}, utc - {utc}"
+
+    ChangeProductItemNo?(string newItemNo)
+        explicit "Change product item no. - {newItemNo}"
+        ProductItemNoChanged!(string newItemNo, DateTime utc)
+            explicit "{id} item changed on {newItemNo}, utc - {utc}"
+
+    MakeProductOrderable?()
+        explicit "Make {id} orderable"
+        ProductMakedOrderable!(DateTime utc)
+            explicit "{id} maked orderable"
+
+    MakeProductNonOrderable?(string reason)
+        explicit "Make {id} non-orderable, reason - {reason}"
+        ProductMakedNonOrderable!(string reason, DateTime utc)
+            explicit "{id} maked non-orderable, reason - {reason}, utc - {utc}"
+
+    UpdateProductStock?(decimal quantity, string reason)
+        explicit "update {id} stock {qunatity}, reason - {reason}"
+        ProductStockUpdated!(decimal quantity, string reason, DateTime utc)
+            explicit "{id} stock updated {quantity}, reason - {reason}, utc - {utc}"
+
+    RenameProduct?(string newTitle)
+        explicit "rename {id}"
+        ProductRenamed!(string newTitle, DateTime utc)
+            explicit "{id} renamed, utc - {utc}"
+
+     ChangeProductVatRate?(VatRate newVatRate)
+        explicit "Change product vat rate - {newVatRate}"
+        ProductVatRateChanged!(VatRate newVatRate, DateTime utc)
+            explicit "{id} item changed on {newVatRate}, utc - {utc}"
+
+    ChangeProductUnitOfMeasure?(string newUnitOfMeasure)
+        explicit "Change product unit of measure - {newItemNo}"
+        ProductUnitOfMeasureChanged!(string newUnitOfMeasure, DateTime utc)
+            explicit "{id} item changed on {newUnitOfMeasure}, utc - {utc}"
+
+    ChangeProductPrice?(CurrencyAmount newPrice)
+        explicit "Change product price - {newPrice}"
+        ProductPriceChanged!(CurrencyAmount newPrice, DateTime utc)
+            explicit "{id} item changed on {newPrice}, utc - {utc}"
+}
