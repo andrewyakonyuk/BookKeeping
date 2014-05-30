@@ -6,7 +6,7 @@
              mc:Ignorable="d" 
              xmlns:chart="clr-namespace:De.TorstenMandelkow.MetroChart;assembly=De.TorstenMandelkow.MetroChart" 
              xmlns:converters="clr-namespace:BookKeeping.UI.Converters;assembly=BookKeeping.UI"
-            
+            Background="{DynamicResource Background}"
              d:DesignHeight="300" d:DesignWidth="300">
     <UserControl.Resources>
         

@@ -90,7 +90,7 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="De.TorstenMandelkow.MetroChart">
-      <HintPath>..\libs\MetroChart\De.TorstenMandelkow.MetroChart.dll</HintPath>
+      <HintPath>..\libs\MetroCharts\De.TorstenMandelkow.MetroChart.dll</HintPath>
     </Reference>
     <Reference Include="MahApps.Metro">
       <HintPath>..\packages\MahApps.Metro.0.13.1.0\lib\net40\MahApps.Metro.dll</HintPath>
