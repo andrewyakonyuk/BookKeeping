@@ -150,6 +150,9 @@
   <data name="Charge" xml:space="preserve">
     <value>Charge</value>
   </data>
+  <data name="Charts" xml:space="preserve">
+    <value>Charts</value>
+  </data>
   <data name="Copy" xml:space="preserve">
     <value>Copy</value>
   </data>

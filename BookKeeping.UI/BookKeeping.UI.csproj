@@ -107,6 +107,7 @@
     <Compile Include="Behaviors\TabControlBehavior.cs" />
     <Compile Include="Converters\InverseBooleanConverter.cs" />
     <Compile Include="Converters\MarkupConverterBase.cs" />
+    <Compile Include="Converters\StringToBrushConverter.cs" />
     <Compile Include="Converters\ValueConverterGroup.cs" />
     <Compile Include="IHasToolbarCommands.cs" />
     <Compile Include="MessageEnvelope.cs" />

@@ -117,6 +117,8 @@ namespace BookKeeping.App.ViewModels
 
         public ICommand HistoryOfGoodsReportCmd { get; private set; }
 
+        public ICommand ChartsCmd { get; private set; }
+
         public bool QuitConfirmationEnabled
         {
             get { return _quitConfirmationEnabled; }
@@ -136,7 +138,7 @@ namespace BookKeeping.App.ViewModels
 
             ListOfProductsCmd = new DelegateCommand(_ => SetActiveWorkspace(CreateOrRetrieveWorkspace<ProductListViewModel>()));
             SaleOfGoodsCmd = new DelegateCommand(_ => SetActiveWorkspace(CreateOrRetrieveWorkspace<OrderViewModel>()));
+            ChartsCmd = new DelegateCommand(_ => SetActiveWorkspace(CreateOrRetrieveWorkspace<ChartsViewModel>()));
         }
-
     }
 }

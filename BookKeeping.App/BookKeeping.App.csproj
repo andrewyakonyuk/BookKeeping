@@ -89,6 +89,9 @@
     <CodeAnalysisRuleSet>AllRules.ruleset</CodeAnalysisRuleSet>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="De.TorstenMandelkow.MetroChart">
+      <HintPath>..\libs\MetroChart\De.TorstenMandelkow.MetroChart.dll</HintPath>
+    </Reference>
     <Reference Include="MahApps.Metro">
       <HintPath>..\packages\MahApps.Metro.0.13.1.0\lib\net40\MahApps.Metro.dll</HintPath>
     </Reference>
@@ -133,6 +136,7 @@
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
     <Compile Include="ViewModels\ChangePasswordViewMode.cs" />
+    <Compile Include="ViewModels\ChartsViewModel.cs" />
     <Compile Include="ViewModels\OrderLineViewModel.cs" />
     <Compile Include="ViewModels\OrderViewModel.cs" />
     <Compile Include="ViewModels\MainWindowViewModel.cs" />
@@ -140,6 +144,9 @@
     <Compile Include="ViewModels\ProductViewModel.cs" />
     <Compile Include="ViewModels\ProfileViewModel.cs" />
     <Compile Include="ViewModels\SignInViewModel.cs" />
+    <Compile Include="Views\ChartsView.xaml.cs">
+      <DependentUpon>ChartsView.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Views\OrderView.xaml.cs">
       <DependentUpon>OrderView.xaml</DependentUpon>
     </Compile>
@@ -199,6 +206,10 @@
     <Page Include="Styles\TextBox.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Views\ChartsView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Views\OrderView.xaml">
       <SubType>Designer</SubType>
