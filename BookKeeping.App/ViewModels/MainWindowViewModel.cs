@@ -119,6 +119,18 @@ namespace BookKeeping.App.ViewModels
 
         public ICommand ChartsCmd { get; private set; }
 
+        private bool _isWorkspacesVisible;
+
+        public bool IsWorkspacesVisible
+        {
+            get { return _isWorkspacesVisible; }
+            set
+            {
+                _isWorkspacesVisible = value;
+                OnPropertyChanged(() => IsWorkspacesVisible);
+            }
+        }
+
         public bool QuitConfirmationEnabled
         {
             get { return _quitConfirmationEnabled; }
@@ -139,6 +151,12 @@ namespace BookKeeping.App.ViewModels
             ListOfProductsCmd = new DelegateCommand(_ => SetActiveWorkspace(CreateOrRetrieveWorkspace<ProductListViewModel>()));
             SaleOfGoodsCmd = new DelegateCommand(_ => SetActiveWorkspace(CreateOrRetrieveWorkspace<OrderViewModel>()));
             ChartsCmd = new DelegateCommand(_ => SetActiveWorkspace(CreateOrRetrieveWorkspace<ChartsViewModel>()));
+        }
+
+        protected override void OnWorkspacesChanged(object sender, NotifyCollectionChangedEventArgs e)
+        {
+            base.OnWorkspacesChanged(sender, e);
+            IsWorkspacesVisible = Workspaces.Count > 0;
         }
     }
 }

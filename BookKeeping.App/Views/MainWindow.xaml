@@ -6,6 +6,7 @@
         xmlns:viewmodels="clr-namespace:BookKeeping.App.ViewModels"
         xmlns:viewmodels.ui="clr-namespace:BookKeeping.UI.ViewModels;assembly=BookKeeping.UI"
         xmlns:converters="clr-namespace:BookKeeping.UI.Converters;assembly=BookKeeping.UI"
+        xmlns:converters.ui="clr-namespace:BookKeeping.UI.Converters;assembly=BookKeeping.UI"
         xmlns:p="clr-namespace:BookKeeping.App.Properties"
         Title="{Binding Path=DisplayName}" Height="400" Width="800"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
@@ -196,7 +197,7 @@
             </Grid.ColumnDefinitions>
             <TabControl Margin="15,5" ItemsSource="{Binding Path=Workspaces, Mode=OneWay}"
                 IsSynchronizedWithCurrentItem="True" DisplayMemberPath="DisplayName" ClipToBounds="True"
-                        behaviors:TabContent.IsCached="True">
+                        behaviors:TabContent.IsCached="True" Visibility="{Binding Path=IsWorkspacesVisible, Converter={StaticResource BooleanToVisibilityConverterKey}}">
                 <TabControl.Resources>
                     <DataTemplate DataType="{x:Type viewmodels.ui:WorkspaceViewModel}">
                         <views:Workspace></views:Workspace>
