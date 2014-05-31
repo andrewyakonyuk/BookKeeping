@@ -41,6 +41,7 @@ namespace BookKeeping.App.ViewModels
 
             var tempSource = new ObservableCollection<ProductViewModel>();
             Source = tempSource;
+
             tempSource.CollectionChanged += tempSource_CollectionChanged;
             foreach (var item in GetProducts())
             {

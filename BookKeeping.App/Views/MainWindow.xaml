@@ -180,7 +180,6 @@
                 <MenuItem Header="{x:Static p:Resources.HistoryOfGoods}" Command="{Binding Path=HistoryOfGoodsRepostCmd}"></MenuItem>
                 <MenuItem Header="{x:Static p:Resources.ReportOnSeller}" Command="{Binding Path=ReportOnSellerReportCmd}"></MenuItem>
                 <MenuItem Header="{x:Static p:Resources.SalesForPeriod}" Command="{Binding Path=SalesForPeriodReportCmd}"></MenuItem>
-                <MenuItem Header="{x:Static p:Resources.Charts}" Command="{Binding Path=ChartsCmd}"></MenuItem>
             </MenuItem>
             <MenuItem Header="{x:Static p:Resources.Help}">
                 <MenuItem Header="{x:Static p:Resources.AboutApplication}"></MenuItem>
@@ -209,8 +208,8 @@
                     <DataTemplate DataType="{x:Type viewmodels:OrderViewModel}">
                         <views:OrderView></views:OrderView>
                     </DataTemplate>
-                    <DataTemplate DataType="{x:Type viewmodels:ChartsViewModel}">
-                        <views:ChartsView></views:ChartsView>
+                    <DataTemplate DataType="{x:Type viewmodels:SalesForPeriodViewModel}">
+                        <views:SalesForPeriodView></views:SalesForPeriodView>
                     </DataTemplate>
                     <DataTemplate DataType="{x:Type viewmodels:RemainsOfGoodsViewModel}">
                         <views:RemainsOfGoodsView></views:RemainsOfGoodsView>

@@ -1,40 +1,38 @@
-﻿<UserControl x:Class="BookKeeping.App.Views.ChartsView"
+﻿<UserControl x:Class="BookKeeping.App.Views.SalesForPeriodView"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              mc:Ignorable="d" 
+             xmlns:p="clr-namespace:BookKeeping.App.Properties"
              xmlns:chart="clr-namespace:De.TorstenMandelkow.MetroChart;assembly=De.TorstenMandelkow.MetroChart" 
              xmlns:converters="clr-namespace:BookKeeping.UI.Converters;assembly=BookKeeping.UI"
-            Background="{DynamicResource Background}"
+             Background="{DynamicResource Background}"
              d:DesignHeight="300" d:DesignWidth="300">
     <UserControl.Resources>
-        
+
     </UserControl.Resources>
     <Grid>
         <chart:ClusteredColumnChart  
                 Grid.Column="0"
-                Grid.Row="0"                
-                ChartTitle="Pie Chart"
-                ChartSubTitle="Chart with fixed width and height"
-                Palette="{Binding Path=SelectedPalette.Value}"
-                FontSize="{Binding Path=SelectedFontSize}"
+                Grid.Row="0"  
+                ChartTitle="{Binding Path=Title, Mode=OneWay}"
+                ChartSubTitle="{Binding Path=SubTitle, Mode=OneWay}"
+                FontSize="11"
                 IsRowColumnSwitched="{Binding Path=IsRowColumnSwitched}"
                 ChartTitleVisibility="{Binding Path=IsTitleVisible, Converter={StaticResource BooleanToVisibilityConverter}}"
                 ChartLegendVisibility="{Binding Path=IsLegendVisible, Converter={StaticResource BooleanToVisibilityConverter}}"
                 ToolTipFormat="{Binding Path=ToolTipFormat}"
-                x:Name="Charts"
-                Foreground="{Binding Path=Foreground}" 
-                Background="{Binding Path=Background}"                 
+                x:Name="Charts"                
                 SelectedItem="{Binding Path=SelectedItem, Mode=TwoWay}"
-                SelectedBrush="DarkRed"  >
+                SelectedBrush="DarkRed">
             <chart:ClusteredColumnChart.Series>
                 <chart:ChartSeries
-                        SeriesTitle="Errors"
-                        DisplayMember="Category"
-                        ValueMember="Number"
-                        ItemsSource="{Binding Path=Errors}" >
-                    </chart:ChartSeries>
+                        SeriesTitle="{x:Static p:Resources.Month}"
+                        DisplayMember="Month"
+                        ValueMember="Sales"
+                        ItemsSource="{Binding Path=Monthes}" >
+                </chart:ChartSeries>
             </chart:ClusteredColumnChart.Series>
         </chart:ClusteredColumnChart>
     </Grid>

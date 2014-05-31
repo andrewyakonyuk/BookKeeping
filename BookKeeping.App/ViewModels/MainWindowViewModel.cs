@@ -40,6 +40,8 @@ namespace BookKeeping.App.ViewModels
 
             MainMenu.Clear();
             BuildMainMenu();
+
+            SalesForPeriodReportCmd.Execute(null);
         }
 
         void AuthorizationSuccessful(object sender, EventArgs e)
@@ -91,7 +93,7 @@ namespace BookKeeping.App.ViewModels
 
         public ICommand HistoryOfGoodsReportCmd { get; private set; }
 
-        public ICommand ChartsCmd { get; private set; }
+        public ICommand SalesForPeriodReportCmd { get; private set; }
 
         public ICommand SaveCmd { get; private set; }
 
@@ -133,9 +135,8 @@ namespace BookKeeping.App.ViewModels
             SaleOfGoodsCmd = new DelegateCommand(_ => SetActiveWorkspace(CreateOrRetrieveWorkspace<OrderViewModel>()));
 
             // Reports
-            ChartsCmd = new DelegateCommand(_ => SetActiveWorkspace(CreateOrRetrieveWorkspace<ChartsViewModel>()));
             RemainsOfGoodsReportCmd = new DelegateCommand(_ => SetActiveWorkspace(CreateOrRetrieveWorkspace<RemainsOfGoodsViewModel>()));
-
+            SalesForPeriodReportCmd = new DelegateCommand(_ => SetActiveWorkspace(CreateOrRetrieveWorkspace<SalesForPeriodViewModel>()));
         }
 
         protected override void OnWorkspacesChanged(object sender, NotifyCollectionChangedEventArgs e)

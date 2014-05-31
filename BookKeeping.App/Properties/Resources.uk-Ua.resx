@@ -291,4 +291,49 @@
   <data name="VendorList" xml:space="preserve">
     <value>Перелік постачальників</value>
   </data>
+  <data name="April" xml:space="preserve">
+    <value>Квітень</value>
+  </data>
+  <data name="August" xml:space="preserve">
+    <value>Серпень</value>
+  </data>
+  <data name="December" xml:space="preserve">
+    <value>Грудень</value>
+  </data>
+  <data name="February" xml:space="preserve">
+    <value>Лютий</value>
+  </data>
+  <data name="January" xml:space="preserve">
+    <value>Січень</value>
+  </data>
+  <data name="July" xml:space="preserve">
+    <value>Липень</value>
+  </data>
+  <data name="June" xml:space="preserve">
+    <value>Червень</value>
+  </data>
+  <data name="March" xml:space="preserve">
+    <value>Березень</value>
+  </data>
+  <data name="May" xml:space="preserve">
+    <value>Травень</value>
+  </data>
+  <data name="Month" xml:space="preserve">
+    <value>Місяць</value>
+  </data>
+  <data name="Monthes" xml:space="preserve">
+    <value>Місяці</value>
+  </data>
+  <data name="November" xml:space="preserve">
+    <value>Листопад</value>
+  </data>
+  <data name="October" xml:space="preserve">
+    <value>Жовтень</value>
+  </data>
+  <data name="SalesForPeriod_ToolTipFormat" xml:space="preserve">
+    <value>Продано '{1}' одиниць товару за {0} ({3:P2})</value>
+  </data>
+  <data name="September" xml:space="preserve">
+    <value>Вересень</value>
+  </data>
 </root>
