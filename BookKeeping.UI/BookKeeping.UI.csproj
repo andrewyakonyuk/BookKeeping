@@ -109,7 +109,9 @@
     <Compile Include="Converters\MarkupConverterBase.cs" />
     <Compile Include="Converters\StringToBrushConverter.cs" />
     <Compile Include="Converters\ValueConverterGroup.cs" />
+    <Compile Include="DataGridDocumentPaginator.cs" />
     <Compile Include="IHasToolbarCommands.cs" />
+    <Compile Include="IPrintable.cs" />
     <Compile Include="MessageEnvelope.cs" />
     <Compile Include="TreeNode.cs" />
     <Compile Include="ViewModels\CommandViewModel.cs" />

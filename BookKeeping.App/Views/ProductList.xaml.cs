@@ -56,6 +56,8 @@ namespace BookKeeping.App.Views
                 viewModel.ShowFindPopup = !viewModel.ShowFindPopup;
                 args.Handled = true;
             }));
+
+            viewModel.ProductListTable = ProductListTable;
         }
 
         private void DataGrid_SelectionChanged(object sender, SelectionChangedEventArgs e)

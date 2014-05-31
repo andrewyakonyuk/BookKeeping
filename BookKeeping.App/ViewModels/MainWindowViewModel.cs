@@ -27,6 +27,7 @@ namespace BookKeeping.App.ViewModels
         {
             this.DisplayName = BookKeeping.App.Properties.Resources.Application_Name;
             this.QuitConfirmationEnabled = true;
+            this.StatusMessage = T("Idle");
 
             var userRepository = new UserRepository();
             _repostory = userRepository;
@@ -143,14 +144,22 @@ namespace BookKeeping.App.ViewModels
         }
 
         public ICommand SaveCmd { get; private set; }
+        public ICommand PrintCmd { get; private set; }
 
         protected override void BuildMainMenu()
         {
             base.BuildMainMenu();
 
+            //General
+            PrintCmd = new DelegateCommand(_ => ((IPrintable)CurrentWorkspace).Print(), _ => CurrentWorkspace is IPrintable);
+
             ListOfProductsCmd = new DelegateCommand(_ => SetActiveWorkspace(CreateOrRetrieveWorkspace<ProductListViewModel>()));
             SaleOfGoodsCmd = new DelegateCommand(_ => SetActiveWorkspace(CreateOrRetrieveWorkspace<OrderViewModel>()));
+
+            // Reports
             ChartsCmd = new DelegateCommand(_ => SetActiveWorkspace(CreateOrRetrieveWorkspace<ChartsViewModel>()));
+            RemainsOfGoodsReportCmd = new DelegateCommand(_ => SetActiveWorkspace(CreateOrRetrieveWorkspace<RemainsOfGoodsViewModel>()));
+
         }
 
         protected override void OnWorkspacesChanged(object sender, NotifyCollectionChangedEventArgs e)

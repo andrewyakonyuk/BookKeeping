@@ -157,6 +157,7 @@
                 </MenuItem>
                 <Separator></Separator>
                 <MenuItem Header="{x:Static p:Resources.Save}" Command="{Binding Path=SaveCmd}"></MenuItem>
+                <MenuItem Header="{x:Static p:Resources.Print}" Command="{Binding Path=PrintCmd}"></MenuItem>
                 <Separator></Separator>
                 <MenuItem Header="{x:Static p:Resources.Settings}"></MenuItem>
                 <Separator></Separator>
@@ -187,7 +188,7 @@
         </Menu>
         <StatusBar DockPanel.Dock="Bottom" Height="30" Background="Transparent">
             <StatusBarItem>
-                <TextBlock Text="Ready"></TextBlock>
+                <TextBlock Text="{Binding Path=StatusMessage, Mode=OneWay}"></TextBlock>
             </StatusBarItem>
         </StatusBar>
         <Grid>
@@ -210,6 +211,9 @@
                     </DataTemplate>
                     <DataTemplate DataType="{x:Type viewmodels:ChartsViewModel}">
                         <views:ChartsView></views:ChartsView>
+                    </DataTemplate>
+                    <DataTemplate DataType="{x:Type viewmodels:RemainsOfGoodsViewModel}">
+                        <views:RemainsOfGoodsView></views:RemainsOfGoodsView>
                     </DataTemplate>
                 </TabControl.Resources>
             </TabControl>

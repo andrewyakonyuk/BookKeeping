@@ -12,7 +12,7 @@
         
     </UserControl.Resources>
     <Grid>
-        <chart:PieChart  
+        <chart:ClusteredColumnChart  
                 Grid.Column="0"
                 Grid.Row="0"                
                 ChartTitle="Pie Chart"
@@ -23,18 +23,19 @@
                 ChartTitleVisibility="{Binding Path=IsTitleVisible, Converter={StaticResource BooleanToVisibilityConverter}}"
                 ChartLegendVisibility="{Binding Path=IsLegendVisible, Converter={StaticResource BooleanToVisibilityConverter}}"
                 ToolTipFormat="{Binding Path=ToolTipFormat}"
-                PieMinimalSize="400.0"
+                x:Name="Charts"
                 Foreground="{Binding Path=Foreground}" 
                 Background="{Binding Path=Background}"                 
                 SelectedItem="{Binding Path=SelectedItem, Mode=TwoWay}"
                 SelectedBrush="DarkRed"  >
-            <chart:PieChart.Series>
+            <chart:ClusteredColumnChart.Series>
                 <chart:ChartSeries
                         SeriesTitle="Errors"
                         DisplayMember="Category"
                         ValueMember="Number"
-                        ItemsSource="{Binding Path=Errors}" />
-            </chart:PieChart.Series>
-        </chart:PieChart>
+                        ItemsSource="{Binding Path=Errors}" >
+                    </chart:ChartSeries>
+            </chart:ClusteredColumnChart.Series>
+        </chart:ClusteredColumnChart>
     </Grid>
 </UserControl>

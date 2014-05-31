@@ -7,11 +7,15 @@ using System.Text;
 using System.Windows;
 using BookKeeping.UI;
 using BookKeeping.UI.ViewModels;
+using System.Windows.Media;
+using BookKeeping.App.Exporters;
 
 namespace BookKeeping.App.ViewModels
 {
-    public class ChartsViewModel : WorkspaceViewModel
+    public class ChartsViewModel : WorkspaceViewModel, IPrintable
     {
+        readonly PdfExporter _exporter = new PdfExporter();
+
         public DelegateCommand AddSeriesCommand { get; set; }
         public ObservableCollection<string> ChartTypes { get; set; }
         public List<double> FontSizes { get; set; }
@@ -193,34 +197,15 @@ namespace BookKeeping.App.ViewModels
             Series = new ObservableCollection<SeriesData>();
 
             Errors = new ObservableCollection<TestClass>();
-            Warnings = new ObservableCollection<TestClass>();
-
-            ObservableCollection<TestClass> Infos = new ObservableCollection<TestClass>();
-
-            Errors.Add(new TestClass() { Category = "Globalization", Number = 75 });
-            Errors.Add(new TestClass() { Category = "Features", Number = 2 });
-            Errors.Add(new TestClass() { Category = "ContentTypes", Number = 12 });
-            Errors.Add(new TestClass() { Category = "Correctness", Number = 83});
-            //Errors.Add(new TestClass() { Category = "Naming", Number = 80 });
-            Errors.Add(new TestClass() { Category = "Best Practices", Number = 29 });
-
-            Warnings.Add(new TestClass() { Category = "Globalization", Number = 34 });
-            Warnings.Add(new TestClass() { Category = "Features", Number = 23 });
-            Warnings.Add(new TestClass() { Category = "ContentTypes", Number = 15 });
-            Warnings.Add(new TestClass() { Category = "Correctness", Number = 66 });
-            Warnings.Add(new TestClass() { Category = "Naming", Number = 56 });
-            Warnings.Add(new TestClass() { Category = "Best Practices", Number = 34 });
-
-            Infos.Add(new TestClass() { Category = "Globalization", Number = 14 });
-            Infos.Add(new TestClass() { Category = "Features", Number = 3 });
-            Infos.Add(new TestClass() { Category = "ContentTypes", Number = 55 });
-            Infos.Add(new TestClass() { Category = "Correctness", Number = 26 });
-            Infos.Add(new TestClass() { Category = "Naming", Number = 3 });
-            Infos.Add(new TestClass() { Category = "Best Practices", Number = 8 });
-
-            Series.Add(new SeriesData() { SeriesDisplayName = "Errors", Items = Errors });
-            Series.Add(new SeriesData() { SeriesDisplayName = "Warnings", Items = Warnings });
-            Series.Add(new SeriesData() { SeriesDisplayName = "Info", Items = Infos });
+            var random = new Random();
+            for (int i = 0; i < 12; i++)
+            {
+                Errors.Add(new TestClass
+                {
+                    Category = new string("qwertyuiopasdfghjklzxcvbnm".Substring(random.Next(0, 12)).OrderBy(t => Guid.NewGuid()).ToArray()),
+                    Number =  random.Next(10, 100)
+                });
+            }
         }
 
         int newSeriesCounter = 1;
@@ -364,6 +349,20 @@ namespace BookKeeping.App.ViewModels
                 return "{0} in series '{2}' has value '{1}' ({3:P2})";
             }           
         }
+
+        public void Print()
+        {
+            var saveFileDialog = new Microsoft.Win32.SaveFileDialog();
+            saveFileDialog.DefaultExt = ".pdf";
+
+            bool? result = saveFileDialog.ShowDialog();
+            if (result == true)
+            {
+                _exporter.Export(Visual, saveFileDialog.FileName);
+            }
+        }
+
+        public Visual Visual { get; set; }
     }
 
     public class SeriesData

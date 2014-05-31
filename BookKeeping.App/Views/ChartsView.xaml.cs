@@ -1,4 +1,5 @@
-﻿using System;
+﻿using BookKeeping.App.ViewModels;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -22,6 +23,14 @@ namespace BookKeeping.App.Views
         public ChartsView()
         {
             InitializeComponent();
+
+            this.DataContextChanged += ChartsView_DataContextChanged;
+        }
+
+        void ChartsView_DataContextChanged(object sender, DependencyPropertyChangedEventArgs e)
+        {
+            var viewModel = DataContext as ChartsViewModel;
+            viewModel.Visual = this.Charts;
         }
     }
 }

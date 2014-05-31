@@ -156,7 +156,7 @@
                 </TextBox>
             </DockPanel>
         </Border>
-        <DataGrid ItemsSource="{Binding Path=Source}" IsSynchronizedWithCurrentItem="True"
+        <DataGrid ItemsSource="{Binding Path=Source}" IsSynchronizedWithCurrentItem="True" x:Name="ProductListTable"
                   IsReadOnly="False" SelectedItem="{Binding Path=SelectedItem}" AreRowDetailsFrozen="True"
                   SelectionChanged="DataGrid_SelectionChanged"
                   AutoGenerateColumns="False">
@@ -242,7 +242,7 @@
                     <views:ProductDetailView Margin="25,10,10,10" Padding="2"></views:ProductDetailView>
                 </DataTemplate>
             </DataGrid.RowDetailsTemplate>
-        <DataGrid.RowStyle>
+            <DataGrid.RowStyle>
                 <Style TargetType="{x:Type DataGridRow}">
                     <Setter Property="DetailsVisibility" Value="Collapsed"></Setter>
                     <Setter Property="Foreground" Value="{DynamicResource BlackBrush}" />

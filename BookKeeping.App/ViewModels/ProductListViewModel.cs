@@ -14,10 +14,14 @@ using BookKeeping.UI.ViewModels;
 using ICommand = System.Windows.Input.ICommand;
 using BookKeeping.Domain.Contracts;
 using BookKeeping.Projections.ProductsList;
+using System.Windows.Documents;
+using System.Windows.Controls;
+using BookKeeping.App.Exporters;
+using System.Threading.Tasks;
 
 namespace BookKeeping.App.ViewModels
 {
-    public class ProductListViewModel : WorkspaceViewModel
+    public class ProductListViewModel : WorkspaceViewModel, IPrintable
     {
         private string _searchText = string.Empty;
         private bool _showFindPopup = false;
@@ -168,6 +172,8 @@ namespace BookKeeping.App.ViewModels
 
         public ListCollectionView CollectionView { get { return (ListCollectionView)CollectionViewSource.GetDefaultView(Source); } }
 
+        public DataGrid ProductListTable { get; set; }
+
         protected void SaveChanges()
         {
             HasChanges = false;
@@ -198,7 +204,7 @@ namespace BookKeeping.App.ViewModels
         private IEnumerable<ProductView> GetProductListProjection()
         {
             var random = new Random(100);
-            for (int i = 0; i < 100; i++)
+            for (int i = 0; i < 500; i++)
             {
                 yield return new ProductView
                    {
@@ -360,6 +366,23 @@ namespace BookKeeping.App.ViewModels
                     DisplayName = DisplayName.Substring(0, DisplayName.Length - 2);
                 }
             }
+        }
+
+        public void Print()
+        {
+            SendMessage(new MessageEnvelope(T("PrintingNotCompleted")));
+            //var saveFileDialog = new Microsoft.Win32.SaveFileDialog();
+            //bool? result = saveFileDialog.ShowDialog();
+            //if (result == true)
+            //{
+            //    App.Current.Dispatcher.BeginInvoke((Action)delegate
+            //    {
+            //        var exporter = new PdfExporter();
+            //        var documentPaginator = new DataGridDocumentPaginator(ProductListTable, string.Empty, new System.Windows.Size(940, 1070), new System.Windows.Thickness());
+            //        exporter.Export(documentPaginator, saveFileDialog.FileName);
+            //        SendMessage(new MessageEnvelope(T("PrintCompleted")));
+            //    });
+            //}
         }
     }
 }
