@@ -22,73 +22,46 @@ namespace BookKeeping.App.ViewModels
         private IContextUserProvider _contextUserProvider;
         private readonly IRepository<User> _repostory;
         private long? _previousUserId;
+        private bool _isWorkspacesVisible;
 
         public MainWindowViewModel()
         {
-            this.DisplayName = BookKeeping.App.Properties.Resources.Application_Name;
             this.QuitConfirmationEnabled = true;
-            this.StatusMessage = T("Idle");
 
             var userRepository = new UserRepository();
             _repostory = userRepository;
 
             var authService = new AuthenticationService(userRepository);
             SignIn = new SignInViewModel(authService);
-            SignIn.AuthenticationSuccessful += (sender, e) =>
-            {
-                if (_contextUserProvider == null)
-                    _contextUserProvider = new ContextUserProvider(userRepository);
-
-                Profile.Username = _contextUserProvider.ContextUser().Name;
-                Profile.IsAuthorization = true;
-                _previousUserId = _contextUserProvider.ContextUser().Id;
-            };
+            SignIn.AuthenticationSuccessful += AuthorizationSuccessful;
 
             Profile = new ProfileViewModel(authService, _contextUserProvider);
-            Profile.PropertyChanged += Profile_PropertyChanged;
-
-            CloseLoginCmd = new DelegateCommand(t => { }, t => Profile.IsAuthorization);
-
-            CollectionViewSource.GetDefaultView(Workspaces).MoveCurrentToFirst();
-            Exit = ApplicationCommands.Close;
-
-            SaveCmd = new DelegateCommand(_ =>
-            {
-                if (CurrentWorkspace is ProductListViewModel)
-                {
-                    ((ProductListViewModel)CurrentWorkspace).SaveCmd.Execute(_);
-                }
-            },
-            _ =>
-            {
-                if (CurrentWorkspace is ProductListViewModel)
-                {
-                    return ((ProductListViewModel)CurrentWorkspace).SaveCmd.CanExecute(_);
-                }
-                return false;
-            });
+            Bind(Profile, t => t.IsAuthorization, IsAuthorization_PropertyChanged);
 
             MainMenu.Clear();
             BuildMainMenu();
         }
 
-        void Profile_PropertyChanged(object sender, PropertyChangedEventArgs e)
+        void AuthorizationSuccessful(object sender, EventArgs e)
         {
-            switch (e.PropertyName)
+            if (_contextUserProvider == null)
+                _contextUserProvider = new ContextUserProvider((UserRepository)_repostory);
+
+            Profile.Username = _contextUserProvider.ContextUser().Name;
+            Profile.IsAuthorization = true;
+            _previousUserId = _contextUserProvider.ContextUser().Id;
+        }
+
+        void IsAuthorization_PropertyChanged(object sender, PropertyChangedEventArgs e)
+        {
+            if (Profile.IsAuthorization)
             {
-                case "IsAuthorization":
-                    if (Profile.IsAuthorization)
-                    {
-                        Profile.ChangePassword = new ChangePasswordViewModel(_repostory);
-                        if (_contextUserProvider.ContextUser() != null
-                            && _previousUserId != _contextUserProvider.ContextUser().Id)
-                        {
-                            Workspaces.Clear();
-                        }
-                    }
-                    break;
-                default:
-                    break;
+                Profile.ChangePassword = new ChangePasswordViewModel(_repostory);
+                if (_contextUserProvider.ContextUser() != null
+                    && _previousUserId != _contextUserProvider.ContextUser().Id)
+                {
+                    Workspaces.Clear();
+                }
             }
         }
 
@@ -120,7 +93,9 @@ namespace BookKeeping.App.ViewModels
 
         public ICommand ChartsCmd { get; private set; }
 
-        private bool _isWorkspacesVisible;
+        public ICommand SaveCmd { get; private set; }
+
+        public ICommand PrintCmd { get; private set; }
 
         public bool IsWorkspacesVisible
         {
@@ -143,15 +118,16 @@ namespace BookKeeping.App.ViewModels
             }
         }
 
-        public ICommand SaveCmd { get; private set; }
-        public ICommand PrintCmd { get; private set; }
-
         protected override void BuildMainMenu()
         {
             base.BuildMainMenu();
 
             //General
             PrintCmd = new DelegateCommand(_ => ((IPrintable)CurrentWorkspace).Print(), _ => CurrentWorkspace is IPrintable);
+            Exit = ApplicationCommands.Close;
+            SaveCmd = new DelegateCommand(_ => ((ISaveable)CurrentWorkspace).SaveChanges(), _ => CurrentWorkspace is ISaveable && ((ISaveable)CurrentWorkspace).CanSave);
+
+            CloseLoginCmd = new DelegateCommand(t => { }, t => Profile.IsAuthorization);
 
             ListOfProductsCmd = new DelegateCommand(_ => SetActiveWorkspace(CreateOrRetrieveWorkspace<ProductListViewModel>()));
             SaleOfGoodsCmd = new DelegateCommand(_ => SetActiveWorkspace(CreateOrRetrieveWorkspace<OrderViewModel>()));

@@ -131,6 +131,7 @@
     <Compile Include="Converters\VatRateConverter.cs" />
     <Compile Include="Exporters\IExporter.cs" />
     <Compile Include="Exporters\PdfExporter.cs" />
+    <Compile Include="Helpers\ExpressionHelper.cs" />
     <Compile Include="Properties\Resources.uk-Ua.Designer.cs">
       <DependentUpon>Resources.uk-Ua.resx</DependentUpon>
       <AutoGen>True</AutoGen>

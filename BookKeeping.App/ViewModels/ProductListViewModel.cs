@@ -1,27 +1,22 @@
-﻿using System;
+﻿using BookKeeping.App.Helpers;
+using BookKeeping.Domain.Contracts;
+using BookKeeping.Projections.ProductsList;
+using BookKeeping.UI;
+using BookKeeping.UI.ViewModels;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Collections.Specialized;
 using System.ComponentModel;
 using System.Linq;
-using System.Linq.Expressions;
-using System.Text.RegularExpressions;
-using System.Windows.Data;
-using BookKeeping.Domain.Services;
-using BookKeeping.UI;
-using BookKeeping.UI.ViewModels;
-using ICommand = System.Windows.Input.ICommand;
-using BookKeeping.Domain.Contracts;
-using BookKeeping.Projections.ProductsList;
-using System.Windows.Documents;
 using System.Windows.Controls;
-using BookKeeping.App.Exporters;
-using System.Threading.Tasks;
+using System.Windows.Data;
+using ICommand = System.Windows.Input.ICommand;
 
 namespace BookKeeping.App.ViewModels
 {
-    public class ProductListViewModel : WorkspaceViewModel, IPrintable
+    public class ProductListViewModel : WorkspaceViewModel, IPrintable, ISaveable
     {
         private string _searchText = string.Empty;
         private bool _showFindPopup = false;
@@ -30,9 +25,9 @@ namespace BookKeeping.App.ViewModels
         private IList _selectedItems;
         private bool _hasChanges = false;
         private string _filterText = string.Empty;
-        private readonly Regex filterExpressionRegex = new Regex(@"^(\s*)(?<field>\w+)(\s*)(?<operator>\W+)(\s*)(?<value>.+)", RegexOptions.Compiled);
         private ProductViewModel _editingItem;
         private ProductViewModel _previousEditingItem;
+        private readonly ExpressionHelper _expressionHelper = new ExpressionHelper();
 
         public ProductListViewModel()
         {
@@ -40,7 +35,7 @@ namespace BookKeeping.App.ViewModels
             FilterButtonCmd = new DelegateCommand(_ => DoFilter(FilterText), _ => true);
             FilterPopupCmd = new DelegateCommand(_ => ShowFilterPopup = !ShowFilterPopup);
             EditProductCmd = new DelegateCommand(item => { EditingItem = item == EditingItem ? null : item as ProductViewModel; }, _ => SelectedItems.Count == 1);
-            SaveCmd = new DelegateCommand(_ => SaveChanges(), _ => HasChanges && IsValid && CollectionView.OfType<ProductViewModel>().All(t => t.IsValid));
+            SaveCmd = new DelegateCommand(_ => SaveChanges(), _ => CanSave);
 
             DisplayName = T("ListOfProducts");
 
@@ -51,7 +46,7 @@ namespace BookKeeping.App.ViewModels
             {
                 tempSource.Add(item);
             }
-            this.PropertyChanged += ProductListViewModel_PropertyChanged;
+            Bind(() => HasChanges, HasChangesPropertyChanged);
             HasChanges = false;
         }
 
@@ -174,15 +169,6 @@ namespace BookKeeping.App.ViewModels
 
         public DataGrid ProductListTable { get; set; }
 
-        protected void SaveChanges()
-        {
-            HasChanges = false;
-            foreach (var item in Source as IEnumerable<ProductViewModel>)
-            {
-                item.HasChanges = false;
-            }
-        }
-
         protected virtual IEnumerable<ProductViewModel> GetProducts()
         {
             var random = new Random(100);
@@ -237,17 +223,14 @@ namespace BookKeeping.App.ViewModels
             Func<ProductViewModel, bool> selector = (p) => false;
             try
             {
-                if (!string.IsNullOrWhiteSpace(filterExpression) && filterExpressionRegex.IsMatch(filterExpression))
-                {
-                    var groups = filterExpressionRegex.Match(filterExpression).Groups;
-                    selector = CreateFilterFunc<ProductViewModel>(groups["field"].Value.Trim(),
-                        groups["operator"].Value.Trim(),
-                        groups["value"].Value.Trim());
-                }
+                var filterSelector = _expressionHelper.GetFilter<ProductViewModel>(filterExpression);
+                if (filterExpression != null)
+                    selector = filterSelector;
             }
-            catch (NotSupportedException) { }
-            catch (FormatException) { }
-            catch (InvalidOperationException) { }
+            catch (Exception ex)
+            {
+                //todo: logging
+            }
             finally
             {
                 foreach (var item in ((IEnumerable<ProductViewModel>)Source))
@@ -268,50 +251,6 @@ namespace BookKeeping.App.ViewModels
             }
         }
 
-        protected Func<T, bool> CreateFilterFunc<T>(string fieldStr, string operatorStr, string valueStr)
-        {
-            var parameter = Expression.Parameter(typeof(T));
-            var field = Expression.Property(parameter, fieldStr);
-            Expression value = null;
-            decimal tempDecimal;
-            bool tempBoolean;
-            if (decimal.TryParse(valueStr, System.Globalization.NumberStyles.Any, System.Globalization.CultureInfo.CurrentCulture, out tempDecimal))
-            {
-                value = Expression.Constant(tempDecimal);
-            }
-            else if (bool.TryParse(valueStr, out tempBoolean))
-            {
-                value = Expression.Constant(tempBoolean);
-            }
-            else value = Expression.Constant(valueStr);
-
-            Expression @operator = null;
-            switch (operatorStr)
-            {
-                case "<":
-                    @operator = Expression.LessThan(field, value);
-                    break;
-
-                case "<=":
-                    @operator = Expression.LessThanOrEqual(field, value);
-                    break;
-
-                case "=":
-                    @operator = Expression.Equal(field, value);
-                    break;
-
-                case ">":
-                    @operator = Expression.GreaterThan(field, value);
-                    break;
-
-                case ">=":
-                    @operator = Expression.GreaterThanOrEqual(field, value);
-                    break;
-                    throw new NotSupportedException();
-            }
-            return Expression.Lambda<Func<T, bool>>(@operator, parameter).Compile();
-        }
-
         private void tempSource_CollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
         {
             switch (e.Action)
@@ -330,41 +269,39 @@ namespace BookKeeping.App.ViewModels
             {
                 foreach (ProductViewModel item in e.OldItems)
                 {
-                    item.PropertyChanged -= item_PropertyChanged;
+                    Unbind(item, t => t.HasChanges, ProductViewModel_HasChangesPropertyChanged);
                 }
             }
             if (e.NewItems != null)
             {
                 foreach (ProductViewModel item in e.NewItems)
                 {
-                    item.PropertyChanged += item_PropertyChanged;
+                    Bind(item, t => t.HasChanges, ProductViewModel_HasChangesPropertyChanged);
                 }
             }
         }
 
-        private void item_PropertyChanged(object sender, PropertyChangedEventArgs e)
+        private void ProductViewModel_HasChangesPropertyChanged(object sender, PropertyChangedEventArgs e)
         {
-            if (e.PropertyName == "HasChanges")
-            {
-                var item = (ProductViewModel)sender;
-                if (item.HasChanges)
-                    this.HasChanges = true;
-            }
+            var item = (ProductViewModel)sender;
+            if (item.HasChanges)
+                this.HasChanges = true;
         }
 
-        private void ProductListViewModel_PropertyChanged(object sender, PropertyChangedEventArgs e)
+        private void HasChangesPropertyChanged(object sender, PropertyChangedEventArgs e)
         {
-            if (e.PropertyName == GetPropertyName(() => HasChanges))
+            var end = " *";
+            if (HasChanges)
             {
-                var end = " *";
-                if (HasChanges && !DisplayName.EndsWith(end))
-                {
-                    DisplayName = DisplayName + end;
-                }
-                else if (!HasChanges && DisplayName.EndsWith(end))
-                {
-                    DisplayName = DisplayName.Substring(0, DisplayName.Length - 2);
-                }
+                CanClose = false;
+            }
+            if (HasChanges && !DisplayName.EndsWith(end))
+            {
+                DisplayName = DisplayName + end;
+            }
+            else if (!HasChanges && DisplayName.EndsWith(end))
+            {
+                DisplayName = DisplayName.Substring(0, DisplayName.Length - 2);
             }
         }
 
@@ -383,6 +320,26 @@ namespace BookKeeping.App.ViewModels
             //        SendMessage(new MessageEnvelope(T("PrintCompleted")));
             //    });
             //}
+        }
+
+        public void SaveChanges()
+        {
+            if (CanSave)
+            {
+                HasChanges = false;
+                foreach (var item in Source as IEnumerable<ProductViewModel>)
+                {
+                    item.HasChanges = false;
+                }
+            }
+        }
+
+        public bool CanSave
+        {
+            get
+            {
+                return HasChanges && IsValid && CollectionView.OfType<ProductViewModel>().All(t => t.IsValid);
+            }
         }
     }
 }

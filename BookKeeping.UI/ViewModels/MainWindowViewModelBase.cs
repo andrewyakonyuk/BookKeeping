@@ -98,9 +98,13 @@ namespace BookKeeping.UI.ViewModels
             }
         }
 
-        private void OnWorkspaceRequestClose(object sender, EventArgs e)
+        protected virtual void OnWorkspaceRequestClose(object sender, EventArgs e)
         {
-            Workspaces.Remove(sender as WorkspaceViewModel);
+            var workspace = sender as WorkspaceViewModel;
+            if (workspace.CanClose)
+            {
+                Workspaces.Remove(workspace);
+            }
         }
 
         protected virtual void SetActiveWorkspace(WorkspaceViewModel workspace)

@@ -13,6 +13,7 @@ namespace BookKeeping.UI.ViewModels
         public WorkspaceViewModel()
         {
             CloseCommand = new DelegateCommand(o => OnRequestClose(new RoutedEventArgs()));
+            CanClose = true;
         }
 
         public string DisplayName
@@ -21,9 +22,21 @@ namespace BookKeeping.UI.ViewModels
             set
             {
                 if (string.Equals(_displayName, value)) return;
-                OnPropertyChanging("DisplayName");
+                OnPropertyChanging(() => DisplayName);
                 _displayName = value;
-                OnPropertyChanged("DisplayName");
+                OnPropertyChanged(() => DisplayName);
+            }
+        }
+
+        private bool _canClose = true;
+
+        public bool CanClose
+        {
+            get { return _canClose; }
+            set
+            {
+                _canClose = value;
+                OnPropertyChanged(() => CanClose);
             }
         }
 
