@@ -13,6 +13,8 @@ using System.Linq;
 using System.Windows.Controls;
 using System.Windows.Data;
 using ICommand = System.Windows.Input.ICommand;
+using System.Threading;
+using System.Threading.Tasks;
 
 namespace BookKeeping.App.ViewModels
 {
@@ -28,6 +30,7 @@ namespace BookKeeping.App.ViewModels
         private ProductViewModel _editingItem;
         private ProductViewModel _previousEditingItem;
         private readonly ExpressionHelper _expressionHelper = new ExpressionHelper();
+        private bool _isLoading;
 
         public ProductListViewModel()
         {
@@ -38,18 +41,35 @@ namespace BookKeeping.App.ViewModels
             SaveCmd = new DelegateCommand(_ => SaveChanges(), _ => CanSave);
 
             DisplayName = T("ListOfProducts");
+            IsLoading = true;
 
             var tempSource = new ObservableCollection<ProductViewModel>();
-            Source = tempSource;
 
             tempSource.CollectionChanged += tempSource_CollectionChanged;
-            foreach (var item in GetProducts())
-            {
-                tempSource.Add(item);
-            }
             Bind(() => HasChanges, HasChangesPropertyChanged);
-            HasChanges = false;
+
+            Task loadProductsTask = Task.Factory.StartNew(() =>
+            {
+                foreach (var item in GetProducts())
+                {
+                    tempSource.Add(item);
+                }
+                Source = tempSource;
+                HasChanges = false;
+                IsLoading = false;
+            });
         }
+
+        public bool IsLoading
+        {
+            get { return _isLoading; }
+            set
+            {
+                _isLoading = value;
+                OnPropertyChanged(() => IsLoading);
+            }
+        }
+        
 
         public bool HasChanges
         {
@@ -191,7 +211,7 @@ namespace BookKeeping.App.ViewModels
         private IEnumerable<ProductView> GetProductListProjection()
         {
             var random = new Random(100);
-            for (int i = 0; i < 500; i++)
+            for (int i = 0; i < 5000; i++)
             {
                 yield return new ProductView
                    {
@@ -294,7 +314,7 @@ namespace BookKeeping.App.ViewModels
             var end = " *";
             if (HasChanges)
             {
-                CanClose = false;
+                //todo: CanClose = false;
             }
             if (HasChanges && !DisplayName.EndsWith(end))
             {
@@ -328,6 +348,7 @@ namespace BookKeeping.App.ViewModels
             if (CanSave)
             {
                 HasChanges = false;
+                CanClose = true;
                 foreach (var item in Source as IEnumerable<ProductViewModel>)
                 {
                     item.HasChanges = false;
@@ -339,6 +360,8 @@ namespace BookKeeping.App.ViewModels
         {
             get
             {
+                if (CollectionView == null)
+                    return false;
                 return HasChanges && IsValid && CollectionView.OfType<ProductViewModel>().All(t => t.IsValid);
             }
         }

@@ -9,16 +9,24 @@
              xmlns:p="clr-namespace:BookKeeping.App.Properties"
              xmlns:Controls="http://metro.mahapps.com/winfx/xaml/controls"
              xmlns:views="clr-namespace:BookKeeping.App.Views"
+             xmlns:converters.ui="clr-namespace:BookKeeping.UI.Converters;assembly=BookKeeping.UI"
              d:DesignHeight="300" d:DesignWidth="600" d:DataContext="{viewmodels:ProductListViewModel}">
     <UserControl.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
                 <ResourceDictionary Source="pack://application:,,,/BookKeeping.App;component/Resources/Icons.xaml" />
+                <ResourceDictionary>
+                    <BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverterKey"/>
+                    <converters.ui:ValueConverterGroup x:Key="InverseBooleanToVisibilityConverterKey">
+                        <converters.ui:InverseBooleanConverter></converters.ui:InverseBooleanConverter>
+                        <BooleanToVisibilityConverter></BooleanToVisibilityConverter>
+                    </converters.ui:ValueConverterGroup>
+                </ResourceDictionary>
             </ResourceDictionary.MergedDictionaries>
         </ResourceDictionary>
-
     </UserControl.Resources>
     <Grid>
+        <Controls:ProgressRing IsActive="True" Width="40" Height="40" Visibility="{Binding Path=IsLoading, Converter={StaticResource BooleanToVisibilityConverterKey}}" />
         <!-- search panel -->
         <Border 
             VerticalAlignment="Top" 
@@ -159,7 +167,8 @@
         <DataGrid ItemsSource="{Binding Path=Source}" IsSynchronizedWithCurrentItem="True" x:Name="ProductListTable"
                   IsReadOnly="False" SelectedItem="{Binding Path=SelectedItem}" AreRowDetailsFrozen="True"
                   SelectionChanged="DataGrid_SelectionChanged"
-                  AutoGenerateColumns="False">
+                  AutoGenerateColumns="False"
+                  Visibility="{Binding Path=IsLoading, Converter={StaticResource InverseBooleanToVisibilityConverterKey}}">
             <DataGrid.ContextMenu>
                 <ContextMenu>
                     <MenuItem Command="{Binding Path=EditProductCmd}" CommandParameter="{Binding Path=SelectedItem}" Header="{x:Static p:Resources.Edit}">
