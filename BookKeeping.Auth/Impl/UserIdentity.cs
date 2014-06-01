@@ -1,14 +1,11 @@
-﻿using BookKeeping.Domain.Aggregates;
+﻿using BookKeeping.Domain.Contracts;
 using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Security.Principal;
-using System.Text;
 
 namespace BookKeeping.Auth
 {
     [Serializable]
-    public class UserIdentity : MarshalByRefObject, IIdentity
+    public class UserIdentity : MarshalByRefObject, System.Security.Principal.IIdentity
     {
         private readonly AccountEntry accountEntry;
 
@@ -18,12 +15,12 @@ namespace BookKeeping.Auth
             this.accountEntry = accountEntry;
         }
 
-        public long Id
+        public UserId Id
         {
             get { return accountEntry.Id; }
         }
 
-        public RoleType RoleType
+        public string RoleType
         {
             get { return accountEntry.RoleType; }
         }
@@ -35,7 +32,7 @@ namespace BookKeeping.Auth
 
         public bool IsAuthenticated
         {
-            get { return Id > 0; }
+            get { return Id.Id > 0; }
         }
 
         public string Name { get; private set; }

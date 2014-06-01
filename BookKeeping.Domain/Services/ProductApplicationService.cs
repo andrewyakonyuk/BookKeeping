@@ -1,11 +1,11 @@
-﻿using BookKeeping.Core;
-using BookKeeping.Infrastructure.Domain;
+﻿using BookKeeping.Domain.Aggregates;
 using BookKeeping.Domain.Contracts;
-using System;
 using BookKeeping.Infrastructure;
+using BookKeeping.Infrastructure.Domain;
 using BookKeeping.Persistent.Storage;
+using System;
 
-namespace BookKeeping.Domain.Aggregates.Product
+namespace BookKeeping.Domain.Services
 {
     public class ProductApplicationService : 
         ICommandHandler<CreateProduct>,

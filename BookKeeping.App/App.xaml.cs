@@ -2,6 +2,8 @@
 using BookKeeping.App.ViewModels;
 using BookKeeping.App.Views;
 using BookKeeping.UI.Localization;
+using BookKeeping.Domain.Contracts;
+using BookKeeping.Domain.Projections.UserIndex;
 
 namespace BookKeeping.App
 {
@@ -18,6 +20,8 @@ namespace BookKeeping.App
 
             ResourceLocalizer.Initialize(BookKeeping.App.Properties.Resources.ResourceManager);
 
+            InitSuperUser();
+
             MainWindow window = new MainWindow();
             var viewModel = new MainWindowViewModel();
             window.DataContext = viewModel;
@@ -27,6 +31,22 @@ namespace BookKeeping.App
                 window.Close();
             };
             window.Show();
+        }
+
+        protected void InitSuperUser()
+        {
+            var userIndex = Context.Current.Query<UserIndexLookup>();
+            if (userIndex.HasValue)
+            {
+                if (!userIndex.Value.Logins.ContainsKey("admin"))
+                {
+                    Context.Current.Command(new CreateUser(new UserId(1), "Адміністратор", "admin", "qwerty", "admin"));
+                }
+            }
+            else
+            {
+                Context.Current.Command(new CreateUser(new UserId(1), "Адміністратор", "admin", "qwerty", "admin"));
+            }
         }
     }
 }

@@ -1,8 +1,7 @@
 ﻿using BookKeeping.Domain.Aggregates;
+using BookKeeping.Domain.Contracts;
 using System;
-using System.Collections.Generic;
 using System.IO;
-using System.Linq;
 using System.Text;
 using System.Xml.Serialization;
 
@@ -24,9 +23,9 @@ namespace BookKeeping.Auth
 
         public string Name { get; set; }
 
-        public long Id { get; set; }
+        public UserId Id { get; set; }
 
-        public RoleType RoleType { get; set; }
+        public string RoleType { get; set; }
 
         public string Serialize()
         {

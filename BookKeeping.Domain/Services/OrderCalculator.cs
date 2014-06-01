@@ -5,7 +5,7 @@ namespace BookKeeping.Domain.Services
 {
    public class OrderCalculator : IOrderCalculator
     {
-        public OrderCalculationResult CalculateOrder(Order.Order order)
+        public OrderCalculationResult CalculateOrder(Order order)
         {
             //if (order.OrderLines.Any())
             //{

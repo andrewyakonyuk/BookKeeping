@@ -1,6 +1,6 @@
 ﻿using BookKeeping.Domain.Contracts;
 
-namespace BookKeeping.Domain.Order
+namespace BookKeeping.Domain.Aggregates
 {
     public sealed class OrderLine
     {

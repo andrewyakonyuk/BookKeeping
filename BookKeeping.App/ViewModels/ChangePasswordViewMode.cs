@@ -1,5 +1,6 @@
 ﻿using BookKeeping.Auth;
 using BookKeeping.Domain.Aggregates;
+using BookKeeping.Domain.Contracts;
 using BookKeeping.Domain.Repositories;
 using BookKeeping.UI;
 using BookKeeping.UI.ViewModels;
@@ -16,9 +17,9 @@ namespace BookKeeping.App.ViewModels
     {
         private User _user;
         private bool _isVisible = false;
-        private readonly IRepository<User> _repository;
+        private readonly IRepository<User,UserId> _repository;
 
-        public ChangePasswordViewModel(IRepository<User> repository)
+        public ChangePasswordViewModel(IRepository<User,UserId> repository)
         {
             _repository = repository;
             Users = _repository.All();
@@ -64,17 +65,17 @@ namespace BookKeeping.App.ViewModels
 
         public void ChangePassword(string oldPassword, string newPassword)
         {
-            if (_user != null)
-            {
-                if (_user.Password.Check(oldPassword))
-                {
-                    _user.SetPassword(newPassword);
-                }
-                _repository.Save(_user);
-            }
+            //if (_user != null)
+            //{
+            //    if (_user.Password.Check(oldPassword))
+            //    {
+            //        _user.SetPassword(newPassword);
+            //    }
+            //    _repository.Save(_user);
+            //}
         }
 
-        public ICommand ChangePasswordCmd { get; private set; }
+        public System.Windows.Input.ICommand ChangePasswordCmd { get; private set; }
 
 
     }

@@ -1,47 +1,88 @@
 ﻿using BookKeeping.Domain.Aggregates;
-using System;
+using BookKeeping.Domain.Contracts;
+using BookKeeping.Domain.Projections.UserIndex;
+using BookKeeping.Persistent;
+using BookKeeping.Persistent.AtomicStorage;
+using BookKeeping.Persistent.Storage;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 
 namespace BookKeeping.Domain.Repositories
 {
-    public class UserRepository : IUserRepository, IRepository<User>
+    public class UserRepository : IUserRepository, IRepository<User, UserId>
     {
-        private User _admin = new User("Адміністратор", "admin");
-        private User _seller = new User("Продавець", "seller");
+        readonly IEventStore _eventStore;
+        readonly IDocumentReader<unit, UserIndexLookup> _userIndexReader;
 
-        public UserRepository()
+        public UserRepository(IEventStore eventStore, IDocumentReader<unit, UserIndexLookup> userIndexReader)
         {
-            _admin.Id = 11;
-            _admin.Role = RoleType.Admin;
-            _admin.SetPassword("qwerty");
-
-            _seller.Id = 12;
-            _seller.Role = RoleType.Teacher;
-            _seller.SetPassword("qwerty");
+            _eventStore = eventStore;
+            _userIndexReader = userIndexReader;
         }
 
         public IEnumerable<User> All()
         {
-            yield return _admin;
-            yield return _seller;
+            var index = _userIndexReader.Get<UserIndexLookup>();
+            if (index.HasValue)
+            {
+                foreach (var item in index.Value.Identities)
+                {
+                    yield return Get(item);
+                }
+            }
+            yield break;
         }
 
-        public User Get(long id)
+        public User Get(UserId id)
         {
-            return All().SingleOrDefault(t => t.Id == id);
+            var stream = _eventStore.LoadEventStream(id);
+            if (stream.Version > 0)
+                return new User(stream.Events);
+            return null;
         }
 
         public User Get(string login, string password)
         {
-            return All().SingleOrDefault(user => user.Login.Equals(login) && user.Password.Check(password));
+            var user = _userIndexReader.Get<UserIndexLookup>()
+                .Convert(t => t.Logins[login])
+                .Convert(t => Get(t));
+            if (user.HasValue && user.Value.Password.Check(password))
+            {
+                return user.Value;
+            }
+            return null;
         }
 
         public void Save(User user)
         {
-            //do nothing
+            while (true)
+            {
+                EventStream eventStream = _eventStore.LoadEventStream(user.Id);
+                try
+                {
+                    _eventStore.AppendToStream(user.Id, eventStream.Version, user.Changes);
+                    return;
+                }
+                catch (OptimisticConcurrencyException ex)
+                {
+                    foreach (var clientEvent in user.Changes)
+                    {
+                        foreach (var actualEvent in ex.ActualEvents)
+                        {
+                            if (ConflictsWith(clientEvent, actualEvent))
+                            {
+                                throw new RealConcurrencyException(string.Format("Conflict between {0} and {1}", clientEvent, actualEvent), ex);
+                            }
+                        }
+                    }
+                    // there are no conflicts and we can append
+                    _eventStore.AppendToStream(user.Id, ex.ActualVersion, user.Changes);
+                }
+            }
+        }
+
+        static bool ConflictsWith(IEvent x, IEvent y)
+        {
+            return x.GetType() == y.GetType();
         }
     }
-       
 }

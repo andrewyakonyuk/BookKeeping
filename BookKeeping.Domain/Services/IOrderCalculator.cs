@@ -5,7 +5,7 @@ namespace BookKeeping.Domain.Services
 {
     public interface IOrderCalculator
     {
-        OrderCalculationResult CalculateOrder(Order.Order order);
+        OrderCalculationResult CalculateOrder(Order order);
     }
 
     public struct OrderCalculationResult

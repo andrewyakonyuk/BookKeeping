@@ -2,7 +2,7 @@
 using BookKeeping.Domain.Contracts;
 using System.Collections.Generic;
 
-namespace BookKeeping.Domain.Order
+namespace BookKeeping.Domain.Aggregates
 {
     public sealed class OrderState
     {

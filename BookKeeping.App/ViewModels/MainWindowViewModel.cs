@@ -1,18 +1,14 @@
-﻿using System;
-using System.Collections.ObjectModel;
+﻿using BookKeeping.Auth;
+using BookKeeping.Domain.Aggregates;
+using BookKeeping.Domain.Contracts;
+using BookKeeping.Domain.Repositories;
+using BookKeeping.UI;
+using BookKeeping.UI.ViewModels;
+using System;
 using System.Collections.Specialized;
 using System.ComponentModel;
-using System.Diagnostics.Contracts;
-using System.Linq;
-using System.Windows.Data;
 using System.Windows.Input;
-using System.Globalization;
 using ICommand = System.Windows.Input.ICommand;
-using BookKeeping.UI.ViewModels;
-using BookKeeping.UI;
-using BookKeeping.Auth;
-using BookKeeping.Domain.Repositories;
-using BookKeeping.Domain.Aggregates;
 
 namespace BookKeeping.App.ViewModels
 {
@@ -20,15 +16,15 @@ namespace BookKeeping.App.ViewModels
     {
         private bool _quitConfirmationEnabled;
         private IContextUserProvider _contextUserProvider;
-        private readonly IRepository<User> _repostory;
-        private long? _previousUserId;
+        private readonly IRepository<User,UserId> _repostory;
+        private UserId _previousUserId;
         private bool _isWorkspacesVisible;
 
         public MainWindowViewModel()
         {
             this.QuitConfirmationEnabled = true;
 
-            var userRepository = new UserRepository();
+            var userRepository = (IUserRepository)Context.Current.GetRepo<User, UserId>();
             _repostory = userRepository;
 
             var authService = new AuthenticationService(userRepository);

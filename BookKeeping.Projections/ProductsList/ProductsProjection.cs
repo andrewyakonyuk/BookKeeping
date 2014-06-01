@@ -1,5 +1,4 @@
-﻿using BookKeeping.Core;
-using BookKeeping.Domain.Contracts;
+﻿using BookKeeping.Domain.Contracts;
 using BookKeeping.Infrastructure.Domain;
 using BookKeeping.Persistent;
 using BookKeeping.Persistent.AtomicStorage;

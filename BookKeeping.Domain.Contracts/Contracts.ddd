@@ -68,3 +68,30 @@ interface Product(ProductId Id)
         ProductPriceChanged!(CurrencyAmount newPrice, DateTime utc)
             explicit "{id} item changed on {newPrice}, utc - {utc}"
 }
+
+interface User(UserId id)
+{
+    // define shortcut for commands
+    if ? = ICommand<UserId>
+    // define shortcut for events
+    if ! = IEvent<UserId>
+        
+    CreateUser?(string name, string login, string password, string role)
+        explicit "Create {id} with name '{name}', login '{login}' and role '{role}'"
+        UserCreated!(string name, string login, Password password, string role, DateTime utc)
+            explicit "{id} created with name '{name}', login '{login}' and role '{role}', utc - {utc}"
+
+    AssignRoleToUser?(string role)
+        explicit "Assign role '{role}'  to '{id}'"
+        RoleAssignedToUser!(string role, DateTime utc)
+            explicit "Role '{role}' assigned to '{id}', utc - {utc}"
+
+    ChangeUserPassword?(string oldPassword, string newPassword)
+        explicit "Change password for '{id}'"
+        UserPasswordChanged!(Password password, DateTime utc)
+            explicit "Password for '{id}' changed, utc - {utc}"
+
+    DeleteUser? ()
+        UserDeleted! (DateTime utc)
+            explicit "Deleted user {Id}, utc - {utc}"
+}

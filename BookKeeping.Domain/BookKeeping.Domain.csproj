@@ -88,6 +88,7 @@
   <ItemGroup>
     <Reference Include="System" />
     <Reference Include="System.Core" />
+    <Reference Include="System.Runtime.Serialization" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="Microsoft.CSharp" />
@@ -95,27 +96,27 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Aggregates\AggregateBase.cs" />
     <Compile Include="Aggregates\Customer.cs" />
-    <Compile Include="Aggregates\Customer\Customer.cs" />
-    <Compile Include="Aggregates\Customer\CustomerApplicationService.cs" />
-    <Compile Include="Aggregates\Customer\CustomerState.cs" />
+    <Compile Include="Projections\UserIndex\UserIndexLookup.cs" />
+    <Compile Include="Projections\UserIndex\UserIndexProjection.cs" />
+    <Compile Include="Services\CustomerApplicationService.cs" />
     <Compile Include="Aggregates\Order.cs" />
     <Compile Include="Aggregates\OrderLine.cs" />
     <Compile Include="Aggregates\OrderLineCollection.cs" />
     <Compile Include="Aggregates\Order\Order.cs" />
-    <Compile Include="Aggregates\Order\OrderApplicationService.cs" />
+    <Compile Include="Services\OrderApplicationService.cs" />
     <Compile Include="Aggregates\Order\OrderLine.cs" />
     <Compile Include="Aggregates\Order\OrderState.cs" />
-    <Compile Include="Aggregates\Password.cs" />
     <Compile Include="Aggregates\Product.cs" />
-    <Compile Include="Aggregates\Product\Product.cs" />
-    <Compile Include="Aggregates\Product\ProductApplicationService.cs" />
-    <Compile Include="Aggregates\Product\ProductState.cs" />
-    <Compile Include="Aggregates\Vendor.cs" />
+    <Compile Include="Services\ProductApplicationService.cs" />
     <Compile Include="Aggregates\User.cs" />
+    <Compile Include="Services\UserApplicationService.cs" />
+    <Compile Include="Aggregates\Vendor.cs" />
     <Compile Include="Base64Extensions.cs" />
     <Compile Include="DomainBoundedContext.cs" />
-    <Compile Include="IEntity.cs" />
+    <Compile Include="DomainIdentityGenerator.cs" />
+    <Compile Include="IDocumentIdentityGenerator.cs" />
     <Compile Include="Maybe.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Repositories\IRepository`1.cs" />
@@ -162,6 +163,7 @@
       <Install>true</Install>
     </BootstrapperPackage>
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

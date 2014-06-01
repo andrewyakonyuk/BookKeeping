@@ -1,11 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.Serialization;
 using System.Security.Cryptography;
 using System.Text;
 
-namespace BookKeeping.Domain.Aggregates
+namespace BookKeeping.Domain.Contracts
 {
+    [Serializable]
+    [DataContract]
     public sealed class Password
     {
         private static readonly Random random = new Random();
@@ -28,9 +31,11 @@ namespace BookKeeping.Domain.Aggregates
             Hash = HashPassword(password, Salt);
         }
 
-        public string Hash { get; private set; }
+        [DataMember(Order = 1)]
+        public string Hash { get; protected set; }
 
-        public string Salt { get; private set; }
+        [DataMember(Order = 2)]
+        public string Salt { get; protected set; }
 
         public bool Check(string oldPassword)
         {

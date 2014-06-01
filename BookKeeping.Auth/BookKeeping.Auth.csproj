@@ -50,6 +50,10 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\BookKeeping.Domain.Contracts\BookKeeping.Domain.Contracts.csproj">
+      <Project>{c5f2deca-02a4-4069-81ae-611c14f0f9f9}</Project>
+      <Name>BookKeeping.Domain.Contracts</Name>
+    </ProjectReference>
     <ProjectReference Include="..\BookKeeping.Domain\BookKeeping.Domain.csproj">
       <Project>{9dbd5c57-7f4a-4c79-bfb1-ba241d21c2c6}</Project>
       <Name>BookKeeping.Domain</Name>

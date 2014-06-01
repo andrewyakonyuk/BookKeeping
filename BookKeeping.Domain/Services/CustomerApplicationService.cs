@@ -1,12 +1,12 @@
-﻿using BookKeeping.Core;
-using BookKeeping.Infrastructure.Domain;
+﻿using BookKeeping.Infrastructure.Domain;
 using BookKeeping.Domain.Contracts;
 using BookKeeping.Domain.Services;
 using System;
 using BookKeeping.Persistent.Storage;
 using BookKeeping.Infrastructure;
+using BookKeeping.Domain.Aggregates;
 
-namespace BookKeeping.Domain.Aggregates.Customer
+namespace BookKeeping.Domain.Services
 {
     /// <summary><para>
     /// This is an application service within the current bounded context.

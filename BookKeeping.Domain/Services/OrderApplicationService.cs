@@ -1,9 +1,10 @@
-﻿using BookKeeping.Infrastructure.Domain;
+﻿using BookKeeping.Domain.Aggregates;
 using BookKeeping.Domain.Contracts;
-using System;
+using BookKeeping.Infrastructure.Domain;
 using BookKeeping.Persistent.Storage;
+using System;
 
-namespace BookKeeping.Domain.Order
+namespace BookKeeping.Domain.Services
 {
     public class OrderApplicationService
     {

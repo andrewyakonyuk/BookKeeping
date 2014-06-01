@@ -1,4 +1,5 @@
 ﻿using BookKeeping.Domain.Aggregates;
+using BookKeeping.Domain.Contracts;
 using BookKeeping.Domain.Repositories;
 using System.Threading;
 
@@ -6,9 +7,9 @@ namespace BookKeeping.Auth
 {
     public class ContextUserProvider : IContextUserProvider
     {
-        private readonly IRepository<User> userRepository;
+        private readonly IRepository<User,UserId> userRepository;
 
-        public ContextUserProvider(IRepository<User> userRepository)
+        public ContextUserProvider(IRepository<User,UserId> userRepository)
         {
             this.userRepository = userRepository;
         }

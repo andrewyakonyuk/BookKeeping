@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace BookKeeping.Core
+namespace BookKeeping.Infrastructure.Domain
 {
     public class UnregisteredDomainEventException : Exception
     {

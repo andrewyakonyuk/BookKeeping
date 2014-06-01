@@ -1,17 +1,20 @@
-﻿using System;
+﻿using BookKeeping.Domain.Aggregates;
+using BookKeeping.Domain.Contracts;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
 namespace BookKeeping.Domain.Repositories
 {
-    public interface IRepository<TEntity>
-        where TEntity : IEntity
+    public interface IRepository<TAggregate, TKey>
+        where TAggregate : AggregateBase
+        where TKey : IIdentity
     {
-        IEnumerable<TEntity> All();
+        IEnumerable<TAggregate> All();
 
-        TEntity Get(long id);
+        TAggregate Get(TKey id);
 
-        void Save(TEntity entity);
+        void Save(TAggregate entity);
     }
 }

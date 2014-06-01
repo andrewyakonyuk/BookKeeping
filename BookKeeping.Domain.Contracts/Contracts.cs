@@ -411,6 +411,179 @@ public partial class ProductPriceChanged : IEvent<ProductId>
             return string.Format(@"{0} item changed on {1}, utc - {2}", Id, NewPrice, Utc);
         }
     }
+    [DataContract(Namespace = "BookKeeping")]
+public partial class CreateUser : ICommand<UserId>
+    {
+        [DataMember(Order = 1)] public UserId Id { get; private set; }
+        [DataMember(Order = 2)] public string Name { get; private set; }
+        [DataMember(Order = 3)] public string Login { get; private set; }
+        [DataMember(Order = 4)] public string Password { get; private set; }
+        [DataMember(Order = 5)] public string Role { get; private set; }
+        
+        CreateUser () {}
+        public CreateUser (UserId id, string name, string login, string password, string role)
+        {
+            Id = id;
+            Name = name;
+            Login = login;
+            Password = password;
+            Role = role;
+        }
+        
+        public override string ToString()
+        {
+            return string.Format(@"Create {0} with name '{1}', login '{2}' and role '{3}'", Id, Name, Login, Role);
+        }
+    }
+    [DataContract(Namespace = "BookKeeping")]
+public partial class UserCreated : IEvent<UserId>
+    {
+        [DataMember(Order = 1)] public UserId Id { get; private set; }
+        [DataMember(Order = 2)] public string Name { get; private set; }
+        [DataMember(Order = 3)] public string Login { get; private set; }
+        [DataMember(Order = 4)] public Password Password { get; private set; }
+        [DataMember(Order = 5)] public string Role { get; private set; }
+        [DataMember(Order = 6)] public DateTime Utc { get; private set; }
+        
+        UserCreated () {}
+        public UserCreated (UserId id, string name, string login, Password password, string role, DateTime utc)
+        {
+            Id = id;
+            Name = name;
+            Login = login;
+            Password = password;
+            Role = role;
+            Utc = utc;
+        }
+        
+        public override string ToString()
+        {
+            return string.Format(@"{0} created with name '{1}', login '{2}' and role '{3}', utc - {4}", Id, Name, Login, Role, Utc);
+        }
+    }
+    [DataContract(Namespace = "BookKeeping")]
+public partial class AssignRoleToUser : ICommand<UserId>
+    {
+        [DataMember(Order = 1)] public UserId Id { get; private set; }
+        [DataMember(Order = 2)] public string Role { get; private set; }
+        
+        AssignRoleToUser () {}
+        public AssignRoleToUser (UserId id, string role)
+        {
+            Id = id;
+            Role = role;
+        }
+        
+        public override string ToString()
+        {
+            return string.Format(@"Assign role '{1}'  to '{0}'", Id, Role);
+        }
+    }
+    [DataContract(Namespace = "BookKeeping")]
+public partial class RoleAssignedToUser : IEvent<UserId>
+    {
+        [DataMember(Order = 1)] public UserId Id { get; private set; }
+        [DataMember(Order = 2)] public string Role { get; private set; }
+        [DataMember(Order = 3)] public DateTime Utc { get; private set; }
+        
+        RoleAssignedToUser () {}
+        public RoleAssignedToUser (UserId id, string role, DateTime utc)
+        {
+            Id = id;
+            Role = role;
+            Utc = utc;
+        }
+        
+        public override string ToString()
+        {
+            return string.Format(@"Role '{1}' assigned to '{0}', utc - {2}", Id, Role, Utc);
+        }
+    }
+    [DataContract(Namespace = "BookKeeping")]
+public partial class ChangeUserPassword : ICommand<UserId>
+    {
+        [DataMember(Order = 1)] public UserId Id { get; private set; }
+        [DataMember(Order = 2)] public string OldPassword { get; private set; }
+        [DataMember(Order = 3)] public string NewPassword { get; private set; }
+        
+        ChangeUserPassword () {}
+        public ChangeUserPassword (UserId id, string oldPassword, string newPassword)
+        {
+            Id = id;
+            OldPassword = oldPassword;
+            NewPassword = newPassword;
+        }
+        
+        public override string ToString()
+        {
+            return string.Format(@"Change password for '{0}'", Id);
+        }
+    }
+    [DataContract(Namespace = "BookKeeping")]
+public partial class UserPasswordChanged : IEvent<UserId>
+    {
+        [DataMember(Order = 1)] public UserId Id { get; private set; }
+        [DataMember(Order = 2)] public Password Password { get; private set; }
+        [DataMember(Order = 3)] public DateTime Utc { get; private set; }
+        
+        UserPasswordChanged () {}
+        public UserPasswordChanged (UserId id, Password password, DateTime utc)
+        {
+            Id = id;
+            Password = password;
+            Utc = utc;
+        }
+        
+        public override string ToString()
+        {
+            return string.Format(@"Password for '{0}' changed, utc - {1}", Id, Utc);
+        }
+    }
+    [DataContract(Namespace = "BookKeeping")]
+public partial class DeleteUser : ICommand<UserId>
+    {
+        [DataMember(Order = 1)] public UserId Id { get; private set; }
+        
+        DeleteUser () {}
+        public DeleteUser (UserId id)
+        {
+            Id = id;
+        }
+    }
+    [DataContract(Namespace = "BookKeeping")]
+public partial class UserDeleted : IEvent<UserId>
+    {
+        [DataMember(Order = 1)] public UserId Id { get; private set; }
+        [DataMember(Order = 2)] public DateTime Utc { get; private set; }
+        
+        UserDeleted () {}
+        public UserDeleted (UserId id, DateTime utc)
+        {
+            Id = id;
+            Utc = utc;
+        }
+        
+        public override string ToString()
+        {
+            return string.Format(@"Deleted user {0}, utc - {1}", Id, Utc);
+        }
+    }
+    
+    public interface IUserApplicationService
+    {
+        void When(CreateUser c);
+        void When(AssignRoleToUser c);
+        void When(ChangeUserPassword c);
+        void When(DeleteUser c);
+    }
+    
+    public interface IUserState
+    {
+        void When(UserCreated e);
+        void When(RoleAssignedToUser e);
+        void When(UserPasswordChanged e);
+        void When(UserDeleted e);
+    }
     
     public interface IProductApplicationService
     {
