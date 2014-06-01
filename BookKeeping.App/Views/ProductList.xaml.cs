@@ -53,11 +53,11 @@ namespace BookKeeping.App.Views
             {
                 if (DataContext == null)
                     return;
-                viewModel.ShowFindPopup = !viewModel.ShowFindPopup;
+                viewModel.IsFindPopupVisible = !viewModel.IsFindPopupVisible;
                 args.Handled = true;
             }));
 
-            viewModel.ProductListTable = ProductListTable;
+            viewModel.PrintArea = ProductListTable;
         }
 
         private void DataGrid_SelectionChanged(object sender, SelectionChangedEventArgs e)

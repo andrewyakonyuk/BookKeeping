@@ -10,19 +10,18 @@ using System.Collections.ObjectModel;
 using System.Collections.Specialized;
 using System.ComponentModel;
 using System.Linq;
-using System.Windows.Controls;
-using System.Windows.Data;
-using ICommand = System.Windows.Input.ICommand;
-using System.Threading;
 using System.Threading.Tasks;
+using System.Windows.Data;
+using System.Windows.Media;
+using ICommand = System.Windows.Input.ICommand;
 
 namespace BookKeeping.App.ViewModels
 {
     public class ProductListViewModel : WorkspaceViewModel, IPrintable, ISaveable
     {
         private string _searchText = string.Empty;
-        private bool _showFindPopup = false;
-        private bool _showFilterPopup = false;
+        private bool _isFindPopupVisible = false;
+        private bool _isFilterPopupVisible = false;
         private object _selectedItem;
         private IList _selectedItems;
         private bool _hasChanges = false;
@@ -36,7 +35,7 @@ namespace BookKeeping.App.ViewModels
         {
             SearchButtonCmd = new DelegateCommand(_ => DoSearch(SearchText), _ => true);
             FilterButtonCmd = new DelegateCommand(_ => DoFilter(FilterText), _ => true);
-            FilterPopupCmd = new DelegateCommand(_ => ShowFilterPopup = !ShowFilterPopup);
+            FilterPopupCmd = new DelegateCommand(_ => IsFilterPopupVisible = !IsFilterPopupVisible);
             EditProductCmd = new DelegateCommand(item => { EditingItem = item == EditingItem ? null : item as ProductViewModel; }, _ => SelectedItems.Count == 1);
             SaveCmd = new DelegateCommand(_ => SaveChanges(), _ => CanSave);
 
@@ -102,37 +101,37 @@ namespace BookKeeping.App.ViewModels
             }
         }
 
-        public bool ShowFindPopup
+        public bool IsFindPopupVisible
         {
-            get { return _showFindPopup; }
+            get { return _isFindPopupVisible; }
             set
             {
                 if (value)
-                    ShowFilterPopup = false;
+                    IsFilterPopupVisible = false;
                 else
                 {
                     SearchText = string.Empty;
                 }
-                OnPropertyChanging(() => ShowFindPopup);
-                _showFindPopup = value;
-                OnPropertyChanged(() => ShowFindPopup);
+                OnPropertyChanging(() => IsFindPopupVisible);
+                _isFindPopupVisible = value;
+                OnPropertyChanged(() => IsFindPopupVisible);
             }
         }
 
-        public bool ShowFilterPopup
+        public bool IsFilterPopupVisible
         {
-            get { return _showFilterPopup; }
+            get { return _isFilterPopupVisible; }
             set
             {
                 if (value)
-                    ShowFindPopup = false;
+                    IsFindPopupVisible = false;
                 else
                 {
                     ResetFilter();
                 }
-                OnPropertyChanging(() => ShowFilterPopup);
-                _showFilterPopup = value;
-                OnPropertyChanged(() => ShowFilterPopup);
+                OnPropertyChanging(() => IsFilterPopupVisible);
+                _isFilterPopupVisible = value;
+                OnPropertyChanged(() => IsFilterPopupVisible);
             }
         }
 
@@ -188,7 +187,7 @@ namespace BookKeeping.App.ViewModels
 
         public ListCollectionView CollectionView { get { return (ListCollectionView)CollectionViewSource.GetDefaultView(Source); } }
 
-        public DataGrid ProductListTable { get; set; }
+        public Visual PrintArea { get; set; }
 
         protected virtual IEnumerable<ProductViewModel> GetProducts()
         {
@@ -279,7 +278,8 @@ namespace BookKeeping.App.ViewModels
                 case NotifyCollectionChangedAction.Add:
                 case NotifyCollectionChangedAction.Remove:
                 case NotifyCollectionChangedAction.Replace:
-                    HasChanges = true;
+                    if (!IsLoading)
+                        HasChanges = true;
                     break;
 
                 default:
@@ -336,8 +336,8 @@ namespace BookKeeping.App.ViewModels
             //    App.Current.Dispatcher.BeginInvoke((Action)delegate
             //    {
             //        var exporter = new PdfExporter();
-            //        var documentPaginator = new DataGridDocumentPaginator(ProductListTable, string.Empty, new System.Windows.Size(940, 1070), new System.Windows.Thickness());
-            //        exporter.Export(documentPaginator, saveFileDialog.FileName);
+            //        //var documentPaginator = new DataGridDocumentPaginator((DataGrid)PrintArea, string.Empty, new System.Windows.Size(940, 1070), new System.Windows.Thickness());
+            //        exporter.Export(PrintArea, saveFileDialog.FileName);
             //        SendMessage(new MessageEnvelope(T("PrintCompleted")));
             //    });
             //}

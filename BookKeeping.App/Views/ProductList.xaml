@@ -36,7 +36,7 @@
             Width="200"
             BorderThickness="2,0,0,2"
             Background="White"
-            Visibility="{Binding ShowFindPopup, Converter={StaticResource BooleanToVisibilityConverter}}"
+            Visibility="{Binding IsFindPopupVisible, Converter={StaticResource BooleanToVisibilityConverter}}"
             FocusManager.FocusedElement="{Binding ElementName=txtSearchBox}"
             BorderBrush="{DynamicResource BackgroundSelected}">
             <DockPanel LastChildFill="True" >
@@ -82,7 +82,7 @@
             Width="200"
             BorderThickness="2,0,0,2"
             Background="White"
-            Visibility="{Binding ShowFilterPopup, Converter={StaticResource BooleanToVisibilityConverter}}"
+            Visibility="{Binding IsFilterPopupVisible, Converter={StaticResource BooleanToVisibilityConverter}}"
             FocusManager.FocusedElement="{Binding ElementName=txtFilterBox}"
             BorderBrush="{DynamicResource BackgroundSelected}">
             <DockPanel LastChildFill="True" >
