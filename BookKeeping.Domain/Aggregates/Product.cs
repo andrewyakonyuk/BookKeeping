@@ -1,6 +1,6 @@
-﻿using BookKeeping.Domain.Contracts;
-using System;
+﻿using System;
 using System.Collections.Generic;
+using BookKeeping.Domain.Contracts;
 
 namespace BookKeeping.Domain.Aggregates
 {
@@ -88,7 +88,13 @@ namespace BookKeeping.Domain.Aggregates
             Apply(new ProductMakedNonOrderable(this.Id, reason, utc));
         }
 
-        public void When(ProductCreated e)
+        protected override void Mutate(IEvent e)
+        {
+            Version += 1;
+            ((IProductState)this).When((dynamic)e);
+        }
+
+        void IProductState.When(ProductCreated e)
         {
             Id = e.Id;
             Title = e.Title;
@@ -99,47 +105,47 @@ namespace BookKeeping.Domain.Aggregates
             VatRate = e.VatRate;
         }
 
-        public void When(ProductStockUpdated e)
+        void IProductState.When(ProductStockUpdated e)
         {
             Stock = e.Quantity;
         }
 
-        public void When(ProductRenamed e)
+        void IProductState.When(ProductRenamed e)
         {
             Title = e.NewTitle;
         }
 
-        public void When(ProductBarcodeChanged e)
+        void IProductState.When(ProductBarcodeChanged e)
         {
             Barcode = e.NewBarcode;
         }
 
-        public void When(ProductItemNoChanged e)
+        void IProductState.When(ProductItemNoChanged e)
         {
             ItemNo = e.NewItemNo;
         }
 
-        public void When(ProductPriceChanged e)
+        void IProductState.When(ProductPriceChanged e)
         {
             Price = e.NewPrice;
         }
 
-        public void When(ProductUnitOfMeasureChanged e)
+        void IProductState.When(ProductUnitOfMeasureChanged e)
         {
             UnitOfMeasure = e.NewUnitOfMeasure;
         }
 
-        public void When(ProductVatRateChanged e)
+        void IProductState.When(ProductVatRateChanged e)
         {
             VatRate = e.NewVatRate;
         }
 
-        public void When(ProductMakedOrderable e)
+        void IProductState.When(ProductMakedOrderable e)
         {
             IsOrderable = true;
         }
 
-        public void When(ProductMakedNonOrderable e)
+        void IProductState.When(ProductMakedNonOrderable e)
         {
             IsOrderable = false;
         }

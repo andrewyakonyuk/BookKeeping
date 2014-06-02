@@ -44,10 +44,10 @@ namespace BookKeeping.Domain.Repositories
         {
             var user = _userIndexReader.Get<UserIndexLookup>()
                 .Convert(t => t.Logins[login])
-                .Convert(t => Get(t));
-            if (user.HasValue && user.Value.Password.Check(password))
+                .Convert(t => Get(t), default(User));
+            if (user != null && user.Password.Check(password))
             {
-                return user.Value;
+                return user;
             }
             return null;
         }

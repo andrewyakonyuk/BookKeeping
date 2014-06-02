@@ -1,39 +1,29 @@
-﻿using BookKeeping.Domain.Contracts;
-using System;
+﻿using System;
 using System.Collections.Generic;
+using BookKeeping.Domain.Contracts;
 
 namespace BookKeeping.Domain.Aggregates
 {
     public class User : AggregateBase, IUserState
     {
-        public UserId Id { get; private set; }
-
-        public Password Password { get; private set; }
-
-        public string Name { get; private set; }
-
-        public string Login { get; private set; }
-
-        public string Role { get; private set; }
-
         public User(IEnumerable<IEvent> events)
             : base(events)
         {
         }
 
-        public void Create(UserId id, string name, string login, string password, string role, DateTime utc)
-        {
-            Apply(new UserCreated(id, name, login, new Password(password), role, utc));
-        }
+        public UserId Id { get; private set; }
+
+        public string Login { get; private set; }
+
+        public string Name { get; private set; }
+
+        public Password Password { get; private set; }
+
+        public string Role { get; private set; }
 
         public void AssignToRole(string role, DateTime utc)
         {
             Apply(new RoleAssignedToUser(this.Id, role, utc));
-        }
-
-        public void Delete(DateTime utc)
-        {
-            Apply(new UserDeleted(this.Id, utc));
         }
 
         public void ChangePassword(string oldPassword, string newPassword, DateTime utc)
@@ -45,9 +35,17 @@ namespace BookKeeping.Domain.Aggregates
             else throw new InvalidOperationException();
         }
 
+        public void Create(UserId id, string name, string login, string password, string role, DateTime utc)
+        {
+            Apply(new UserCreated(id, name, login, new Password(password), role, utc));
+        }
 
+        public void Delete(DateTime utc)
+        {
+            Apply(new UserDeleted(this.Id, utc));
+        }
 
-        public void When(UserCreated e)
+        void IUserState.When(UserCreated e)
         {
             Id = e.Id;
             Password = e.Password;
@@ -56,21 +54,25 @@ namespace BookKeeping.Domain.Aggregates
             Role = e.Role;
         }
 
-        public void When(RoleAssignedToUser e)
+        void IUserState.When(RoleAssignedToUser e)
         {
             Role = e.Role;
         }
 
-        public void When(UserDeleted e)
+        void IUserState.When(UserDeleted e)
         {
             Version = -1;
         }
 
-        public void When(UserPasswordChanged e)
+        void IUserState.When(UserPasswordChanged e)
         {
             Password = e.Password;
         }
 
-        
+        protected override void Mutate(IEvent e)
+        {
+            Version += 1;
+            ((IUserState)this).When((dynamic)e);
+        }
     }
 }
