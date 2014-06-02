@@ -5,6 +5,6 @@ namespace BookKeeping.Domain.Repositories
 {
     public interface IUserRepository : IRepository<User, UserId>
     {
-        User Get(string login, string password);
+        User Load(string login, string password);
     }
 }

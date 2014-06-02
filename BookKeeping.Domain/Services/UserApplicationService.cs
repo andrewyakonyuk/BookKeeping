@@ -1,6 +1,7 @@
 ﻿using BookKeeping.Domain.Aggregates;
 using BookKeeping.Domain.Contracts;
 using BookKeeping.Domain.Projections.UserIndex;
+using BookKeeping.Domain.Repositories;
 using BookKeeping.Infrastructure;
 using BookKeeping.Infrastructure.Domain;
 using BookKeeping.Persistent;
@@ -16,29 +17,20 @@ namespace BookKeeping.Domain.Services
         ICommandHandler<ChangeUserPassword>,
         ICommandHandler<DeleteUser>
     {
-        private readonly IEventBus _eventBus;
-        private readonly IEventStore _eventStore;
+        readonly IRepository<User, UserId> _repository;
         private readonly IDocumentReader<unit, UserIndexLookup> _userIndex;
 
-        public UserApplicationService(IEventStore eventStore, IEventBus eventBus, IDocumentReader<unit, UserIndexLookup> userIndex)
+        public UserApplicationService(IRepository<User,UserId> repository, IDocumentReader<unit, UserIndexLookup> userIndex)
         {
-            _eventStore = eventStore;
-            _eventBus = eventBus;
+            _repository = repository;
             _userIndex = userIndex;
         }
 
         private void Update(UserId id, Action<User> execute)
         {
-            var stream = _eventStore.LoadEventStream(id);
-            var user = new User(stream.Events);
+            var user = _repository.Get(id);
             execute(user);
-            _eventStore.AppendToStream(id, stream.Version, user.Changes);
-
-            foreach (var @event in user.Changes)
-            {
-                var realEvent = (dynamic)System.Convert.ChangeType(@event, @event.GetType());
-                _eventBus.Publish(realEvent);
-            }
+            _repository.Save(user);
         }
 
         public void When(CreateUser c)

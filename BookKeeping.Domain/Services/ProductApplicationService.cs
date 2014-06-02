@@ -4,6 +4,7 @@ using BookKeeping.Domain.Contracts;
 using BookKeeping.Infrastructure;
 using BookKeeping.Infrastructure.Domain;
 using BookKeeping.Persistent.Storage;
+using BookKeeping.Domain.Repositories;
 
 namespace BookKeeping.Domain.Services
 {
@@ -19,27 +20,18 @@ namespace BookKeeping.Domain.Services
         ICommandHandler<MakeProductOrderable>,
         ICommandHandler<MakeProductNonOrderable>
     {
-        private readonly IEventBus _eventBus;
-        private readonly IEventStore _eventStore;
+        readonly IRepository<Product, ProductId> _repository;
 
-        public ProductApplicationService(IEventStore eventStore, IEventBus eventBus)
+        public ProductApplicationService(IRepository<Product, ProductId> repository)
         {
-            _eventStore = eventStore;
-            _eventBus = eventBus;
+            _repository = repository;
         }
 
         private void Update(ProductId id, Action<Product> execute)
         {
-            var stream = _eventStore.LoadEventStream(id);
-            var customer = new Product(stream.Events);
-            execute(customer);
-            _eventStore.AppendToStream(id, stream.Version, customer.Changes);
-
-            foreach (var @event in customer.Changes)
-            {
-                var realEvent = (dynamic)System.Convert.ChangeType(@event, @event.GetType());
-                _eventBus.Publish(realEvent);
-            }
+            var product = _repository.Get(id);
+            execute(product);
+            _repository.Save(product);
         }
 
         public void When(CreateProduct c)

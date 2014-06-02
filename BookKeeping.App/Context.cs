@@ -93,7 +93,7 @@ namespace BookKeeping.App
             //todo: 
             if (typeof(T) == typeof(User) && typeof(TId) == typeof(UserId))
             {
-                return (IRepository<T, TId>)new UserRepository(_eventStore, _projections.GetReader<unit, UserIndexLookup>());
+                return (IRepository<T, TId>)new UserRepository(_eventStore, _eventBus, _projections.GetReader<unit, UserIndexLookup>());
             }
             return null;
         }

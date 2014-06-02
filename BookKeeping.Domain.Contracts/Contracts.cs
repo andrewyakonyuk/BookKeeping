@@ -68,7 +68,7 @@ public partial class ProductCreated : IEvent<ProductId>
         
         public override string ToString()
         {
-            return string.Format(@"Product {1} created, {0}, {2}, {3}, {4}, {5}, {6}, {7}, utc - {8}", Title, ItemNo, Price, Stock, UnitOfMeasure, VatRate, Barcode, UserId, Utc);
+            return string.Format(@"Product {1} created, {0}, {2}, {3}, {4}, {5}, {6} by {7} on {8}", Title, ItemNo, Price, Stock, UnitOfMeasure, VatRate, Barcode, UserId, Utc);
         }
     }
     [DataContract(Namespace = "BookKeeping")]
@@ -108,7 +108,7 @@ public partial class ProductBarcodeChanged : IEvent<ProductId>
         
         public override string ToString()
         {
-            return string.Format(@"Product barcode changed on {0}, {1}, utc - {2}", NewBarcode, UserId, Utc);
+            return string.Format(@"Product barcode changed on {0} by {1} on {2}", NewBarcode, UserId, Utc);
         }
     }
     [DataContract(Namespace = "BookKeeping")]
@@ -148,7 +148,7 @@ public partial class ProductItemNoChanged : IEvent<ProductId>
         
         public override string ToString()
         {
-            return string.Format(@"{0} item changed on {1}, {2}, utc - {3}", Id, NewItemNo, UserId, Utc);
+            return string.Format(@"{0} item changed on {1} by {2} on {3}", Id, NewItemNo, UserId, Utc);
         }
     }
     [DataContract(Namespace = "BookKeeping")]
@@ -184,7 +184,7 @@ public partial class ProductMakedOrderable : IEvent<ProductId>
         
         public override string ToString()
         {
-            return string.Format(@"{0} maked orderable, {1}, utc - {2}", Id, UserId, Utc);
+            return string.Format(@"{0} maked orderable by {1} on {2}", Id, UserId, Utc);
         }
     }
     [DataContract(Namespace = "BookKeeping")]
@@ -224,7 +224,7 @@ public partial class ProductMakedNonOrderable : IEvent<ProductId>
         
         public override string ToString()
         {
-            return string.Format(@"{0} maked non-orderable, reason - {1}, {2}, utc - {3}", Id, Reason, UserId, Utc);
+            return string.Format(@"{0} maked non-orderable, reason - {1} by {2} on {3}", Id, Reason, UserId, Utc);
         }
     }
     [DataContract(Namespace = "BookKeeping")]
@@ -268,7 +268,7 @@ public partial class ProductStockUpdated : IEvent<ProductId>
         
         public override string ToString()
         {
-            return string.Format(@"{0} stock updated {1}, reason - {2}, {3}, utc - {4}", Id, Quantity, Reason, UserId, Utc);
+            return string.Format(@"{0} stock updated {1}, reason - {2} by {3} on {4}", Id, Quantity, Reason, UserId, Utc);
         }
     }
     [DataContract(Namespace = "BookKeeping")]
@@ -308,7 +308,7 @@ public partial class ProductRenamed : IEvent<ProductId>
         
         public override string ToString()
         {
-            return string.Format(@"{0} renamed, {1}, utc - {2}", Id, UserId, Utc);
+            return string.Format(@"{0} renamed by {1} on {2}", Id, UserId, Utc);
         }
     }
     [DataContract(Namespace = "BookKeeping")]
@@ -348,7 +348,7 @@ public partial class ProductVatRateChanged : IEvent<ProductId>
         
         public override string ToString()
         {
-            return string.Format(@"{0} item changed on {1}, {2}, utc - {3}", Id, NewVatRate, UserId, Utc);
+            return string.Format(@"{0} item changed on {1} by {2} on {3}", Id, NewVatRate, UserId, Utc);
         }
     }
     [DataContract(Namespace = "BookKeeping")]
@@ -388,7 +388,7 @@ public partial class ProductUnitOfMeasureChanged : IEvent<ProductId>
         
         public override string ToString()
         {
-            return string.Format(@"{0} item changed on {1}, {2}, utc - {3}", Id, NewUnitOfMeasure, UserId, Utc);
+            return string.Format(@"{0} item changed on {1} by {2} on {3}", Id, NewUnitOfMeasure, UserId, Utc);
         }
     }
     [DataContract(Namespace = "BookKeeping")]
@@ -428,7 +428,43 @@ public partial class ProductPriceChanged : IEvent<ProductId>
         
         public override string ToString()
         {
-            return string.Format(@"{0} item changed on {1}, {2}, utc - {3}", Id, NewPrice, UserId, Utc);
+            return string.Format(@"{0} item changed on {1} by {2} on {3}", Id, NewPrice, UserId, Utc);
+        }
+    }
+    [DataContract(Namespace = "BookKeeping")]
+public partial class DeleteProduct : ICommand<ProductId>
+    {
+        [DataMember(Order = 1)] public ProductId Id { get; private set; }
+        
+        DeleteProduct () {}
+        public DeleteProduct (ProductId id)
+        {
+            Id = id;
+        }
+        
+        public override string ToString()
+        {
+            return string.Format(@"delete {0}", Id);
+        }
+    }
+    [DataContract(Namespace = "BookKeeping")]
+public partial class ProductDeleted : IEvent<ProductId>
+    {
+        [DataMember(Order = 1)] public ProductId Id { get; private set; }
+        [DataMember(Order = 2)] public UserId UserId { get; private set; }
+        [DataMember(Order = 3)] public DateTime Utc { get; private set; }
+        
+        ProductDeleted () {}
+        public ProductDeleted (ProductId id, UserId userId, DateTime utc)
+        {
+            Id = id;
+            UserId = userId;
+            Utc = utc;
+        }
+        
+        public override string ToString()
+        {
+            return string.Format(@"{0} deleted by {1} on {2}", Id, UserId, Utc);
         }
     }
     [DataContract(Namespace = "BookKeeping")]
@@ -617,6 +653,7 @@ public partial class UserDeleted : IEvent<UserId>
         void When(ChangeProductVatRate c);
         void When(ChangeProductUnitOfMeasure c);
         void When(ChangeProductPrice c);
+        void When(DeleteProduct c);
     }
     
     public interface IProductState
@@ -631,6 +668,7 @@ public partial class UserDeleted : IEvent<UserId>
         void When(ProductVatRateChanged e);
         void When(ProductUnitOfMeasureChanged e);
         void When(ProductPriceChanged e);
+        void When(ProductDeleted e);
     }
     #endregion
 }

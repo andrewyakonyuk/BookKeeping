@@ -1,6 +1,7 @@
 ﻿using BookKeeping.Domain.Aggregates;
 using BookKeeping.Domain.Contracts;
 using BookKeeping.Domain.Projections.UserIndex;
+using BookKeeping.Infrastructure.Domain;
 using BookKeeping.Persistent;
 using BookKeeping.Persistent.AtomicStorage;
 using BookKeeping.Persistent.Storage;
@@ -8,18 +9,21 @@ using System.Collections.Generic;
 
 namespace BookKeeping.Domain.Repositories
 {
-    public class UserRepository : IUserRepository, IRepository<User, UserId>
+    public class UserRepository : RepositoryBase<User,UserId>, IUserRepository, IRepository<User, UserId>
     {
         readonly IEventStore _eventStore;
         readonly IDocumentReader<unit, UserIndexLookup> _userIndexReader;
+        readonly IEventBus _eventBus;
 
-        public UserRepository(IEventStore eventStore, IDocumentReader<unit, UserIndexLookup> userIndexReader)
+        public UserRepository(IEventStore eventStore, IEventBus eventBus, IDocumentReader<unit, UserIndexLookup> userIndexReader)
+            : base(eventStore, eventBus)
         {
             _eventStore = eventStore;
             _userIndexReader = userIndexReader;
+            _eventBus = eventBus;
         }
 
-        public IEnumerable<User> All()
+        public override IEnumerable<User> All()
         {
             var index = _userIndexReader.Get<UserIndexLookup>();
             if (index.HasValue)
@@ -32,7 +36,13 @@ namespace BookKeeping.Domain.Repositories
             yield break;
         }
 
-        public User Get(UserId id)
+        public override User Get(UserId id)
+        {
+            var stream = _eventStore.LoadEventStream(id);
+            return new User(stream.Events);
+        }
+
+        public override User Load(UserId id)
         {
             var stream = _eventStore.LoadEventStream(id);
             if (stream.Version > 0)
@@ -40,11 +50,11 @@ namespace BookKeeping.Domain.Repositories
             return null;
         }
 
-        public User Get(string login, string password)
+        public virtual User Load(string login, string password)
         {
             var user = _userIndexReader.Get<UserIndexLookup>()
                 .Convert(t => t.Logins.ContainsKey(login) ? t.Logins[login] : new UserId(-1))
-                .Convert(t => Get(t), default(User));
+                .Convert(t => Load(t), default(User));
             if (user == null)
                 return null;
             if (user.Password.Check(password))
@@ -52,39 +62,6 @@ namespace BookKeeping.Domain.Repositories
                 return user;
             }
             else return null;
-        }
-
-        public void Save(User user)
-        {
-            while (true)
-            {
-                EventStream eventStream = _eventStore.LoadEventStream(user.Id);
-                try
-                {
-                    _eventStore.AppendToStream(user.Id, eventStream.Version, user.Changes);
-                    return;
-                }
-                catch (OptimisticConcurrencyException ex)
-                {
-                    foreach (var clientEvent in user.Changes)
-                    {
-                        foreach (var actualEvent in ex.ActualEvents)
-                        {
-                            if (ConflictsWith(clientEvent, actualEvent))
-                            {
-                                throw new RealConcurrencyException(string.Format("Conflict between {0} and {1}", clientEvent, actualEvent), ex);
-                            }
-                        }
-                    }
-                    // there are no conflicts and we can append
-                    _eventStore.AppendToStream(user.Id, ex.ActualVersion, user.Changes);
-                }
-            }
-        }
-
-        static bool ConflictsWith(IEvent x, IEvent y)
-        {
-            return x.GetType() == y.GetType();
         }
     }
 }

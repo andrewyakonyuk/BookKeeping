@@ -15,7 +15,7 @@ namespace BookKeeping.Auth
 
         public virtual bool SignIn(string username, string password)
         {
-            var user = _repository.Get(username, password);
+            var user = _repository.Load(username, password);
             if (user == null)
                 return false;
             var identity = new UserIdentity(new AccountEntry(user), username);

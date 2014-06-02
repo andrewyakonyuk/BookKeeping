@@ -15,6 +15,8 @@ namespace BookKeeping.Domain.Repositories
 
         TAggregate Get(TKey id);
 
+        TAggregate Load(TKey id);
+
         void Save(TAggregate entity);
     }
 }

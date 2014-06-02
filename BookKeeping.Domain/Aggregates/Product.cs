@@ -149,5 +149,10 @@ namespace BookKeeping.Domain.Aggregates
         {
             IsOrderable = false;
         }
+
+        void IProductState.When(ProductDeleted e)
+        {
+            Version = -1;
+        }
     }
 }

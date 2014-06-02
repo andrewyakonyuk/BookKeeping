@@ -36,7 +36,7 @@ namespace BookKeeping.App
             //    identities.Add(new UserIdentity(new AccountEntry(user), user.Name));
             //}
 
-            //for (int i = 0; i < 5000; i++)
+            //for (int i = 500; i < 1000; i++)
             //{
             //    BookKeeping.Infrastructure.Current.IdentityIs(identities[random.Next(0, identities.Count - 1)]);
             //    Context.Current.Command(new CreateProduct(new ProductId(i),
@@ -49,7 +49,7 @@ namespace BookKeeping.App
             //        new Barcode("12342323", BarcodeType.EAN13)
             //        ));
             //}
-            //BookKeeping.Infrastructure.Current.Reset();
+            BookKeeping.Infrastructure.Current.Reset();
 
             MainWindow window = new MainWindow();
             var viewModel = new MainWindowViewModel();

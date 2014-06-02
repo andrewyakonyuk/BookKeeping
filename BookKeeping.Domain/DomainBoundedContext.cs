@@ -1,4 +1,6 @@
-﻿using BookKeeping.Domain.Projections.UserIndex;
+﻿using BookKeeping.Domain.Projections.ProductIndex;
+using BookKeeping.Domain.Projections.UserIndex;
+using BookKeeping.Domain.Repositories;
 using BookKeeping.Domain.Services;
 using BookKeeping.Infrastructure.Domain;
 using BookKeeping.Persistent;
@@ -18,8 +20,8 @@ namespace BookKeeping
         public static IEnumerable<object> EntityApplicationServices(IDocumentStore docs, IEventStore store, IEventBus eventBus)
         {
             yield return new CustomerApplicationService(store, eventBus, new PricingService());
-            yield return new ProductApplicationService(store, eventBus);
-            yield return new UserApplicationService(store, eventBus, docs.GetReader<unit, UserIndexLookup>());
+            yield return new ProductApplicationService(new ProductRepository(store, eventBus, docs.GetReader<unit, ProductIndexLookup>()));
+            yield return new UserApplicationService(new UserRepository(store, eventBus, docs.GetReader<unit, UserIndexLookup>()), docs.GetReader<unit, UserIndexLookup>());
         }
     }
 }
