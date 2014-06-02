@@ -43,13 +43,15 @@ namespace BookKeeping.Domain.Repositories
         public User Get(string login, string password)
         {
             var user = _userIndexReader.Get<UserIndexLookup>()
-                .Convert(t => t.Logins[login])
+                .Convert(t => t.Logins.ContainsKey(login) ? t.Logins[login] : new UserId(-1))
                 .Convert(t => Get(t), default(User));
-            if (user != null && user.Password.Check(password))
+            if (user == null)
+                return null;
+            if (user.Password.Check(password))
             {
                 return user;
             }
-            return null;
+            else return null;
         }
 
         public void Save(User user)

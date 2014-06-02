@@ -1,11 +1,16 @@
 ﻿using System;
 using System.Globalization;
+using System.Runtime.Serialization;
 
 namespace BookKeeping.Domain.Contracts
 {
+    [DataContract]
+    [Serializable]
     public struct Barcode
     {
+        [DataMember(Order = 1)]
         public readonly string Code;
+        [DataMember(Order = 2)]
         public readonly BarcodeType Type;
         static Barcode _undefined = new Barcode(string.Empty, BarcodeType.Undefined);
 
@@ -55,11 +60,11 @@ namespace BookKeeping.Domain.Contracts
         }
     }
 
-   public enum BarcodeType
-   {
-       Undefined,
-       EAN8,
-       EAN13,
-       CODE128
-   }
+    public enum BarcodeType
+    {
+        Undefined,
+        EAN8,
+        EAN13,
+        CODE128
+    }
 }

@@ -48,10 +48,11 @@ public partial class ProductCreated : IEvent<ProductId>
         [DataMember(Order = 6)] public string UnitOfMeasure { get; private set; }
         [DataMember(Order = 7)] public VatRate VatRate { get; private set; }
         [DataMember(Order = 8)] public Barcode Barcode { get; private set; }
-        [DataMember(Order = 9)] public DateTime Utc { get; private set; }
+        [DataMember(Order = 9)] public UserId UserId { get; private set; }
+        [DataMember(Order = 10)] public DateTime Utc { get; private set; }
         
         ProductCreated () {}
-        public ProductCreated (ProductId id, string title, string itemNo, CurrencyAmount price, decimal stock, string unitOfMeasure, VatRate vatRate, Barcode barcode, DateTime utc)
+        public ProductCreated (ProductId id, string title, string itemNo, CurrencyAmount price, decimal stock, string unitOfMeasure, VatRate vatRate, Barcode barcode, UserId userId, DateTime utc)
         {
             Id = id;
             Title = title;
@@ -61,12 +62,13 @@ public partial class ProductCreated : IEvent<ProductId>
             UnitOfMeasure = unitOfMeasure;
             VatRate = vatRate;
             Barcode = barcode;
+            UserId = userId;
             Utc = utc;
         }
         
         public override string ToString()
         {
-            return string.Format(@"Product {1} created, {0}, {2}, {3}, {4}, {5}, {6}, utc - {7}", Title, ItemNo, Price, Stock, UnitOfMeasure, VatRate, Barcode, Utc);
+            return string.Format(@"Product {1} created, {0}, {2}, {3}, {4}, {5}, {6}, {7}, utc - {8}", Title, ItemNo, Price, Stock, UnitOfMeasure, VatRate, Barcode, UserId, Utc);
         }
     }
     [DataContract(Namespace = "BookKeeping")]
@@ -92,19 +94,21 @@ public partial class ProductBarcodeChanged : IEvent<ProductId>
     {
         [DataMember(Order = 1)] public ProductId Id { get; private set; }
         [DataMember(Order = 2)] public Barcode NewBarcode { get; private set; }
-        [DataMember(Order = 3)] public DateTime Utc { get; private set; }
+        [DataMember(Order = 3)] public UserId UserId { get; private set; }
+        [DataMember(Order = 4)] public DateTime Utc { get; private set; }
         
         ProductBarcodeChanged () {}
-        public ProductBarcodeChanged (ProductId id, Barcode newBarcode, DateTime utc)
+        public ProductBarcodeChanged (ProductId id, Barcode newBarcode, UserId userId, DateTime utc)
         {
             Id = id;
             NewBarcode = newBarcode;
+            UserId = userId;
             Utc = utc;
         }
         
         public override string ToString()
         {
-            return string.Format(@"Product barcode changed on {0}, utc - {1}", NewBarcode, Utc);
+            return string.Format(@"Product barcode changed on {0}, {1}, utc - {2}", NewBarcode, UserId, Utc);
         }
     }
     [DataContract(Namespace = "BookKeeping")]
@@ -130,19 +134,21 @@ public partial class ProductItemNoChanged : IEvent<ProductId>
     {
         [DataMember(Order = 1)] public ProductId Id { get; private set; }
         [DataMember(Order = 2)] public string NewItemNo { get; private set; }
-        [DataMember(Order = 3)] public DateTime Utc { get; private set; }
+        [DataMember(Order = 3)] public UserId UserId { get; private set; }
+        [DataMember(Order = 4)] public DateTime Utc { get; private set; }
         
         ProductItemNoChanged () {}
-        public ProductItemNoChanged (ProductId id, string newItemNo, DateTime utc)
+        public ProductItemNoChanged (ProductId id, string newItemNo, UserId userId, DateTime utc)
         {
             Id = id;
             NewItemNo = newItemNo;
+            UserId = userId;
             Utc = utc;
         }
         
         public override string ToString()
         {
-            return string.Format(@"{0} item changed on {1}, utc - {2}", Id, NewItemNo, Utc);
+            return string.Format(@"{0} item changed on {1}, {2}, utc - {3}", Id, NewItemNo, UserId, Utc);
         }
     }
     [DataContract(Namespace = "BookKeeping")]
@@ -165,18 +171,20 @@ public partial class MakeProductOrderable : ICommand<ProductId>
 public partial class ProductMakedOrderable : IEvent<ProductId>
     {
         [DataMember(Order = 1)] public ProductId Id { get; private set; }
-        [DataMember(Order = 2)] public DateTime Utc { get; private set; }
+        [DataMember(Order = 2)] public UserId UserId { get; private set; }
+        [DataMember(Order = 3)] public DateTime Utc { get; private set; }
         
         ProductMakedOrderable () {}
-        public ProductMakedOrderable (ProductId id, DateTime utc)
+        public ProductMakedOrderable (ProductId id, UserId userId, DateTime utc)
         {
             Id = id;
+            UserId = userId;
             Utc = utc;
         }
         
         public override string ToString()
         {
-            return string.Format(@"{0} maked orderable", Id);
+            return string.Format(@"{0} maked orderable, {1}, utc - {2}", Id, UserId, Utc);
         }
     }
     [DataContract(Namespace = "BookKeeping")]
@@ -202,19 +210,21 @@ public partial class ProductMakedNonOrderable : IEvent<ProductId>
     {
         [DataMember(Order = 1)] public ProductId Id { get; private set; }
         [DataMember(Order = 2)] public string Reason { get; private set; }
-        [DataMember(Order = 3)] public DateTime Utc { get; private set; }
+        [DataMember(Order = 3)] public UserId UserId { get; private set; }
+        [DataMember(Order = 4)] public DateTime Utc { get; private set; }
         
         ProductMakedNonOrderable () {}
-        public ProductMakedNonOrderable (ProductId id, string reason, DateTime utc)
+        public ProductMakedNonOrderable (ProductId id, string reason, UserId userId, DateTime utc)
         {
             Id = id;
             Reason = reason;
+            UserId = userId;
             Utc = utc;
         }
         
         public override string ToString()
         {
-            return string.Format(@"{0} maked non-orderable, reason - {1}, utc - {2}", Id, Reason, Utc);
+            return string.Format(@"{0} maked non-orderable, reason - {1}, {2}, utc - {3}", Id, Reason, UserId, Utc);
         }
     }
     [DataContract(Namespace = "BookKeeping")]
@@ -243,20 +253,22 @@ public partial class ProductStockUpdated : IEvent<ProductId>
         [DataMember(Order = 1)] public ProductId Id { get; private set; }
         [DataMember(Order = 2)] public decimal Quantity { get; private set; }
         [DataMember(Order = 3)] public string Reason { get; private set; }
-        [DataMember(Order = 4)] public DateTime Utc { get; private set; }
+        [DataMember(Order = 4)] public UserId UserId { get; private set; }
+        [DataMember(Order = 5)] public DateTime Utc { get; private set; }
         
         ProductStockUpdated () {}
-        public ProductStockUpdated (ProductId id, decimal quantity, string reason, DateTime utc)
+        public ProductStockUpdated (ProductId id, decimal quantity, string reason, UserId userId, DateTime utc)
         {
             Id = id;
             Quantity = quantity;
             Reason = reason;
+            UserId = userId;
             Utc = utc;
         }
         
         public override string ToString()
         {
-            return string.Format(@"{0} stock updated {1}, reason - {2}, utc - {3}", Id, Quantity, Reason, Utc);
+            return string.Format(@"{0} stock updated {1}, reason - {2}, {3}, utc - {4}", Id, Quantity, Reason, UserId, Utc);
         }
     }
     [DataContract(Namespace = "BookKeeping")]
@@ -282,19 +294,21 @@ public partial class ProductRenamed : IEvent<ProductId>
     {
         [DataMember(Order = 1)] public ProductId Id { get; private set; }
         [DataMember(Order = 2)] public string NewTitle { get; private set; }
-        [DataMember(Order = 3)] public DateTime Utc { get; private set; }
+        [DataMember(Order = 3)] public UserId UserId { get; private set; }
+        [DataMember(Order = 4)] public DateTime Utc { get; private set; }
         
         ProductRenamed () {}
-        public ProductRenamed (ProductId id, string newTitle, DateTime utc)
+        public ProductRenamed (ProductId id, string newTitle, UserId userId, DateTime utc)
         {
             Id = id;
             NewTitle = newTitle;
+            UserId = userId;
             Utc = utc;
         }
         
         public override string ToString()
         {
-            return string.Format(@"{0} renamed, utc - {1}", Id, Utc);
+            return string.Format(@"{0} renamed, {1}, utc - {2}", Id, UserId, Utc);
         }
     }
     [DataContract(Namespace = "BookKeeping")]
@@ -320,19 +334,21 @@ public partial class ProductVatRateChanged : IEvent<ProductId>
     {
         [DataMember(Order = 1)] public ProductId Id { get; private set; }
         [DataMember(Order = 2)] public VatRate NewVatRate { get; private set; }
-        [DataMember(Order = 3)] public DateTime Utc { get; private set; }
+        [DataMember(Order = 3)] public UserId UserId { get; private set; }
+        [DataMember(Order = 4)] public DateTime Utc { get; private set; }
         
         ProductVatRateChanged () {}
-        public ProductVatRateChanged (ProductId id, VatRate newVatRate, DateTime utc)
+        public ProductVatRateChanged (ProductId id, VatRate newVatRate, UserId userId, DateTime utc)
         {
             Id = id;
             NewVatRate = newVatRate;
+            UserId = userId;
             Utc = utc;
         }
         
         public override string ToString()
         {
-            return string.Format(@"{0} item changed on {1}, utc - {2}", Id, NewVatRate, Utc);
+            return string.Format(@"{0} item changed on {1}, {2}, utc - {3}", Id, NewVatRate, UserId, Utc);
         }
     }
     [DataContract(Namespace = "BookKeeping")]
@@ -358,19 +374,21 @@ public partial class ProductUnitOfMeasureChanged : IEvent<ProductId>
     {
         [DataMember(Order = 1)] public ProductId Id { get; private set; }
         [DataMember(Order = 2)] public string NewUnitOfMeasure { get; private set; }
-        [DataMember(Order = 3)] public DateTime Utc { get; private set; }
+        [DataMember(Order = 3)] public UserId UserId { get; private set; }
+        [DataMember(Order = 4)] public DateTime Utc { get; private set; }
         
         ProductUnitOfMeasureChanged () {}
-        public ProductUnitOfMeasureChanged (ProductId id, string newUnitOfMeasure, DateTime utc)
+        public ProductUnitOfMeasureChanged (ProductId id, string newUnitOfMeasure, UserId userId, DateTime utc)
         {
             Id = id;
             NewUnitOfMeasure = newUnitOfMeasure;
+            UserId = userId;
             Utc = utc;
         }
         
         public override string ToString()
         {
-            return string.Format(@"{0} item changed on {1}, utc - {2}", Id, NewUnitOfMeasure, Utc);
+            return string.Format(@"{0} item changed on {1}, {2}, utc - {3}", Id, NewUnitOfMeasure, UserId, Utc);
         }
     }
     [DataContract(Namespace = "BookKeeping")]
@@ -396,19 +414,21 @@ public partial class ProductPriceChanged : IEvent<ProductId>
     {
         [DataMember(Order = 1)] public ProductId Id { get; private set; }
         [DataMember(Order = 2)] public CurrencyAmount NewPrice { get; private set; }
-        [DataMember(Order = 3)] public DateTime Utc { get; private set; }
+        [DataMember(Order = 3)] public UserId UserId { get; private set; }
+        [DataMember(Order = 4)] public DateTime Utc { get; private set; }
         
         ProductPriceChanged () {}
-        public ProductPriceChanged (ProductId id, CurrencyAmount newPrice, DateTime utc)
+        public ProductPriceChanged (ProductId id, CurrencyAmount newPrice, UserId userId, DateTime utc)
         {
             Id = id;
             NewPrice = newPrice;
+            UserId = userId;
             Utc = utc;
         }
         
         public override string ToString()
         {
-            return string.Format(@"{0} item changed on {1}, utc - {2}", Id, NewPrice, Utc);
+            return string.Format(@"{0} item changed on {1}, {2}, utc - {3}", Id, NewPrice, UserId, Utc);
         }
     }
     [DataContract(Namespace = "BookKeeping")]

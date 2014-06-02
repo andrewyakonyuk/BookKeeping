@@ -22,23 +22,12 @@ namespace BookKeeping.App.ViewModels
         public ChangePasswordViewModel(IRepository<User,UserId> repository)
         {
             _repository = repository;
-            Users = _repository.All();
             IsVisible = false;//TODO:
 
             ChangePasswordCmd = new DelegateCommand(passwordBox =>
             {
 
             });
-        }
-
-        public UserIdentity Identity
-        {
-            get
-            {
-                if (Thread.CurrentPrincipal == null)
-                    return null;
-                return Thread.CurrentPrincipal.Identity as UserIdentity;
-            }
         }
 
         public User User
@@ -61,7 +50,6 @@ namespace BookKeeping.App.ViewModels
             }
         }
 
-        public IEnumerable<User> Users { get; private set; }
 
         public void ChangePassword(string oldPassword, string newPassword)
         {

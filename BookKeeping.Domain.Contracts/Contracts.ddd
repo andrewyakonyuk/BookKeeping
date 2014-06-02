@@ -20,53 +20,53 @@ interface Product(ProductId Id)
 
     CreateProduct?(string title, string itemNo, CurrencyAmount price, decimal stock, string unitOfMeasure, VatRate vatRate, Barcode barcode)
         explicit "Create product - {title}, {itemNo}, {price}, {stock}, {unitOfMeasure}, {vatRate}, {barcode}"
-        ProductCreated!(string title, string itemNo, CurrencyAmount price, decimal stock, string unitOfMeasure, VatRate vatRate, Barcode barcode, DateTime utc)
-            explicit "Product {itemNo} created, {title}, {price}, {stock}, {unitOfMeasure}, {vatRate}, {barcode}, utc - {utc}"
+        ProductCreated!(string title, string itemNo, CurrencyAmount price, decimal stock, string unitOfMeasure, VatRate vatRate, Barcode barcode, UserId userId, DateTime utc)
+            explicit "Product {itemNo} created, {title}, {price}, {stock}, {unitOfMeasure}, {vatRate}, {barcode}, {userId}, utc - {utc}"
 
     ChangeProductBarcode?(Barcode newBarcode)
         explicit "Change product barcode - {newBarcode}"
-        ProductBarcodeChanged!(Barcode newBarcode, DateTime utc)
-            explicit "Product barcode changed on {newBarcode}, utc - {utc}"
+        ProductBarcodeChanged!(Barcode newBarcode,UserId userId, DateTime utc)
+            explicit "Product barcode changed on {newBarcode}, {userId}, utc - {utc}"
 
     ChangeProductItemNo?(string newItemNo)
         explicit "Change product item no. - {newItemNo}"
-        ProductItemNoChanged!(string newItemNo, DateTime utc)
-            explicit "{id} item changed on {newItemNo}, utc - {utc}"
+        ProductItemNoChanged!(string newItemNo, UserId userId, DateTime utc)
+            explicit "{id} item changed on {newItemNo}, {userId}, utc - {utc}"
 
     MakeProductOrderable?()
         explicit "Make {id} orderable"
-        ProductMakedOrderable!(DateTime utc)
-            explicit "{id} maked orderable"
+        ProductMakedOrderable!(UserId userId, DateTime utc)
+            explicit "{id} maked orderable, {userId}, utc - {utc}"
 
     MakeProductNonOrderable?(string reason)
         explicit "Make {id} non-orderable, reason - {reason}"
-        ProductMakedNonOrderable!(string reason, DateTime utc)
-            explicit "{id} maked non-orderable, reason - {reason}, utc - {utc}"
+        ProductMakedNonOrderable!(string reason, UserId userId, DateTime utc)
+            explicit "{id} maked non-orderable, reason - {reason}, {userId}, utc - {utc}"
 
     UpdateProductStock?(decimal quantity, string reason)
         explicit "update {id} stock {qunatity}, reason - {reason}"
-        ProductStockUpdated!(decimal quantity, string reason, DateTime utc)
-            explicit "{id} stock updated {quantity}, reason - {reason}, utc - {utc}"
+        ProductStockUpdated!(decimal quantity, string reason, UserId userId, DateTime utc)
+            explicit "{id} stock updated {quantity}, reason - {reason}, {userId}, utc - {utc}"
 
     RenameProduct?(string newTitle)
         explicit "rename {id}"
-        ProductRenamed!(string newTitle, DateTime utc)
-            explicit "{id} renamed, utc - {utc}"
+        ProductRenamed!(string newTitle, UserId userId, DateTime utc)
+            explicit "{id} renamed, {userId}, utc - {utc}"
 
      ChangeProductVatRate?(VatRate newVatRate)
         explicit "Change product vat rate - {newVatRate}"
-        ProductVatRateChanged!(VatRate newVatRate, DateTime utc)
-            explicit "{id} item changed on {newVatRate}, utc - {utc}"
+        ProductVatRateChanged!(VatRate newVatRate, UserId userId, DateTime utc)
+            explicit "{id} item changed on {newVatRate}, {userId}, utc - {utc}"
 
     ChangeProductUnitOfMeasure?(string newUnitOfMeasure)
         explicit "Change product unit of measure - {newItemNo}"
-        ProductUnitOfMeasureChanged!(string newUnitOfMeasure, DateTime utc)
-            explicit "{id} item changed on {newUnitOfMeasure}, utc - {utc}"
+        ProductUnitOfMeasureChanged!(string newUnitOfMeasure, UserId userId, DateTime utc)
+            explicit "{id} item changed on {newUnitOfMeasure}, {userId}, utc - {utc}"
 
     ChangeProductPrice?(CurrencyAmount newPrice)
         explicit "Change product price - {newPrice}"
-        ProductPriceChanged!(CurrencyAmount newPrice, DateTime utc)
-            explicit "{id} item changed on {newPrice}, utc - {utc}"
+        ProductPriceChanged!(CurrencyAmount newPrice, UserId userId, DateTime utc)
+            explicit "{id} item changed on {newPrice}, {userId}, utc - {utc}"
 }
 
 interface User(UserId id)

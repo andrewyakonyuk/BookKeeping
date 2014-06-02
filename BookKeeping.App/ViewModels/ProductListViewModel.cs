@@ -192,7 +192,9 @@ namespace BookKeeping.App.ViewModels
         protected virtual IEnumerable<ProductViewModel> GetProducts()
         {
             var random = new Random(100);
-            return GetProductListProjection().Select((p, i) => new ProductViewModel
+            return Context.Current.Query<ProductListView>()
+                .Convert(t => t.Products)
+                .Convert(t => t.Select((p, i) => new ProductViewModel
             {
                 Barcode = p.Barcode,
                 IsOrderable = p.IsOrderable,
@@ -204,7 +206,7 @@ namespace BookKeeping.App.ViewModels
                 VatRate = p.VatRate,
                 HasChanges = false,
                 IsValid = true
-            });
+            }), Enumerable.Empty<ProductViewModel>());
         }
 
         private IEnumerable<ProductView> GetProductListProjection()

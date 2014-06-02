@@ -1,12 +1,19 @@
 ﻿using System;
+using System.Runtime.Serialization;
 
 namespace BookKeeping.Domain.Contracts
 {
+    [DataContract]
+    [Serializable]
     public struct CurrencyAmount
     {
+        [DataMember(Order = 1)]
         public readonly decimal Amount;
+
+        [DataMember(Order = 2)]
         public readonly Currency Currency;
-        static CurrencyAmount _unspecifined = new CurrencyAmount(0, Currency.Undefined);
+
+        private static CurrencyAmount _unspecifined = new CurrencyAmount(0, Currency.Undefined);
 
         public CurrencyAmount(decimal amount, Currency currency)
         {

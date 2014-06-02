@@ -53,6 +53,7 @@
     <Compile Include="IEvent.cs" />
     <Compile Include="IIdentity.cs" />
     <Compile Include="IndentityBase.cs" />
+    <Compile Include="IUserIdentity.cs" />
     <Compile Include="NullId.cs" />
     <Compile Include="OrderId.cs" />
     <Compile Include="OrderMessages.cs" />

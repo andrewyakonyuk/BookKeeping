@@ -1,10 +1,14 @@
 ﻿using System;
 using System.Diagnostics.Contracts;
+using System.Runtime.Serialization;
 
 namespace BookKeeping.Domain.Contracts
 {
+    [DataContract]
+    [Serializable]
     public struct VatRate
     {
+        [DataMember(Order = 1)]
         public readonly Decimal VatPersentage;
         static VatRate _zero = new VatRate(0);
 

@@ -36,8 +36,6 @@ namespace BookKeeping.App.ViewModels
 
             MainMenu.Clear();
             BuildMainMenu();
-
-            SalesForPeriodReportCmd.Execute(null);
         }
 
         void AuthorizationSuccessful(object sender, EventArgs e)

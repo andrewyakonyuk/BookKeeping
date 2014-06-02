@@ -8,6 +8,12 @@ namespace BookKeeping.Domain.Contracts
         [DataMember(Order = 1)]
         public override long Id { get; protected set; }
 
+        public ProductId()
+            : base(0)
+        {
+
+        }
+
         public ProductId(long id)
             : base(id)
         {

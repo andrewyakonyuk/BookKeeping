@@ -1,13 +1,13 @@
-﻿using BookKeeping.Domain.Aggregates;
+﻿using System;
+using BookKeeping.Domain.Aggregates;
 using BookKeeping.Domain.Contracts;
 using BookKeeping.Infrastructure;
 using BookKeeping.Infrastructure.Domain;
 using BookKeeping.Persistent.Storage;
-using System;
 
 namespace BookKeeping.Domain.Services
 {
-    public class ProductApplicationService : 
+    public class ProductApplicationService :
         ICommandHandler<CreateProduct>,
         ICommandHandler<UpdateProductStock>,
         ICommandHandler<RenameProduct>,
@@ -44,52 +44,72 @@ namespace BookKeeping.Domain.Services
 
         public void When(CreateProduct c)
         {
-            Update(c.Id, p => p.Create(c.Id, c.Title, c.ItemNo, c.Price, c.Stock, c.UnitOfMeasure, c.VatRate, c.Barcode, Current.UtcNow));
+            if (Current.Identity == null)
+                throw new InvalidOperationException("UserIdentity should be not null");
+            Update(c.Id, p => p.Create(c.Id, c.Title, c.ItemNo, c.Price, c.Stock, c.UnitOfMeasure, c.VatRate, c.Barcode, Current.Identity.Id, Current.UtcNow));
         }
 
         public void When(UpdateProductStock c)
         {
-            Update(c.Id, p => p.UpdateStock(c.Quantity, c.Reason, Current.UtcNow));
+            if (Current.Identity == null)
+                throw new InvalidOperationException("UserIdentity should be not null");
+            Update(c.Id, p => p.UpdateStock(c.Quantity, c.Reason, Current.Identity.Id, Current.UtcNow));
         }
 
         public void When(RenameProduct c)
         {
-            Update(c.Id, p => p.Rename(c.NewTitle, Current.UtcNow));
+            if (Current.Identity == null)
+                throw new InvalidOperationException("UserIdentity should be not null");
+            Update(c.Id, p => p.Rename(c.NewTitle, Current.Identity.Id, Current.UtcNow));
         }
 
         public void When(ChangeProductBarcode c)
         {
-            Update(c.Id, p => p.ChangeBarcode(c.NewBarcode, Current.UtcNow));
+            if (Current.Identity == null)
+                throw new InvalidOperationException("UserIdentity should be not null");
+            Update(c.Id, p => p.ChangeBarcode(c.NewBarcode, Current.Identity.Id, Current.UtcNow));
         }
 
         public void When(ChangeProductItemNo c)
         {
-            Update(c.Id, p => p.ChangeItemNo(c.NewItemNo, Current.UtcNow));
+            if (Current.Identity == null)
+                throw new InvalidOperationException("UserIdentity should be not null");
+            Update(c.Id, p => p.ChangeItemNo(c.NewItemNo, Current.Identity.Id, Current.UtcNow));
         }
 
         public void When(ChangeProductPrice c)
         {
-            Update(c.Id, p => p.ChangePrice(c.NewPrice, Current.UtcNow));
+            if (Current.Identity == null)
+                throw new InvalidOperationException("UserIdentity should be not null");
+            Update(c.Id, p => p.ChangePrice(c.NewPrice, Current.Identity.Id, Current.UtcNow));
         }
 
         public void When(ChangeProductUnitOfMeasure c)
         {
-            Update(c.Id, p => p.ChangeUnitOfMeasure(c.NewUnitOfMeasure, Current.UtcNow));
+            if (Current.Identity == null)
+                throw new InvalidOperationException("UserIdentity should be not null");
+            Update(c.Id, p => p.ChangeUnitOfMeasure(c.NewUnitOfMeasure, Current.Identity.Id, Current.UtcNow));
         }
 
         public void When(ChangeProductVatRate c)
         {
-            Update(c.Id, p => p.ChangeVatRate(c.NewVatRate, Current.UtcNow));
+            if (Current.Identity == null)
+                throw new InvalidOperationException("UserIdentity should be not null");
+            Update(c.Id, p => p.ChangeVatRate(c.NewVatRate, Current.Identity.Id, Current.UtcNow));
         }
 
         public void When(MakeProductOrderable c)
         {
-            Update(c.Id, p => p.MakeOrderable(Current.UtcNow));
+            if (Current.Identity == null)
+                throw new InvalidOperationException("UserIdentity should be not null");
+            Update(c.Id, p => p.MakeOrderable(Current.Identity.Id, Current.UtcNow));
         }
 
         public void When(MakeProductNonOrderable c)
         {
-            Update(c.Id, p => p.MakeNonOrderable(c.Reason, Current.UtcNow));
+            if (Current.Identity == null)
+                throw new InvalidOperationException("UserIdentity should be not null");
+            Update(c.Id, p => p.MakeNonOrderable(c.Reason, Current.Identity.Id, Current.UtcNow));
         }
     }
 }

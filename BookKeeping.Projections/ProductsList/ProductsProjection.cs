@@ -36,7 +36,9 @@ namespace BookKeeping.Projections.ProductsList
                 Price = e.Price,
                 Stock = e.Stock,
                 UnitOfMeasure = e.UnitOfMeasure,
-                VatRate = e.VatRate
+                VatRate = e.VatRate,
+                Barcode = e.Barcode,
+                IsOrderable = true
             }));
         }
 

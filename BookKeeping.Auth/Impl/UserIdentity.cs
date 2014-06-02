@@ -1,11 +1,10 @@
-﻿using BookKeeping.Domain.Contracts;
-using System;
-using System.Security.Principal;
+﻿using System;
+using BookKeeping.Domain.Contracts;
 
 namespace BookKeeping.Auth
 {
     [Serializable]
-    public class UserIdentity : MarshalByRefObject, System.Security.Principal.IIdentity
+    public class UserIdentity : MarshalByRefObject, System.Security.Principal.IIdentity, IUserIdentity
     {
         private readonly AccountEntry accountEntry;
 
@@ -39,7 +38,7 @@ namespace BookKeeping.Auth
 
         public string[] GetRoles()
         {
-            return new[] { RoleType.ToString() };
+            return new[] { RoleType };
         }
     }
 }

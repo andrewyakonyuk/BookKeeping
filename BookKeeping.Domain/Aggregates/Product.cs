@@ -31,7 +31,7 @@ namespace BookKeeping.Domain.Aggregates
         }
 
         public void Create(ProductId id, string title, string itemNo, CurrencyAmount price,
-            decimal stock, string unitOfMeasure, VatRate vatRate, Barcode barcode, DateTime utc)
+            decimal stock, string unitOfMeasure, VatRate vatRate, Barcode barcode, UserId userId, DateTime utc)
         {
             if (id == null)
                 throw new ArgumentNullException("id");
@@ -40,52 +40,52 @@ namespace BookKeeping.Domain.Aggregates
             if (price.Amount < 0)
                 throw new ArgumentException("Price should be prositive", "price");
 
-            Apply(new ProductCreated(id, title, itemNo, price, stock, unitOfMeasure, vatRate, barcode, utc));
+            Apply(new ProductCreated(id, title, itemNo, price, stock, unitOfMeasure, vatRate, barcode, userId, utc));
         }
 
-        public void UpdateStock(decimal quantity, string reason, DateTime utc)
+        public void UpdateStock(decimal quantity, string reason, UserId userId, DateTime utc)
         {
-            Apply(new ProductStockUpdated(this.Id, quantity, reason, utc));
+            Apply(new ProductStockUpdated(this.Id, quantity, reason, userId, utc));
         }
 
-        public void Rename(string title, DateTime utc)
+        public void Rename(string title, UserId userId, DateTime utc)
         {
-            Apply(new ProductRenamed(this.Id, title, utc));
+            Apply(new ProductRenamed(this.Id, title, userId, utc));
         }
 
-        public void ChangeBarcode(Barcode barcode, DateTime utc)
+        public void ChangeBarcode(Barcode barcode, UserId userId, DateTime utc)
         {
-            Apply(new ProductBarcodeChanged(this.Id, barcode, utc));
+            Apply(new ProductBarcodeChanged(this.Id, barcode, userId, utc));
         }
 
-        public void ChangeItemNo(string itemNo, DateTime utc)
+        public void ChangeItemNo(string itemNo, UserId userId, DateTime utc)
         {
-            Apply(new ProductItemNoChanged(this.Id, itemNo, utc));
+            Apply(new ProductItemNoChanged(this.Id, itemNo, userId, utc));
         }
 
-        public void ChangePrice(CurrencyAmount price, DateTime utc)
+        public void ChangePrice(CurrencyAmount price, UserId userId, DateTime utc)
         {
-            Apply(new ProductPriceChanged(this.Id, price, utc));
+            Apply(new ProductPriceChanged(this.Id, price, userId, utc));
         }
 
-        public void ChangeUnitOfMeasure(string unitOfMeasure, DateTime utc)
+        public void ChangeUnitOfMeasure(string unitOfMeasure, UserId userId, DateTime utc)
         {
-            Apply(new ProductUnitOfMeasureChanged(this.Id, unitOfMeasure, utc));
+            Apply(new ProductUnitOfMeasureChanged(this.Id, unitOfMeasure, userId, utc));
         }
 
-        public void ChangeVatRate(VatRate vatRate, DateTime utc)
+        public void ChangeVatRate(VatRate vatRate, UserId userId, DateTime utc)
         {
-            Apply(new ProductVatRateChanged(this.Id, vatRate, utc));
+            Apply(new ProductVatRateChanged(this.Id, vatRate, userId, utc));
         }
 
-        public void MakeOrderable(DateTime utc)
+        public void MakeOrderable(UserId userId, DateTime utc)
         {
-            Apply(new ProductMakedOrderable(this.Id, utc));
+            Apply(new ProductMakedOrderable(this.Id, userId, utc));
         }
 
-        public void MakeNonOrderable(string reason, DateTime utc)
+        public void MakeNonOrderable(string reason, UserId userId, DateTime utc)
         {
-            Apply(new ProductMakedNonOrderable(this.Id, reason, utc));
+            Apply(new ProductMakedNonOrderable(this.Id, reason, userId, utc));
         }
 
         protected override void Mutate(IEvent e)
