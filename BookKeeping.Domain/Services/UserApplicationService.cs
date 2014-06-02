@@ -20,7 +20,7 @@ namespace BookKeeping.Domain.Services
         readonly IRepository<User, UserId> _repository;
         private readonly IDocumentReader<unit, UserIndexLookup> _userIndex;
 
-        public UserApplicationService(IRepository<User,UserId> repository, IDocumentReader<unit, UserIndexLookup> userIndex)
+        public UserApplicationService(IRepository<User, UserId> repository, IDocumentReader<unit, UserIndexLookup> userIndex)
         {
             _repository = repository;
             _userIndex = userIndex;
@@ -30,7 +30,6 @@ namespace BookKeeping.Domain.Services
         {
             var user = _repository.Get(id);
             execute(user);
-            _repository.Save(user);
         }
 
         public void When(CreateUser c)

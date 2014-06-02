@@ -58,6 +58,10 @@
       <Project>{9dbd5c57-7f4a-4c79-bfb1-ba241d21c2c6}</Project>
       <Name>BookKeeping.Domain</Name>
     </ProjectReference>
+    <ProjectReference Include="..\BookKeeping.Infrastructure\BookKeeping.Infrastructure.csproj">
+      <Project>{8da3d35c-eb9b-4126-8bd9-d82e7445a334}</Project>
+      <Name>BookKeeping.Infrastructure</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

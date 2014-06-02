@@ -101,6 +101,7 @@
     <Compile Include="Caching\CachingService.cs" />
     <Compile Include="Caching\ICachingService.cs" />
     <Compile Include="Current.cs" />
+    <Compile Include="Domain\AggregateBase.cs" />
     <Compile Include="Domain\ICommandBus.cs" />
     <Compile Include="Domain\ICommandHandler.cs" />
     <Compile Include="Domain\ICommandHandlerFactory.cs" />

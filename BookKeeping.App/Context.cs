@@ -1,4 +1,5 @@
-﻿using BookKeeping.Domain.Aggregates;
+﻿using BookKeeping.Domain;
+using BookKeeping.Domain.Aggregates;
 using BookKeeping.Domain.Contracts;
 using BookKeeping.Domain.Projections.UserIndex;
 using BookKeeping.Domain.Repositories;
@@ -11,7 +12,6 @@ using BookKeeping.Persistent.Storage;
 using BookKeeping.Projections;
 using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.IO;
 using System.Linq;
 
@@ -38,7 +38,6 @@ namespace BookKeeping.App
             _projections = new FileDocumentStore(pathToStore, new DefaultDocumentStrategy());
 
             _eventBus = new EventBus(new EventHandlerFactoryImpl(_projections));
-            _commandBus = new CommandBus(new CommandHandlerFactoryImpl(_projections, _eventStore, _eventBus));
 
             _cacheService = CacheService.Current;
         }
@@ -70,6 +69,29 @@ namespace BookKeeping.App
 
         public ICacheService Cache { get { return _cacheService; } }
 
+        public Session GetSession()
+        {
+            return new Session(_eventStore, _eventBus, _projections);
+        }
+    }
+
+    public class Session : IUnitOfWork
+    {
+        readonly IEventStore _eventStore;
+        readonly IEventBus _eventBus;
+        readonly ICommandBus _commandBus;
+        readonly IDocumentStore _projections;
+        readonly IUnitOfWork _innerUnitOfWork;
+
+        public Session(IEventStore eventStore, IEventBus eventBus, IDocumentStore projections)
+        {
+            _eventBus = eventBus;
+            _eventStore = eventStore;
+            _projections = projections;
+            _innerUnitOfWork = new UnitOfWork(_eventStore, _eventBus);
+            _commandBus = new CommandBus(new CommandHandlerFactoryImpl(_projections, _innerUnitOfWork, _eventStore, _eventBus));
+        }
+
         public void Command<TCommand>(TCommand command)
             where TCommand : ICommand
         {
@@ -86,6 +108,7 @@ namespace BookKeeping.App
             return Query<unit, TView>(unit.it);
         }
 
+        [Obsolete]
         public IRepository<T, TId> GetRepo<T, TId>()
             where T : AggregateBase
             where TId : IIdentity
@@ -93,46 +116,70 @@ namespace BookKeeping.App
             //todo: 
             if (typeof(T) == typeof(User) && typeof(TId) == typeof(UserId))
             {
-                return (IRepository<T, TId>)new UserRepository(_eventStore, _eventBus, _projections.GetReader<unit, UserIndexLookup>());
+                return (IRepository<T, TId>)new UserRepository(_eventStore, _innerUnitOfWork, _projections.GetReader<unit, UserIndexLookup>());
             }
             return null;
         }
 
-        private sealed class CommandHandlerFactoryImpl : ICommandHandlerFactory
+        public void Commit()
         {
-            private readonly IDocumentStore _documentStore;
-            private readonly IEventBus _eventBus;
-            private readonly IEventStore _eventStore;
-
-            public CommandHandlerFactoryImpl(IDocumentStore documentStore, IEventStore eventStore, IEventBus eventBus)
-            {
-                _documentStore = documentStore;
-                _eventBus = eventBus;
-                _eventStore = eventStore;
-            }
-
-            public ICommandHandler<T> GetHandler<T>() where T : ICommand
-            {
-                return (ICommandHandler<T>)DomainBoundedContext.EntityApplicationServices(_documentStore, _eventStore, _eventBus)
-                    .SingleOrDefault(service => service is ICommandHandler<T>);
-            }
+            _innerUnitOfWork.Commit();
         }
 
-        private sealed class EventHandlerFactoryImpl : IEventHandlerFactory
+        public void Rollback()
         {
-            private readonly IDocumentStore _documentStore;
+            _innerUnitOfWork.Rollback();
+        }
 
-            public EventHandlerFactoryImpl(IDocumentStore documentStore)
-            {
-                _documentStore = documentStore;
-            }
+        public void RegisterForTracking<TAggregate>(TAggregate aggregateRoot, IIdentity id)
+            where TAggregate : AggregateBase
+        {
+            _innerUnitOfWork.RegisterForTracking(aggregateRoot, id);
+        }
 
-            public IEnumerable<IEventHandler<T>> GetHandlers<T>() where T : IEvent
-            {
-                return DomainBoundedContext.Projections(_documentStore)
-                    .Concat(ClientBoundedContext.Projections(_documentStore))
-                    .OfType<IEventHandler<T>>();
-            }
+        public void Dispose()
+        {
+            _innerUnitOfWork.Dispose();
+            GC.SuppressFinalize(this);
+        }
+    }
+
+    internal sealed class CommandHandlerFactoryImpl : ICommandHandlerFactory
+    {
+        private readonly IDocumentStore _documentStore;
+        private readonly IEventBus _eventBus;
+        private readonly IEventStore _eventStore;
+        private readonly IUnitOfWork _unitOfWork;
+
+        public CommandHandlerFactoryImpl(IDocumentStore documentStore, IUnitOfWork unitOfWork, IEventStore eventStore, IEventBus eventBus)
+        {
+            _documentStore = documentStore;
+            _eventBus = eventBus;
+            _eventStore = eventStore;
+            _unitOfWork = unitOfWork;
+        }
+
+        public ICommandHandler<T> GetHandler<T>() where T : ICommand
+        {
+            return (ICommandHandler<T>)DomainBoundedContext.EntityApplicationServices(_documentStore, _eventStore, _eventBus, _unitOfWork)
+                .SingleOrDefault(service => service is ICommandHandler<T>);
+        }
+    }
+
+    internal sealed class EventHandlerFactoryImpl : IEventHandlerFactory
+    {
+        private readonly IDocumentStore _documentStore;
+
+        public EventHandlerFactoryImpl(IDocumentStore documentStore)
+        {
+            _documentStore = documentStore;
+        }
+
+        public IEnumerable<IEventHandler<T>> GetHandlers<T>() where T : IEvent
+        {
+            return DomainBoundedContext.Projections(_documentStore)
+                .Concat(ClientBoundedContext.Projections(_documentStore))
+                .OfType<IEventHandler<T>>();
         }
     }
 }

@@ -28,26 +28,30 @@ namespace BookKeeping.App
             InitUsers();
 
             //var random = new Random(100);
-            //var userRepo = Context.Current.GetRepo<User, UserId>();
-            //var identities = new List<IUserIdentity>();
-
-            //foreach (var user in userRepo.All())
+            //using (var session = Context.Current.GetSession())
             //{
-            //    identities.Add(new UserIdentity(new AccountEntry(user), user.Name));
-            //}
+            //    var userRepo = session.GetRepo<User, UserId>();
+            //    var identities = new List<IUserIdentity>();
 
-            //for (int i = 500; i < 1000; i++)
-            //{
-            //    BookKeeping.Infrastructure.Current.IdentityIs(identities[random.Next(0, identities.Count - 1)]);
-            //    Context.Current.Command(new CreateProduct(new ProductId(i),
-            //        new string("qwertyuiopasdfghjklzxcvbnm".Substring(random.Next(0, 12)).OrderBy(t => Guid.NewGuid()).ToArray()),
-            //        "item no. " + (i + 1),
-            //        new CurrencyAmount(random.Next(10, 100), Currency.Eur),
-            //        random.Next(1, 1000),
-            //        "m2",
-            //        new VatRate(new decimal(random.NextDouble())),
-            //        new Barcode("12342323", BarcodeType.EAN13)
-            //        ));
+            //    foreach (var user in userRepo.All())
+            //    {
+            //        identities.Add(new UserIdentity(new AccountEntry(user), user.Name));
+            //    }
+
+            //    for (int i = 0; i < 500; i++)
+            //    {
+            //        BookKeeping.Infrastructure.Current.IdentityIs(identities[random.Next(0, identities.Count - 1)]);
+            //        session.Command(new CreateProduct(new ProductId(i),
+            //            new string("qwertyuiopasdfghjklzxcvbnm".Substring(random.Next(0, 12)).OrderBy(t => Guid.NewGuid()).ToArray()),
+            //            "item no. " + (i + 1),
+            //            new CurrencyAmount(random.Next(10, 100), Currency.Eur),
+            //            random.Next(1, 1000),
+            //            "m2",
+            //            new VatRate(new decimal(random.NextDouble())),
+            //            new Barcode("12342323", BarcodeType.EAN13)
+            //            ));
+            //    }
+            //    session.Commit();
             //}
             BookKeeping.Infrastructure.Current.Reset();
 
@@ -64,30 +68,34 @@ namespace BookKeeping.App
 
         protected void InitUsers()
         {
-            var userIndex = Context.Current.Query<UserIndexLookup>();
-            var createAdminCmd = new CreateUser(new UserId(1), "Адміністратор", "admin", "qwerty", "admin");
-            var createSellerCmd = new CreateUser(new UserId(2), "Продавець 1", "seller", "qwerty", "seller");
-            var createAnotherSellerCmd = new CreateUser(new UserId(3), "Продавець 2", "anotherseller", "qwerty", "seller");
-            if (userIndex.HasValue)
+            using (var session = Context.Current.GetSession())
             {
-                if (!userIndex.Value.Logins.ContainsKey("admin"))
+                var userIndex = session.Query<UserIndexLookup>();
+                var createAdminCmd = new CreateUser(new UserId(1), "Адміністратор", "admin", "qwerty", "admin");
+                var createSellerCmd = new CreateUser(new UserId(2), "Продавець 1", "seller", "qwerty", "seller");
+                var createAnotherSellerCmd = new CreateUser(new UserId(3), "Продавець 2", "anotherseller", "qwerty", "seller");
+                if (userIndex.HasValue)
                 {
-                    Context.Current.Command(createAdminCmd);
+                    if (!userIndex.Value.Logins.ContainsKey("admin"))
+                    {
+                        session.Command(createAdminCmd);
+                    }
+                    if (!userIndex.Value.Logins.ContainsKey("seller"))
+                    {
+                        session.Command(createSellerCmd);
+                    }
+                    if (!userIndex.Value.Logins.ContainsKey("anotherseller"))
+                    {
+                        session.Command(createAnotherSellerCmd);
+                    }
                 }
-                if (!userIndex.Value.Logins.ContainsKey("seller"))
+                else
                 {
-                    Context.Current.Command(createSellerCmd);
+                    session.Command(createAdminCmd);
+                    session.Command(createSellerCmd);
+                    session.Command(createAnotherSellerCmd);
                 }
-                if (!userIndex.Value.Logins.ContainsKey("anotherseller"))
-                {
-                    Context.Current.Command(createAnotherSellerCmd);
-                }
-            }
-            else
-            {
-                Context.Current.Command(createAdminCmd);
-                Context.Current.Command(createSellerCmd);
-                Context.Current.Command(createAnotherSellerCmd);
+                session.Commit();
             }
         }
     }

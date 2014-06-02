@@ -1,5 +1,6 @@
 ﻿using BookKeeping.Domain.Contracts;
 using BookKeeping.Domain.Services;
+using BookKeeping.Infrastructure.Domain;
 using System;
 using System.Collections.Generic;
 

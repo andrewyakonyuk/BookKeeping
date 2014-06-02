@@ -30,6 +30,7 @@ namespace BookKeeping.App.ViewModels
         private ProductViewModel _previousEditingItem;
         private readonly ExpressionHelper _expressionHelper = new ExpressionHelper();
         private bool _isLoading;
+        private Session _session = Context.Current.GetSession();
 
         public ProductListViewModel()
         {
@@ -192,7 +193,7 @@ namespace BookKeeping.App.ViewModels
         protected virtual IEnumerable<ProductViewModel> GetProducts()
         {
             var random = new Random(100);
-            return Context.Current.Query<ProductListView>()
+            return _session.Query<ProductListView>()
                 .Convert(t => t.Products)
                 .Convert(t => t.Select((p, i) => new ProductViewModel
             {
@@ -207,26 +208,6 @@ namespace BookKeeping.App.ViewModels
                 HasChanges = false,
                 IsValid = true
             }), Enumerable.Empty<ProductViewModel>());
-        }
-
-        private IEnumerable<ProductView> GetProductListProjection()
-        {
-            var random = new Random(100);
-            for (int i = 0; i < 5000; i++)
-            {
-                yield return new ProductView
-                   {
-                       Id = new ProductId(i),
-                       Barcode = new Barcode("12342323", BarcodeType.EAN13),
-                       IsOrderable = true,
-                       ItemNo = "item no. " + (i + 1),
-                       Price = new CurrencyAmount(random.Next(10, 100), Currency.Eur),
-                       Stock = random.Next(1, 1000),
-                       Title = new string("qwertyuiopasdfghjklzxcvbnm".Substring(random.Next(0, 12)).OrderBy(t => Guid.NewGuid()).ToArray()),
-                       UnitOfMeasure = "m2",
-                       VatRate = new VatRate(new decimal(random.NextDouble())),
-                   };
-            }
         }
 
         protected void DoSearch(string searchText)

@@ -1,7 +1,7 @@
 ﻿using BookKeeping.Domain.Contracts;
 using System.Collections.Generic;
 
-namespace BookKeeping.Domain.Aggregates
+namespace BookKeeping.Infrastructure.Domain
 {
     public abstract class AggregateBase
     {

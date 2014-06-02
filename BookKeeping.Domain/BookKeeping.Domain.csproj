@@ -96,14 +96,12 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Aggregates\AggregateBase.cs" />
     <Compile Include="Aggregates\Customer.cs" />
     <Compile Include="Projections\ProductIndex\ProductIndexLookup.cs" />
     <Compile Include="Projections\ProductIndex\ProductIndexProjection.cs" />
     <Compile Include="Projections\UserIndex\UserIndexLookup.cs" />
     <Compile Include="Projections\UserIndex\UserIndexProjection.cs" />
     <Compile Include="Repositories\ProductRepository.cs" />
-    <Compile Include="Repositories\RepositoryBase.cs" />
     <Compile Include="Services\CustomerApplicationService.cs" />
     <Compile Include="Aggregates\Order.cs" />
     <Compile Include="Aggregates\OrderLine.cs" />
@@ -121,7 +119,6 @@
     <Compile Include="DomainBoundedContext.cs" />
     <Compile Include="DomainIdentityGenerator.cs" />
     <Compile Include="IDocumentIdentityGenerator.cs" />
-    <Compile Include="Maybe.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Repositories\IRepository`1.cs" />
     <Compile Include="Repositories\IUserRepository.cs" />
@@ -130,6 +127,7 @@
     <Compile Include="Services\OrderCalculator.cs" />
     <Compile Include="Services\Pricing\IPricingService.cs" />
     <Compile Include="Services\Pricing\PricingService.cs" />
+    <Compile Include="UnitOfWork.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\BookKeeping.Domain.Contracts\BookKeeping.Domain.Contracts.csproj">

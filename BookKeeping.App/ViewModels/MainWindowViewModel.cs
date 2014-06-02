@@ -19,12 +19,13 @@ namespace BookKeeping.App.ViewModels
         private readonly IRepository<User,UserId> _repostory;
         private UserId _previousUserId;
         private bool _isWorkspacesVisible;
+        private Session _session = Context.Current.GetSession();
 
         public MainWindowViewModel()
         {
             this.QuitConfirmationEnabled = true;
 
-            var userRepository = (IUserRepository)Context.Current.GetRepo<User, UserId>();
+            var userRepository = (IUserRepository)_session.GetRepo<User, UserId>();
             _repostory = userRepository;
 
             var authService = new AuthenticationService(userRepository);

@@ -9,21 +9,20 @@ using System.Collections.Generic;
 
 namespace BookKeeping.Domain.Repositories
 {
-    public class UserRepository : RepositoryBase<User,UserId>, IUserRepository, IRepository<User, UserId>
+    public class UserRepository : IUserRepository, IRepository<User, UserId>
     {
         readonly IEventStore _eventStore;
         readonly IDocumentReader<unit, UserIndexLookup> _userIndexReader;
-        readonly IEventBus _eventBus;
+        readonly IUnitOfWork _unitOfWork;
 
-        public UserRepository(IEventStore eventStore, IEventBus eventBus, IDocumentReader<unit, UserIndexLookup> userIndexReader)
-            : base(eventStore, eventBus)
+        public UserRepository(IEventStore eventStore, IUnitOfWork unitOfWork, IDocumentReader<unit, UserIndexLookup> userIndexReader)
         {
             _eventStore = eventStore;
             _userIndexReader = userIndexReader;
-            _eventBus = eventBus;
+            _unitOfWork = unitOfWork;
         }
 
-        public override IEnumerable<User> All()
+        public IEnumerable<User> All()
         {
             var index = _userIndexReader.Get<UserIndexLookup>();
             if (index.HasValue)
@@ -36,17 +35,23 @@ namespace BookKeeping.Domain.Repositories
             yield break;
         }
 
-        public override User Get(UserId id)
+        public User Get(UserId id)
         {
             var stream = _eventStore.LoadEventStream(id);
-            return new User(stream.Events);
+            var user = new User(stream.Events);
+            _unitOfWork.RegisterForTracking(user, id);
+            return user;
         }
 
-        public override User Load(UserId id)
+        public User Load(UserId id)
         {
             var stream = _eventStore.LoadEventStream(id);
             if (stream.Version > 0)
-                return new User(stream.Events);
+            {
+                var user = new User(stream.Events);
+                _unitOfWork.RegisterForTracking(user, id);
+                return user;
+            }
             return null;
         }
 
@@ -59,6 +64,7 @@ namespace BookKeeping.Domain.Repositories
                 return null;
             if (user.Password.Check(password))
             {
+                _unitOfWork.RegisterForTracking(user, user.Id);
                 return user;
             }
             else return null;

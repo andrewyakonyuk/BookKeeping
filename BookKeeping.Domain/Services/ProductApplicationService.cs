@@ -31,7 +31,6 @@ namespace BookKeeping.Domain.Services
         {
             var product = _repository.Get(id);
             execute(product);
-            _repository.Save(product);
         }
 
         public void When(CreateProduct c)

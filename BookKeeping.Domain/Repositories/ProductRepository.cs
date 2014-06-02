@@ -9,21 +9,20 @@ using System.Collections.Generic;
 
 namespace BookKeeping.Domain.Repositories
 {
-    public class ProductRepository : RepositoryBase<Product, ProductId>, IRepository<Product, ProductId>
+    public class ProductRepository : IRepository<Product, ProductId>
     {
         readonly IEventStore _eventStore;
-        readonly IEventBus _eventBus;
         readonly IDocumentReader<unit, ProductIndexLookup> _userIndexReader;
+        readonly IUnitOfWork _unitOfWork;
 
-        public ProductRepository(IEventStore eventStore, IEventBus eventBus, IDocumentReader<unit, ProductIndexLookup> userIndexReader)
-            : base(eventStore, eventBus)
+        public ProductRepository(IEventStore eventStore, IUnitOfWork unitOfWork, IDocumentReader<unit, ProductIndexLookup> userIndexReader)
         {
             _eventStore = eventStore;
             _userIndexReader = userIndexReader;
-            _eventBus = eventBus;
+            _unitOfWork = unitOfWork;
         }
 
-        public override IEnumerable<Product> All()
+        public IEnumerable<Product> All()
         {
             var index = _userIndexReader.Get<ProductIndexLookup>();
             if (index.HasValue)
@@ -36,17 +35,23 @@ namespace BookKeeping.Domain.Repositories
             yield break;
         }
 
-        public override Product Get(ProductId id)
+        public Product Get(ProductId id)
         {
             var stream = _eventStore.LoadEventStream(id);
-            return new Product(stream.Events);
+            var product = new Product(stream.Events);
+            _unitOfWork.RegisterForTracking(product, id);
+            return product;
         }
 
-        public override Product Load(ProductId id)
+        public Product Load(ProductId id)
         {
             var stream = _eventStore.LoadEventStream(id);
             if (stream.Version > 0)
-                return new Product(stream.Events);
+            {
+                var product = new Product(stream.Events);
+                _unitOfWork.RegisterForTracking(product, id);
+                return product;
+            }
             return null;
         }
     }
