@@ -53,7 +53,7 @@ namespace BookKeeping.App
             //    }
             //    session.Commit();
             //}
-            BookKeeping.Infrastructure.Current.Reset();
+            //BookKeeping.Infrastructure.Current.Reset();
 
             MainWindow window = new MainWindow();
             var viewModel = new MainWindowViewModel();

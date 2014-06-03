@@ -8,6 +8,6 @@ namespace BookKeeping.Domain.Contracts
         Undefined,
         Eur,
         Usd,
-        Uan
+        Uah
     }
 }
