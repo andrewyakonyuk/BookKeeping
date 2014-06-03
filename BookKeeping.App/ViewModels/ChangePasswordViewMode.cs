@@ -23,7 +23,7 @@ namespace BookKeeping.App.ViewModels
             ChangePasswordCmd = new DelegateCommand(_ =>
             {
                 ChangePassword(OldPassword, NewPassword);
-            });
+            }, _ => !string.IsNullOrEmpty(NewPassword) && !string.IsNullOrEmpty(OldPassword));
         }
 
         public System.Windows.Input.ICommand ChangePasswordCmd { get; private set; }
