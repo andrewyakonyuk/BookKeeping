@@ -119,11 +119,13 @@
                 <Separator></Separator>
                 <MenuItem Header="{x:Static p:Resources.Find}" Command="Find"></MenuItem>
             </MenuItem>
-            <MenuItem Header="{x:Static p:Resources.Service}"></MenuItem>
+            <MenuItem Header="{x:Static p:Resources.Service}">
+                <MenuItem Header="{x:Static p:Resources.EventHistory}" Command="{Binding Path=EventHistoryCmd}"></MenuItem>
+            </MenuItem>
             <MenuItem Header="{x:Static p:Resources.Reports}">
                 <MenuItem Header="{x:Static p:Resources.RemainsOfGoods}" Command="{Binding Path=RemainsOfGoodsReportCmd}"></MenuItem>
                 <MenuItem Header="{x:Static p:Resources.HistoryOfGoods}" Command="{Binding Path=HistoryOfGoodsRepostCmd}"></MenuItem>
-                <MenuItem Header="{x:Static p:Resources.ReportOnSeller}" Command="{Binding Path=ReportOnSellerReportCmd}"></MenuItem>
+                <MenuItem Header="{x:Static p:Resources.ReportBySellers}" Command="{Binding Path=ReportBySellersReportCmd}"></MenuItem>
                 <MenuItem Header="{x:Static p:Resources.SalesForPeriod}" Command="{Binding Path=SalesForPeriodReportCmd}"></MenuItem>
             </MenuItem>
             <MenuItem Header="{x:Static p:Resources.Help}">
@@ -158,6 +160,12 @@
                     </DataTemplate>
                     <DataTemplate DataType="{x:Type viewmodels:RemainsOfGoodsViewModel}">
                         <views:RemainsOfGoodsView></views:RemainsOfGoodsView>
+                    </DataTemplate>
+                    <DataTemplate DataType="{x:Type viewmodels:ReportBySellersViewModel}">
+                        <views:ReportBySellersView></views:ReportBySellersView>
+                    </DataTemplate>
+                    <DataTemplate DataType="{x:Type viewmodels:EventHistoryViewModel}">
+                        <views:EventHistoryView></views:EventHistoryView>
                     </DataTemplate>
                 </TabControl.Resources>
             </TabControl>

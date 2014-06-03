@@ -2,6 +2,7 @@
 using BookKeeping.Domain.Aggregates;
 using BookKeeping.Domain.Contracts;
 using BookKeeping.Domain.Repositories;
+using BookKeeping.Infrastructure;
 using BookKeeping.UI;
 using BookKeeping.UI.ViewModels;
 using System;
@@ -84,11 +85,15 @@ namespace BookKeeping.App.ViewModels
 
         public ICommand SettingsCmd { get; private set; }
 
+        public ICommand EventHistoryCmd { get; private set; }
+
         public ICommand RemainsOfGoodsReportCmd { get; private set; }
 
         public ICommand HistoryOfGoodsReportCmd { get; private set; }
 
         public ICommand SalesForPeriodReportCmd { get; private set; }
+
+        public ICommand ReportBySellersReportCmd { get; private set; }
 
         public ICommand SaveCmd { get; private set; }
 
@@ -129,9 +134,13 @@ namespace BookKeeping.App.ViewModels
             ListOfProductsCmd = new DelegateCommand(_ => SetActiveWorkspace(CreateOrRetrieveWorkspace<ProductListViewModel>()));
             SaleOfGoodsCmd = new DelegateCommand(_ => SetActiveWorkspace(CreateOrRetrieveWorkspace<OrderViewModel>()));
 
+            //Services
+            EventHistoryCmd = new DelegateCommand(_ => SetActiveWorkspace(CreateOrRetrieveWorkspace<EventHistoryViewModel>()), _ => Current.Identity.RoleType == "admin");
+
             // Reports
             RemainsOfGoodsReportCmd = new DelegateCommand(_ => SetActiveWorkspace(CreateOrRetrieveWorkspace<RemainsOfGoodsViewModel>()));
             SalesForPeriodReportCmd = new DelegateCommand(_ => SetActiveWorkspace(CreateOrRetrieveWorkspace<SalesForPeriodViewModel>()));
+            ReportBySellersReportCmd = new DelegateCommand(_ => SetActiveWorkspace(CreateOrRetrieveWorkspace<ReportBySellersViewModel>()));
         }
 
         protected override void OnWorkspacesChanged(object sender, NotifyCollectionChangedEventArgs e)

@@ -180,6 +180,9 @@
   <data name="Delete" xml:space="preserve">
     <value>Delete</value>
   </data>
+  <data name="Description" xml:space="preserve">
+    <value>Description</value>
+  </data>
   <data name="DoFilter" xml:space="preserve">
     <value>Filter...</value>
   </data>
@@ -188,6 +191,9 @@
   </data>
   <data name="Edit" xml:space="preserve">
     <value>Edit</value>
+  </data>
+  <data name="EventHistory" xml:space="preserve">
+    <value>Events history</value>
   </data>
   <data name="Exit" xml:space="preserve">
     <value>Exit</value>
@@ -312,11 +318,14 @@
   <data name="Redo" xml:space="preserve">
     <value>Redo</value>
   </data>
+  <data name="Reload" xml:space="preserve">
+    <value>Reload</value>
+  </data>
   <data name="RemainsOfGoods" xml:space="preserve">
     <value>Remains of goods</value>
   </data>
-  <data name="ReportOnSeller" xml:space="preserve">
-    <value>Report on the seller</value>
+  <data name="ReportBySellers" xml:space="preserve">
+    <value>Report by the sellers</value>
   </data>
   <data name="Reports" xml:space="preserve">
     <value>Reports</value>

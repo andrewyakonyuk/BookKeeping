@@ -261,7 +261,7 @@
   <data name="RemainsOfGoods" xml:space="preserve">
     <value>Залишки продуктів</value>
   </data>
-  <data name="ReportOnSeller" xml:space="preserve">
+  <data name="ReportBySellers" xml:space="preserve">
     <value>Звіт по продавцю</value>
   </data>
   <data name="Reports" xml:space="preserve">
@@ -353,5 +353,11 @@
   </data>
   <data name="SignInFailed" xml:space="preserve">
     <value>Не вдалося увiйти</value>
+  </data>
+  <data name="EventHistory" xml:space="preserve">
+    <value>Історія подій</value>
+  </data>
+  <data name="Reload" xml:space="preserve">
+    <value>Оновити</value>
   </data>
 </root>

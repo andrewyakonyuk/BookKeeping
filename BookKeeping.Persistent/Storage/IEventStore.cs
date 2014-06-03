@@ -11,6 +11,8 @@ namespace BookKeeping.Persistent.Storage
 
         EventStream LoadEventStream(IIdentity id, long skipEvents, int maxCount);
 
+        EventStream LoadEventStream(long skip, int take);
+
         /// <summary>
         /// Appends events to server stream for the provided identity.
         /// </summary>

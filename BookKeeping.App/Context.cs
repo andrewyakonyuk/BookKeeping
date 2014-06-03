@@ -39,6 +39,8 @@ namespace BookKeeping.App
             _eventBus = new EventBus(new EventHandlerFactoryImpl(_projections));
 
             _cacheService = CacheService.Current;
+
+            var stream = _eventStore.LoadEventStream(0, int.MaxValue);
         }
 
         static Type[] LoadMessageContracts()
@@ -67,6 +69,8 @@ namespace BookKeeping.App
         }
 
         public ICacheService Cache { get { return _cacheService; } }
+
+        public IEventStore EventStore { get { return _eventStore; } }
 
         public Session GetSession()
         {

@@ -151,6 +151,7 @@
     </Compile>
     <Compile Include="StartupProjectionRebuilder.cs" />
     <Compile Include="ViewModels\ChangePasswordViewMode.cs" />
+    <Compile Include="ViewModels\EventHistoryViewModel.cs" />
     <Compile Include="ViewModels\OrderLineViewModel.cs" />
     <Compile Include="ViewModels\OrderViewModel.cs" />
     <Compile Include="ViewModels\MainWindowViewModel.cs" />
@@ -158,10 +159,14 @@
     <Compile Include="ViewModels\ProductViewModel.cs" />
     <Compile Include="ViewModels\ProfileViewModel.cs" />
     <Compile Include="ViewModels\RemainsOfGoodsViewModel.cs" />
+    <Compile Include="ViewModels\ReportBySellersViewModel.cs" />
     <Compile Include="ViewModels\SalesForPeriodViewModel.cs" />
     <Compile Include="ViewModels\SignInViewModel.cs" />
     <Compile Include="Views\ChangePasswordView.xaml.cs">
       <DependentUpon>ChangePasswordView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\EventHistoryView.xaml.cs">
+      <DependentUpon>EventHistoryView.xaml</DependentUpon>
     </Compile>
     <Compile Include="Views\OrderView.xaml.cs">
       <DependentUpon>OrderView.xaml</DependentUpon>
@@ -174,6 +179,9 @@
     </Compile>
     <Compile Include="Views\RemainsOfGoodsView.xaml.cs">
       <DependentUpon>RemainsOfGoodsView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\ReportBySellersView.xaml.cs">
+      <DependentUpon>ReportBySellersView.xaml</DependentUpon>
     </Compile>
     <Compile Include="Views\SalesForPeriodView.xaml.cs">
       <DependentUpon>SalesForPeriodView.xaml</DependentUpon>
@@ -236,6 +244,10 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="Views\EventHistoryView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Views\OrderView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -265,6 +277,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Views\RemainsOfGoodsView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\ReportBySellersView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

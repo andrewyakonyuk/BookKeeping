@@ -75,7 +75,7 @@ namespace BookKeeping.App
 
         protected void GenerateProducts()
         {
-            var random = new Random(100);
+            var random = new Random();
             using (var session = Context.Current.GetSession())
             {
                 var userRepo = session.GetRepo<User, UserId>();

@@ -70,6 +70,29 @@ namespace BookKeeping.Persistent.Storage
             return stream;
         }
 
+        public EventStream LoadEventStream(long skip, int take)
+        {
+            var records = _appendOnlyStore.ReadRecords( skip, take).ToList();
+            var stream = new EventStream();
+
+            // TODO: make this lazy somehow?
+            foreach (var tapeRecord in records)
+            {
+                using (var memory = new MemoryStream(tapeRecord.Data))
+                {
+                    var eventCount = _messageStrategy.ReadCompactInt(memory);
+                    var objects = new object[eventCount];
+                    for (int i = 0; i < eventCount; i++)
+                    {
+                        objects[i] = _messageStrategy.ReadMessage(memory);
+                    }
+                    stream.Events.AddRange(objects.Cast<IEvent>());
+                    stream.Version += eventCount;
+                }
+            }
+            return stream;
+        }
+
         public EventStream LoadEventStream(IIdentity id)
         {
             return LoadEventStream(id, 0, int.MaxValue);
