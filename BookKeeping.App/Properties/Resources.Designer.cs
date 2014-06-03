@@ -763,6 +763,15 @@ namespace BookKeeping.App.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Sign in failed.
+        /// </summary>
+        public static string SignInFailed {
+            get {
+                return ResourceManager.GetString("SignInFailed", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Sign out.
         /// </summary>
         public static string SignOut {

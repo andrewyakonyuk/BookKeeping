@@ -18,6 +18,8 @@ namespace BookKeeping.App.ViewModels
         private IAuthenticationService _authService;
 
         public event EventHandler AuthenticationSuccessful = (sender, e) => { };
+        private bool _isValidationMessageVisible = false;
+        private string _validationMessage = string.Empty;
 
         public SignInViewModel(IAuthenticationService authService)
         {
@@ -32,6 +34,11 @@ namespace BookKeeping.App.ViewModels
                     AuthenticationSuccessful(this, new EventArgs());
                     Login = string.Empty;
                     ((PasswordBox)passwordBox).Password = string.Empty;
+                }
+                else
+                {
+                    IsValidationMessageVisible = true;
+                    ValidationMessage = T("SignInFailed");
                 }
             });
         }
@@ -58,21 +65,29 @@ namespace BookKeeping.App.ViewModels
             }
         }
 
+        public bool IsValidationMessageVisible
+        {
+            get { return _isValidationMessageVisible; }
+            set
+            {
+                _isValidationMessageVisible = value;
+                OnPropertyChanged(() => IsValidationMessageVisible);
+            }
+        }
+
+        public string ValidationMessage
+        {
+            get { return _validationMessage; }
+            set
+            {
+                _validationMessage = value;
+                OnPropertyChanged(() => ValidationMessage);
+            }
+        }
+
         protected override string GetErrorMessage(string columnName)
         {
-            if (IsSuccessful == true)
-                return null;
-            switch (columnName)
-            {
-                case "Login":
-                    return T("SignInFailed");
-
-                case "Password":
-                    return T("SignInFailed");
-
-                default:
-                    return null;
-            }
+            return null;
         }
 
         public ICommand SignInCmd { get; private set; }

@@ -21,7 +21,7 @@ namespace BookKeeping.App
         {
             base.OnStartup(e);
 
-            System.Threading.Thread.CurrentThread.CurrentUICulture = System.Globalization.CultureInfo.CurrentCulture;
+            System.Threading.Thread.CurrentThread.CurrentUICulture = new System.Globalization.CultureInfo("uk-ua");//System.Globalization.CultureInfo.CurrentCulture;
 
             ResourceLocalizer.Initialize(BookKeeping.App.Properties.Resources.ResourceManager);
 

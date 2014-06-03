@@ -351,4 +351,7 @@
   <data name="ChangePasswordSuccessful" xml:space="preserve">
     <value>Пароль було успiшно змiнено </value>
   </data>
+  <data name="SignInFailed" xml:space="preserve">
+    <value>Не вдалося увiйти</value>
+  </data>
 </root>
