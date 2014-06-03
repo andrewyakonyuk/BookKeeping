@@ -336,4 +336,19 @@
   <data name="September" xml:space="preserve">
     <value>Вересень</value>
   </data>
+  <data name="ChangePassword" xml:space="preserve">
+    <value>Змiна паролю</value>
+  </data>
+  <data name="NewPassword" xml:space="preserve">
+    <value>Новий пароль</value>
+  </data>
+  <data name="OldPassword" xml:space="preserve">
+    <value>Старий пароль</value>
+  </data>
+  <data name="ChangePasswordFailed" xml:space="preserve">
+    <value>Не вдалося змiнити пароль</value>
+  </data>
+  <data name="ChangePasswordSuccessful" xml:space="preserve">
+    <value>Пароль було успiшно змiнено </value>
+  </data>
 </root>

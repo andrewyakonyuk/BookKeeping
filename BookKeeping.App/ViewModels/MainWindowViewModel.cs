@@ -53,7 +53,7 @@ namespace BookKeeping.App.ViewModels
         {
             if (Profile.IsAuthorization)
             {
-                Profile.ChangePassword = new ChangePasswordViewModel(_repostory);
+                Profile.ChangePassword = new ChangePasswordViewModel(_session);
                 if (_contextUserProvider.ContextUser() != null
                     && _previousUserId != _contextUserProvider.ContextUser().Id)
                 {

@@ -1,42 +1,40 @@
-﻿using BookKeeping.Auth;
-using BookKeeping.Domain.Aggregates;
+﻿using BookKeeping.Domain;
 using BookKeeping.Domain.Contracts;
-using BookKeeping.Domain.Repositories;
+using BookKeeping.Infrastructure;
 using BookKeeping.UI;
 using BookKeeping.UI.ViewModels;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading;
-using System.Windows.Input;
 
 namespace BookKeeping.App.ViewModels
 {
     public class ChangePasswordViewModel : ViewModelBase
     {
-        private User _user;
+        private readonly Session _session;
+        private bool _isValidationMessageVisible = false;
         private bool _isVisible = false;
-        private readonly IRepository<User,UserId> _repository;
+        private string _newPassword;
+        private string _oldPassword;
+        private string _validationMessage;
 
-        public ChangePasswordViewModel(IRepository<User,UserId> repository)
+        public ChangePasswordViewModel(Session session)
         {
-            _repository = repository;
-            IsVisible = false;//TODO:
+            IsVisible = true;
+            _session = session;
 
-            ChangePasswordCmd = new DelegateCommand(passwordBox =>
+            ChangePasswordCmd = new DelegateCommand(_ =>
             {
-
+                ChangePassword(OldPassword, NewPassword);
             });
         }
 
-        public User User
+        public System.Windows.Input.ICommand ChangePasswordCmd { get; private set; }
+
+        public bool IsValidationMessageVisible
         {
-            get { return _user; }
+            get { return _isValidationMessageVisible; }
             set
             {
-                _user = value;
-                OnPropertyChanged(() => User);
+                _isValidationMessageVisible = value;
+                OnPropertyChanged(() => IsValidationMessageVisible);
             }
         }
 
@@ -50,21 +48,53 @@ namespace BookKeeping.App.ViewModels
             }
         }
 
+        public string NewPassword
+        {
+            get { return _newPassword; }
+            set
+            {
+                _newPassword = value;
+                OnPropertyChanged(() => NewPassword);
+            }
+        }
+
+        public string OldPassword
+        {
+            get { return _oldPassword; }
+            set
+            {
+                _oldPassword = value;
+                OnPropertyChanged(() => OldPassword);
+            }
+        }
+
+        public string ValidationMessage
+        {
+            get { return _validationMessage; }
+            set
+            {
+                _validationMessage = value;
+                OnPropertyChanged(() => ValidationMessage);
+            }
+        }
 
         public void ChangePassword(string oldPassword, string newPassword)
         {
-            //if (_user != null)
-            //{
-            //    if (_user.Password.Check(oldPassword))
-            //    {
-            //        _user.SetPassword(newPassword);
-            //    }
-            //    _repository.Save(_user);
-            //}
+            if (Current.Identity != null)
+            {
+                try
+                {
+                    _session.Command(new ChangeUserPassword(Current.Identity.Id, oldPassword, newPassword));
+                    _session.Commit();
+                    ValidationMessage = T("ChangePasswordSuccessful");
+                    IsValidationMessageVisible = true;
+                }
+                catch (InvalidDomainOperationException)
+                {
+                    ValidationMessage = T("ChangePasswordFailed");
+                    IsValidationMessageVisible = true;
+                }
+            }
         }
-
-        public System.Windows.Input.ICommand ChangePasswordCmd { get; private set; }
-
-
     }
 }

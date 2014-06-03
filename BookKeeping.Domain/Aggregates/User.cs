@@ -33,7 +33,7 @@ namespace BookKeeping.Domain.Aggregates
             {
                 Apply(new UserPasswordChanged(this.Id, new Password(newPassword), utc));
             }
-            else throw new InvalidOperationException();
+            else throw new InvalidDomainOperationException();
         }
 
         public void Create(UserId id, string name, string login, string password, string role, DateTime utc)

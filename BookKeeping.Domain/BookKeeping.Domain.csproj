@@ -97,6 +97,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Aggregates\Customer.cs" />
+    <Compile Include="InvalidDomainOperationException.cs" />
     <Compile Include="Projections\ProductIndex\ProductIndexLookup.cs" />
     <Compile Include="Projections\ProductIndex\ProductIndexProjection.cs" />
     <Compile Include="Projections\UserIndex\UserIndexLookup.cs" />

@@ -104,6 +104,7 @@
     <Reference Include="WindowsBase" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Behaviors\PasswordBehavior.cs" />
     <Compile Include="Behaviors\TabControlBehavior.cs" />
     <Compile Include="Converters\InverseBooleanConverter.cs" />
     <Compile Include="Converters\MarkupConverterBase.cs" />

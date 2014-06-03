@@ -62,7 +62,7 @@ namespace BookKeeping.Domain.Repositories
                     return user;
                 }
             }
-            return null;
+            return user;
         }
 
         public virtual User Load(string login, string password)

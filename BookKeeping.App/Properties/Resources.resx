@@ -153,6 +153,15 @@
   <data name="Capacity" xml:space="preserve">
     <value>Capacity</value>
   </data>
+  <data name="ChangePassword" xml:space="preserve">
+    <value>Change password</value>
+  </data>
+  <data name="ChangePasswordFailed" xml:space="preserve">
+    <value>Cannot change the password</value>
+  </data>
+  <data name="ChangePasswordSuccessful" xml:space="preserve">
+    <value>Password was changed successful</value>
+  </data>
   <data name="Charge" xml:space="preserve">
     <value>Charge</value>
   </data>
@@ -243,11 +252,17 @@
   <data name="Name" xml:space="preserve">
     <value>Name</value>
   </data>
+  <data name="NewPassword" xml:space="preserve">
+    <value>New password</value>
+  </data>
   <data name="November" xml:space="preserve">
     <value>Novermber</value>
   </data>
   <data name="October" xml:space="preserve">
     <value>October</value>
+  </data>
+  <data name="OldPassword" xml:space="preserve">
+    <value>Old password</value>
   </data>
   <data name="Order" xml:space="preserve">
     <value>Order</value>
