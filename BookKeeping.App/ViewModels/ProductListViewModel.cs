@@ -214,13 +214,16 @@ namespace BookKeeping.App.ViewModels
 
         protected void DoSearch(string searchText)
         {
-            CollectionView.Filter = (object t) =>
+            if (!CollectionView.IsAddingNew && !CollectionView.IsEditingItem)
             {
-                var product = t as ProductViewModel;
-                if (string.IsNullOrEmpty(searchText))
-                    return true;
-                return product.ItemNo.IndexOf(searchText) > -1;
-            };
+                CollectionView.Filter = (object t) =>
+                {
+                    var product = t as ProductViewModel;
+                    if (string.IsNullOrEmpty(searchText))
+                        return true;
+                    return product.ItemNo.IndexOf(searchText) > -1;
+                };
+            }
         }
 
         protected void DoFilter(string filterExpression)
