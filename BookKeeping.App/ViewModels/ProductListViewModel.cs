@@ -359,7 +359,7 @@ namespace BookKeeping.App.ViewModels
                 var product = _productListView.Products.Find(t => t.Id == new ProductId(item.Id));
                 if (product == null)
                 {
-
+                    _session.Command(new CreateProduct(new ProductId(_session.GetId()), item.Title, item.ItemNo, item.Price, item.Stock, item.UnitOfMeasure, item.VatRate, item.Barcode));
                 }
                 else
                 {
