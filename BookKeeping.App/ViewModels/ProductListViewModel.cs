@@ -31,6 +31,8 @@ namespace BookKeeping.App.ViewModels
         private readonly ExpressionHelper _expressionHelper = new ExpressionHelper();
         private bool _isLoading;
         private Session _session = Context.Current.GetSession();
+        private Projections.ProductsList.ProductListView _productListView;
+        private readonly List<ProductViewModel> _changedProducts = new List<ProductViewModel>();
 
         public ProductListViewModel()
         {
@@ -50,7 +52,8 @@ namespace BookKeeping.App.ViewModels
 
             Task loadProductsTask = Task.Factory.StartNew(() =>
             {
-                foreach (var item in GetProducts())
+                _productListView = _session.Query<ProductListView>().Convert(t => t, new ProductListView());
+                foreach (var item in GetProducts(_productListView))
                 {
                     tempSource.Add(item);
                 }
@@ -190,13 +193,12 @@ namespace BookKeeping.App.ViewModels
 
         public Visual PrintArea { get; set; }
 
-        protected virtual IEnumerable<ProductViewModel> GetProducts()
+        protected virtual IEnumerable<ProductViewModel> GetProducts(ProductListView view)
         {
             var random = new Random(100);
-            return _session.Query<ProductListView>()
-                .Convert(t => t.Products)
-                .Convert(t => t.Select((p, i) => new ProductViewModel
+            return view.Products.Select((p, i) => new ProductViewModel
             {
+                Id = p.Id.Id,
                 Barcode = p.Barcode,
                 IsOrderable = p.IsOrderable,
                 ItemNo = p.ItemNo,
@@ -207,7 +209,7 @@ namespace BookKeeping.App.ViewModels
                 VatRate = p.VatRate,
                 HasChanges = false,
                 IsValid = true
-            }), Enumerable.Empty<ProductViewModel>());
+            });
         }
 
         protected void DoSearch(string searchText)
@@ -274,6 +276,7 @@ namespace BookKeeping.App.ViewModels
                 foreach (ProductViewModel item in e.OldItems)
                 {
                     Unbind(item, t => t.HasChanges, ProductViewModel_HasChangesPropertyChanged);
+                    _session.Command(new DeleteProduct(new ProductId(item.Id)));
                 }
             }
             if (e.NewItems != null)
@@ -288,13 +291,17 @@ namespace BookKeeping.App.ViewModels
         private void ProductViewModel_HasChangesPropertyChanged(object sender, PropertyChangedEventArgs e)
         {
             var item = (ProductViewModel)sender;
+            if (item.HasChanges && !_changedProducts.Contains(item))
+            {
+                _changedProducts.Add(item);
+            }
             if (item.HasChanges)
                 this.HasChanges = true;
         }
 
         private void HasChangesPropertyChanged(object sender, PropertyChangedEventArgs e)
         {
-            var end = " *";
+            var end = "*";
             if (HasChanges)
             {
                 //todo: CanClose = false;
@@ -305,7 +312,7 @@ namespace BookKeeping.App.ViewModels
             }
             else if (!HasChanges && DisplayName.EndsWith(end))
             {
-                DisplayName = DisplayName.Substring(0, DisplayName.Length - 2);
+                DisplayName = DisplayName.Substring(0, DisplayName.Length - 1);
             }
         }
 
@@ -330,13 +337,74 @@ namespace BookKeeping.App.ViewModels
         {
             if (CanSave)
             {
-                HasChanges = false;
-                CanClose = true;
-                foreach (var item in Source as IEnumerable<ProductViewModel>)
+                var saveTask = Task.Factory.StartNew(() =>
                 {
-                    item.HasChanges = false;
+                    HasChanges = false;
+                    CanClose = true;
+                    foreach (var item in Source as IEnumerable<ProductViewModel>)
+                    {
+                        item.HasChanges = false;
+                    }
+                    MergeChanges();
+                    _session.Commit();
+                    SendMessage(new MessageEnvelope(T("Saved")));
+                });
+            }
+        }
+
+        protected void MergeChanges()
+        {
+            foreach (var item in _changedProducts)
+            {
+                var product = _productListView.Products.Find(t => t.Id == new ProductId(item.Id));
+                if (product == null)
+                {
+
+                }
+                else
+                {
+                    if (product.Barcode != item.Barcode)
+                    {
+                        _session.Command(new ChangeProductBarcode(product.Id, item.Barcode));
+                    }
+                    if (product.IsOrderable != item.IsOrderable)
+                    {
+                        if (item.IsOrderable)
+                        {
+                            _session.Command(new MakeProductOrderable(product.Id));
+                        }
+                        else
+                        {
+                            _session.Command(new MakeProductNonOrderable(product.Id, "manual edited"));
+                        }
+                    }
+                    if (product.ItemNo != item.ItemNo)
+                    {
+                        _session.Command(new ChangeProductItemNo(product.Id, item.ItemNo));
+                    }
+                    if (product.Price != item.Price)
+                    {
+                        _session.Command(new ChangeProductPrice(product.Id, item.Price));
+                    }
+                    if (product.Stock != item.Stock)
+                    {
+                        _session.Command(new UpdateProductStock(product.Id, item.Stock, "manual edited"));
+                    }
+                    if (product.Title != item.Title)
+                    {
+                        _session.Command(new RenameProduct(product.Id, item.Title));
+                    }
+                    if (product.UnitOfMeasure != item.UnitOfMeasure)
+                    {
+                        _session.Command(new ChangeProductUnitOfMeasure(product.Id, item.UnitOfMeasure));
+                    }
+                    if (product.VatRate != item.VatRate)
+                    {
+                        _session.Command(new ChangeProductVatRate(product.Id, item.VatRate));
+                    }
                 }
             }
+            _changedProducts.Clear();
         }
 
         public bool CanSave

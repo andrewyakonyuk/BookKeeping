@@ -37,20 +37,30 @@ namespace BookKeeping.Domain.Repositories
 
         public User Get(UserId id)
         {
-            var stream = _eventStore.LoadEventStream(id);
-            var user = new User(stream.Events);
-            _unitOfWork.RegisterForTracking(user, id);
+            User user = null;
+            user = _unitOfWork.Get<User>(id);
+            if (user == null)
+            {
+                var stream = _eventStore.LoadEventStream(id);
+                user = new User(stream.Events);
+                _unitOfWork.RegisterForTracking(user, id);
+            }
             return user;
         }
 
         public User Load(UserId id)
         {
-            var stream = _eventStore.LoadEventStream(id);
-            if (stream.Version > 0)
+            User user = null;
+            user = _unitOfWork.Get<User>(id);
+            if (user == null)
             {
-                var user = new User(stream.Events);
-                _unitOfWork.RegisterForTracking(user, id);
-                return user;
+                var stream = _eventStore.LoadEventStream(id);
+                if (stream.Version > 0)
+                {
+                    user = new User(stream.Events);
+                    _unitOfWork.RegisterForTracking(user, id);
+                    return user;
+                }
             }
             return null;
         }

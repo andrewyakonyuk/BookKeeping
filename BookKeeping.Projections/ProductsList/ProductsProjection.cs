@@ -16,7 +16,8 @@ namespace BookKeeping.Projections.ProductsList
         IEventHandler<ProductUnitOfMeasureChanged>,
         IEventHandler<ProductVatRateChanged>,
         IEventHandler<ProductMakedOrderable>,
-        IEventHandler<ProductMakedNonOrderable>
+        IEventHandler<ProductMakedNonOrderable>,
+        IEventHandler<ProductDeleted>
     {
         private readonly IDocumentWriter<unit, ProductListView> _store;
 
@@ -44,7 +45,7 @@ namespace BookKeeping.Projections.ProductsList
 
         public void When(ProductStockUpdated e)
         {
-            _store.UpdateOrThrow(unit.it, list => list.Products.Single(p => p.Id == e.Id).Stock += e.Quantity);
+            _store.UpdateOrThrow(unit.it, list => list.Products.Single(p => p.Id == e.Id).Stock = e.Quantity);
         }
 
         public void When(ProductRenamed e)
@@ -85,6 +86,11 @@ namespace BookKeeping.Projections.ProductsList
         public void When(ProductMakedNonOrderable e)
         {
             _store.UpdateOrThrow(unit.it, list => list.Products.Single(p => p.Id == e.Id).IsOrderable = false);
+        }
+
+        public void When(ProductDeleted e)
+        {
+            _store.UpdateOrThrow(unit.it, list => list.Products.Remove(list.Products.Single(t => t.Id == e.Id)));
         }
     }
 }

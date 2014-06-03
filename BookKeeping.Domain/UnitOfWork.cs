@@ -31,6 +31,16 @@ namespace BookKeeping.Domain
             }
         }
 
+        public TAggregate Get<TAggregate>(IIdentity id)
+            where TAggregate : AggregateBase
+        {
+            if (_identityMap.ContainsKey(id))
+            {
+                return (TAggregate)_identityMap[id];
+            }
+            return null;
+        }
+
         public void Commit()
         {
             foreach (var item in _identityMap.Select(t => t.Value).Where(t => t.Changes.Any()))

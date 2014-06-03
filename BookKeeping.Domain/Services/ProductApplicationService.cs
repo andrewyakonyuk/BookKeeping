@@ -18,7 +18,8 @@ namespace BookKeeping.Domain.Services
         ICommandHandler<ChangeProductUnitOfMeasure>,
         ICommandHandler<ChangeProductVatRate>,
         ICommandHandler<MakeProductOrderable>,
-        ICommandHandler<MakeProductNonOrderable>
+        ICommandHandler<MakeProductNonOrderable>,
+        ICommandHandler<DeleteProduct>
     {
         readonly IRepository<Product, ProductId> _repository;
 
@@ -101,6 +102,13 @@ namespace BookKeeping.Domain.Services
             if (Current.Identity == null)
                 throw new InvalidOperationException("UserIdentity should be not null");
             Update(c.Id, p => p.MakeNonOrderable(c.Reason, Current.Identity.Id, Current.UtcNow));
+        }
+
+        public void When(DeleteProduct c)
+        {
+            if (Current.Identity == null)
+                throw new InvalidOperationException("UserIdentity should be not null");
+            Update(c.Id, p => p.Delete(Current.Identity.Id, Current.UtcNow));
         }
     }
 }

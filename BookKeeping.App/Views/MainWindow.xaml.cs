@@ -22,7 +22,7 @@ namespace BookKeeping.App.Views
     /// </summary>
     public partial class MainWindow : MahApps.Metro.Controls.MetroWindow
     {
-        private bool _shutdown;
+        //private bool _shutdown;
 
         public MainWindow()
         {

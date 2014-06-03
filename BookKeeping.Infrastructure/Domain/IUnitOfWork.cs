@@ -9,5 +9,7 @@ namespace BookKeeping.Infrastructure.Domain
         void Rollback();
         void RegisterForTracking<TAggregate>(TAggregate aggregateRoot, IIdentity id)
             where TAggregate : AggregateBase;
+        TAggregate Get<TAggregate>(IIdentity id)
+            where TAggregate : AggregateBase;
     }
 }

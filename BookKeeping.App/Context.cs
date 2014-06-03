@@ -20,7 +20,6 @@ namespace BookKeeping.App
     public sealed class Context
     {
         readonly IEventStore _eventStore;
-        readonly ICommandBus _commandBus;
         readonly IEventBus _eventBus;
         readonly IDocumentStore _projections;
         readonly ICacheService _cacheService;
@@ -75,13 +74,14 @@ namespace BookKeeping.App
         }
     }
 
-    public class Session : IUnitOfWork
+    public class Session : IUnitOfWork, IDomainIdentityService
     {
         readonly IEventStore _eventStore;
         readonly IEventBus _eventBus;
         readonly ICommandBus _commandBus;
         readonly IDocumentStore _projections;
         readonly IUnitOfWork _innerUnitOfWork;
+        readonly IDomainIdentityService _identityGenerator;
 
         public Session(IEventStore eventStore, IEventBus eventBus, IDocumentStore projections)
         {
@@ -90,6 +90,7 @@ namespace BookKeeping.App
             _projections = projections;
             _innerUnitOfWork = new UnitOfWork(_eventStore, _eventBus);
             _commandBus = new CommandBus(new CommandHandlerFactoryImpl(_projections, _innerUnitOfWork, _eventStore, _eventBus));
+            _identityGenerator = new DomainIdentityGenerator(_projections);
         }
 
         public void Command<TCommand>(TCommand command)
@@ -135,6 +136,16 @@ namespace BookKeeping.App
             where TAggregate : AggregateBase
         {
             _innerUnitOfWork.RegisterForTracking(aggregateRoot, id);
+        }
+
+        public TAggregate Get<TAggregate>(IIdentity id) where TAggregate : AggregateBase
+        {
+            return _innerUnitOfWork.Get<TAggregate>(id);
+        }
+
+        public long GetId()
+        {
+            return _identityGenerator.GetId();
         }
 
         public void Dispose()

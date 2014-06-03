@@ -46,9 +46,9 @@ namespace BookKeeping.Projections.ProductsList
     [Serializable]
     public class ProductListView
     {
-        private IList<ProductView> _products = new List<ProductView>();
+        private List<ProductView> _products = new List<ProductView>();
 
         [DataMember(Order = 1)]
-        public IList<ProductView> Products { get { return _products; } }
+        public List<ProductView> Products { get { return _products; } }
     }
 }

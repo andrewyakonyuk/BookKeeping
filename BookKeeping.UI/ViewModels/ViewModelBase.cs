@@ -6,7 +6,7 @@ using System.Collections.Generic;
 
 namespace BookKeeping.UI.ViewModels
 {
-    public abstract class ViewModelBase :  NotificationObject, IDataErrorInfo
+    public abstract class ViewModelBase : NotificationObject, IDataErrorInfo
     {
         private bool _isValid = true;
         private readonly Dictionary<Tuple<INotifyPropertyChanged, string>, IList<EventHandler<PropertyChangedEventArgs>>> EventHandlers;
@@ -126,6 +126,5 @@ namespace BookKeeping.UI.ViewModels
             var expression = (MemberExpression)action.Body;
             return expression.Member.Name;
         }
-
     }
 }

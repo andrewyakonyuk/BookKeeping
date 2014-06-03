@@ -37,20 +37,30 @@ namespace BookKeeping.Domain.Repositories
 
         public Product Get(ProductId id)
         {
-            var stream = _eventStore.LoadEventStream(id);
-            var product = new Product(stream.Events);
-            _unitOfWork.RegisterForTracking(product, id);
+            Product product = null;
+            product = _unitOfWork.Get<Product>(id);
+            if (product == null)
+            {
+                var stream = _eventStore.LoadEventStream(id);
+                product = new Product(stream.Events);
+                _unitOfWork.RegisterForTracking(product, id);
+            }
             return product;
         }
 
         public Product Load(ProductId id)
         {
-            var stream = _eventStore.LoadEventStream(id);
-            if (stream.Version > 0)
+            Product product = null;
+            product = _unitOfWork.Get<Product>(id);
+            if (product == null)
             {
-                var product = new Product(stream.Events);
-                _unitOfWork.RegisterForTracking(product, id);
-                return product;
+                var stream = _eventStore.LoadEventStream(id);
+                if (stream.Version > 0)
+                {
+                    product = new Product(stream.Events);
+                    _unitOfWork.RegisterForTracking(product, id);
+                    return product;
+                }
             }
             return null;
         }

@@ -31,6 +31,8 @@ namespace BookKeeping.App.ViewModels
             HasChanges = true;
         }
 
+        public long Id { get; set; }
+
         private string _title;
 
         public string Title

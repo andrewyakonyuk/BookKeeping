@@ -89,6 +89,11 @@ namespace BookKeeping.Domain.Aggregates
             Apply(new ProductMakedNonOrderable(this.Id, reason, userId, utc));
         }
 
+        public void Delete(UserId userId, DateTime utc)
+        {
+            Apply(new ProductDeleted(this.Id, userId, utc));
+        }
+
         protected override void Mutate(IEvent e)
         {
             Version += 1;
