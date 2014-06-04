@@ -121,6 +121,7 @@
             </MenuItem>
             <MenuItem Header="{x:Static p:Resources.Service}">
                 <MenuItem Header="{x:Static p:Resources.EventHistory}" Command="{Binding Path=EventHistoryCmd}"></MenuItem>
+                <MenuItem Header="{x:Static p:Resources.ListOfUsers}" Command="{Binding Path=UserListCmd}"></MenuItem>
             </MenuItem>
             <MenuItem Header="{x:Static p:Resources.Reports}">
                 <MenuItem Header="{x:Static p:Resources.RemainsOfGoods}" Command="{Binding Path=RemainsOfGoodsReportCmd}"></MenuItem>
@@ -166,6 +167,9 @@
                     </DataTemplate>
                     <DataTemplate DataType="{x:Type viewmodels:EventHistoryViewModel}">
                         <views:EventHistoryView></views:EventHistoryView>
+                    </DataTemplate>
+                    <DataTemplate DataType="{x:Type viewmodels:UserListViewModel}">
+                        <views:UserListView></views:UserListView>
                     </DataTemplate>
                 </TabControl.Resources>
             </TabControl>

@@ -46,6 +46,11 @@ namespace BookKeeping.Domain.Aggregates
             Apply(new UserDeleted(this.Id, utc));
         }
 
+        public void Rename(string name, DateTime utc)
+        {
+            Apply(new UserRenamed(this.Id, name, utc));
+        }
+
         void IUserState.When(UserCreated e)
         {
             Id = e.Id;
@@ -68,6 +73,11 @@ namespace BookKeeping.Domain.Aggregates
         void IUserState.When(UserPasswordChanged e)
         {
             Password = e.Password;
+        }
+
+        void IUserState.When(UserRenamed e)
+        {
+            Name = e.NewName;
         }
 
         protected override void Mutate(IEvent e)

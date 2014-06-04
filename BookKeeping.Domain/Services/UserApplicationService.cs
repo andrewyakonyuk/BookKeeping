@@ -15,7 +15,8 @@ namespace BookKeeping.Domain.Services
         ICommandHandler<CreateUser>,
         ICommandHandler<AssignRoleToUser>,
         ICommandHandler<ChangeUserPassword>,
-        ICommandHandler<DeleteUser>
+        ICommandHandler<DeleteUser>,
+        ICommandHandler<RenameUser>
     {
         readonly IRepository<User, UserId> _repository;
         private readonly IDocumentReader<unit, UserIndexLookup> _userIndex;
@@ -54,6 +55,11 @@ namespace BookKeeping.Domain.Services
         public void When(DeleteUser c)
         {
             Update(c.Id, u => u.Delete(Current.UtcNow));
+        }
+
+        public void When(RenameUser c)
+        {
+            Update(c.Id, u => u.Rename(c.NewName, Current.UtcNow));
         }
     }
 }

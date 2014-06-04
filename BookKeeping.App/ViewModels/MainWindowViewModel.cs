@@ -87,6 +87,8 @@ namespace BookKeeping.App.ViewModels
 
         public ICommand EventHistoryCmd { get; private set; }
 
+        public ICommand UserListCmd { get; private set; }
+
         public ICommand RemainsOfGoodsReportCmd { get; private set; }
 
         public ICommand HistoryOfGoodsReportCmd { get; private set; }
@@ -136,6 +138,7 @@ namespace BookKeeping.App.ViewModels
 
             //Services
             EventHistoryCmd = new DelegateCommand(_ => SetActiveWorkspace(CreateOrRetrieveWorkspace<EventHistoryViewModel>()), _ => Current.Identity.RoleType == "admin");
+            UserListCmd = new DelegateCommand(_ => SetActiveWorkspace(CreateOrRetrieveWorkspace<UserListViewModel>()), _ => Current.Identity.RoleType == "admin");
 
             // Reports
             RemainsOfGoodsReportCmd = new DelegateCommand(_ => SetActiveWorkspace(CreateOrRetrieveWorkspace<RemainsOfGoodsViewModel>()));

@@ -47,6 +47,8 @@
     <Compile Include="ProductsList\ProductListView.cs" />
     <Compile Include="ProductsList\ProductsProjection.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="UserList\UserListView.cs" />
+    <Compile Include="UserList\UsersProjection.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\BookKeeping.Domain.Contracts\BookKeeping.Domain.Contracts.csproj">

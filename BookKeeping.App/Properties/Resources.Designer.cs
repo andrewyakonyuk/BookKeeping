@@ -421,6 +421,15 @@ namespace BookKeeping.App.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to List of users.
+        /// </summary>
+        public static string ListOfUsers {
+            get {
+                return ResourceManager.GetString("ListOfUsers", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Login.
         /// </summary>
         public static string Login {
@@ -696,6 +705,15 @@ namespace BookKeeping.App.Properties {
         public static string Reports {
             get {
                 return ResourceManager.GetString("Reports", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Role.
+        /// </summary>
+        public static string Role {
+            get {
+                return ResourceManager.GetString("Role", resourceCulture);
             }
         }
         

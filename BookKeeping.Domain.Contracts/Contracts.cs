@@ -596,6 +596,44 @@ public partial class UserPasswordChanged : IEvent<UserId>
         }
     }
     [DataContract(Namespace = "BookKeeping")]
+public partial class RenameUser : ICommand<UserId>
+    {
+        [DataMember(Order = 1)] public UserId Id { get; private set; }
+        [DataMember(Order = 2)] public string NewName { get; private set; }
+        
+        RenameUser () {}
+        public RenameUser (UserId id, string newName)
+        {
+            Id = id;
+            NewName = newName;
+        }
+        
+        public override string ToString()
+        {
+            return string.Format(@"Rename {0} on '{1}'", Id, NewName);
+        }
+    }
+    [DataContract(Namespace = "BookKeeping")]
+public partial class UserRenamed : IEvent<UserId>
+    {
+        [DataMember(Order = 1)] public UserId Id { get; private set; }
+        [DataMember(Order = 2)] public string NewName { get; private set; }
+        [DataMember(Order = 3)] public DateTime Utc { get; private set; }
+        
+        UserRenamed () {}
+        public UserRenamed (UserId id, string newName, DateTime utc)
+        {
+            Id = id;
+            NewName = newName;
+            Utc = utc;
+        }
+        
+        public override string ToString()
+        {
+            return string.Format(@"{0} renamed on '{1}'", Id, NewName);
+        }
+    }
+    [DataContract(Namespace = "BookKeeping")]
 public partial class DeleteUser : ICommand<UserId>
     {
         [DataMember(Order = 1)] public UserId Id { get; private set; }
@@ -630,6 +668,7 @@ public partial class UserDeleted : IEvent<UserId>
         void When(CreateUser c);
         void When(AssignRoleToUser c);
         void When(ChangeUserPassword c);
+        void When(RenameUser c);
         void When(DeleteUser c);
     }
     
@@ -638,6 +677,7 @@ public partial class UserDeleted : IEvent<UserId>
         void When(UserCreated e);
         void When(RoleAssignedToUser e);
         void When(UserPasswordChanged e);
+        void When(UserRenamed e);
         void When(UserDeleted e);
     }
     

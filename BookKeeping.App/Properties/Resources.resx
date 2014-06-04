@@ -237,6 +237,9 @@
   <data name="ListOfProducts" xml:space="preserve">
     <value>List of products</value>
   </data>
+  <data name="ListOfUsers" xml:space="preserve">
+    <value>List of users</value>
+  </data>
   <data name="Login" xml:space="preserve">
     <value>Login</value>
   </data>
@@ -329,6 +332,9 @@
   </data>
   <data name="Reports" xml:space="preserve">
     <value>Reports</value>
+  </data>
+  <data name="Role" xml:space="preserve">
+    <value>Role</value>
   </data>
   <data name="SaleOfGoods" xml:space="preserve">
     <value>Sale of goods</value>

@@ -96,6 +96,11 @@ interface User(UserId id)
         UserPasswordChanged!(Password password, DateTime utc)
             explicit "Password for '{id}' changed, utc - {utc}"
 
+    RenameUser?(string newName)
+        explicit "Rename {id} on '{newName}'"
+        UserRenamed!(string newName, DateTime utc)
+            explicit "{id} renamed on '{newName}'"
+
     DeleteUser? ()
         UserDeleted! (DateTime utc)
             explicit "Deleted user {Id}, utc - {utc}"

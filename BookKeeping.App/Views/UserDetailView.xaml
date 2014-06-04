@@ -1,0 +1,67 @@
+﻿<UserControl x:Class="BookKeeping.App.Views.UserDetailView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             mc:Ignorable="d" 
+             xmlns:p="clr-namespace:BookKeeping.App.Properties"
+             d:DesignHeight="130" d:DesignWidth="600">
+    <UserControl.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="pack://application:,,,/BookKeeping.App;component/Styles/TextBox.xaml" />
+                <ResourceDictionary>
+                </ResourceDictionary>
+            </ResourceDictionary.MergedDictionaries>
+        </ResourceDictionary>
+    </UserControl.Resources>
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="*"></RowDefinition>
+            <RowDefinition Height="*"></RowDefinition>
+            <RowDefinition Height="*"></RowDefinition>
+            <RowDefinition Height="*"></RowDefinition>
+        </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="*"></ColumnDefinition>
+            <ColumnDefinition Width="2*"></ColumnDefinition>
+            <ColumnDefinition Width="*"></ColumnDefinition>
+            <ColumnDefinition Width="2*"></ColumnDefinition>
+        </Grid.ColumnDefinitions>
+        <Grid.Resources>
+            <Style TargetType="{x:Type TextBox}">
+                <Setter Property="Margin" Value="4,4"></Setter>
+                <Setter Property="Height" Value="25"></Setter>
+                <Setter Property="VerticalAlignment" Value="Center"></Setter>
+                <Setter Property="VerticalContentAlignment" Value="Center"></Setter>
+                <Setter Property="Padding" Value="2"></Setter>
+                <Setter Property="Background" Value="Transparent"></Setter>
+            </Style>
+            <Style TargetType="{x:Type ComboBox}">
+                <Setter Property="Margin" Value="4,4"></Setter>
+                <Setter Property="Height" Value="25"></Setter>
+                <Setter Property="VerticalAlignment" Value="Center"></Setter>
+                <Setter Property="VerticalContentAlignment" Value="Center"></Setter>
+                <Setter Property="Padding" Value="2"></Setter>
+                <Setter Property="Background" Value="Transparent"></Setter>
+            </Style>
+            <Style TargetType="{x:Type TextBlock}">
+                <Setter Property="Margin" Value="4,4"></Setter>
+                <Setter Property="Height" Value="25"></Setter>
+                <Setter Property="VerticalAlignment" Value="Center"></Setter>
+            </Style>
+        </Grid.Resources>
+        <TextBlock Text="{x:Static p:Resources.Login}" Grid.Row="0" Grid.Column="0"></TextBlock>
+        <TextBlock Text="{Binding Path=Login, Mode=OneWay}" Grid.Row="0" Grid.Column="1"></TextBlock>
+        
+        <TextBlock Text="{x:Static p:Resources.Name}" Grid.Row="1" Grid.Column="0"></TextBlock>
+        <TextBox Text="{Binding Path=Name, Mode=TwoWay, UpdateSourceTrigger=LostFocus, NotifyOnValidationError=True,
+            ValidatesOnExceptions=True, ValidatesOnDataErrors=True}" Grid.Row="1" Grid.Column="1"
+            Validation.ErrorTemplate="{DynamicResource ValidationErrorTemplate}"></TextBox>
+
+        <TextBlock Text="{x:Static p:Resources.Role}" Grid.Row="2" Grid.Column="0"></TextBlock>
+        <ComboBox ItemsSource="{Binding Path=Roles, Mode=OneWay}" SelectedItem="{Binding Path=RoleType, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged, NotifyOnValidationError=True,
+            ValidatesOnExceptions=True, ValidatesOnDataErrors=True}" Grid.Row="2" Grid.Column="1"
+            Validation.ErrorTemplate="{DynamicResource ValidationErrorTemplate}"></ComboBox>
+    </Grid>
+</UserControl>
