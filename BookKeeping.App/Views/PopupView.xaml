@@ -1,0 +1,60 @@
+﻿<UserControl x:Class="BookKeeping.App.Views.PopupView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             mc:Ignorable="d" 
+             xmlns:p="clr-namespace:BookKeeping.App.Properties"
+             xmlns:Controls="http://metro.mahapps.com/winfx/xaml/controls"
+             xmlns:viewmodels="clr-namespace:BookKeeping.App.ViewModels"
+             xmlns:i="clr-namespace:System.Windows.Interactivity;assembly=System.Windows.Interactivity"
+             d:DesignHeight="30" d:DesignWidth="300" d:DataContext="{x:Type viewmodels:PopupViewModel}">
+    <UserControl.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="pack://application:,,,/BookKeeping.App;component/Resources/Icons.xaml" />
+            </ResourceDictionary.MergedDictionaries>
+        </ResourceDictionary>
+    </UserControl.Resources>
+    <Border 
+            Margin="0"
+            Width="200"
+            BorderThickness="2,0,0,2"
+            Background="White"
+            Visibility="{Binding IsVisible, Converter={StaticResource BooleanToVisibilityConverter}}"
+            BorderBrush="{DynamicResource BackgroundSelected}">
+        <DockPanel LastChildFill="True">
+            <Button DockPanel.Dock="Right" Width="22" Height="22" VerticalContentAlignment="Center"
+                        VerticalAlignment="Center" HorizontalAlignment="Center" HorizontalContentAlignment="Center"
+                        Background="Transparent" BorderThickness="0"
+                        Command="{Binding Path=CloseCmd}">
+                <Button.Style>
+                    <Style TargetType="{x:Type Button}" BasedOn="{StaticResource {x:Type Button}}">
+                        <Style.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter Property="Opacity" Value="1" />
+                            </Trigger>
+                            <Trigger Property="IsMouseOver" Value="False">
+                                <Setter Property="Opacity" Value=".5" />
+                            </Trigger>
+                        </Style.Triggers>
+                    </Style>
+                </Button.Style>
+                <Rectangle Width="12" Height="12" Fill="Black">
+                    <Rectangle.OpacityMask>
+                        <VisualBrush Stretch="Fill"
+                                     Visual="{DynamicResource appbar_close}" />
+                    </Rectangle.OpacityMask>
+                </Rectangle>
+            </Button>
+            <TextBox
+                 Controls:TextboxHelper.Watermark="{Binding Path=Placeholder}"
+                 BorderThickness="0"
+                 Margin="3,1,0,1"
+                 Text="{Binding Path=Text, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                 Controls:TextboxHelper.ButtonCommand="{Binding Path=ActionCmd}"
+                 Style="{DynamicResource SearchMetroTextBox}" KeyUp="TextBox_KeyUp">
+            </TextBox>
+        </DockPanel>
+    </Border>
+</UserControl>

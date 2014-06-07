@@ -9,6 +9,8 @@ using System.Linq;
 using BookKeeping.Domain.Aggregates;
 using System.Collections.Generic;
 using BookKeeping.Auth;
+using System.Windows.Input;
+using System.Windows.Controls;
 
 namespace BookKeeping.App
 {
@@ -27,7 +29,7 @@ namespace BookKeeping.App
 
             InitUsers();
 
-            //GenerateProducts();
+          //  GenerateProducts();
 
             MainWindow window = new MainWindow();
             var viewModel = new MainWindowViewModel();

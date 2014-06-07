@@ -129,7 +129,7 @@ namespace BookKeeping.App.ViewModels
             //General
             PrintCmd = new DelegateCommand(_ => ((IPrintable)CurrentWorkspace).Print(), _ => CurrentWorkspace is IPrintable);
             Exit = ApplicationCommands.Close;
-            SaveCmd = new DelegateCommand(_ => ((ISaveable)CurrentWorkspace).SaveChanges(), _ => CurrentWorkspace is ISaveable && ((ISaveable)CurrentWorkspace).CanSave);
+            SaveCmd = new DelegateCommand(_ => ((ISaveable)CurrentWorkspace).SaveChanges(), _ => CurrentWorkspace is ISaveable && ((ISaveable)CurrentWorkspace).CanSave());
 
             CloseLoginCmd = new DelegateCommand(t => { }, t => Profile.IsAuthorization);
 

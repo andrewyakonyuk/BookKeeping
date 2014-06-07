@@ -3,14 +3,15 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
-              mc:Ignorable="d" 
+             mc:Ignorable="d" 
              xmlns:gl="clr-namespace:System.Globalization;assembly=mscorlib"
              xmlns:viewmodels="clr-namespace:BookKeeping.App.ViewModels"
              xmlns:p="clr-namespace:BookKeeping.App.Properties"
              xmlns:Controls="http://metro.mahapps.com/winfx/xaml/controls"
              xmlns:views="clr-namespace:BookKeeping.App.Views"
              xmlns:converters.ui="clr-namespace:BookKeeping.UI.Converters;assembly=BookKeeping.UI"
-             d:DesignHeight="300" d:DesignWidth="600" d:DataContext="{viewmodels:ProductListViewModel}">
+              xmlns:i="clr-namespace:System.Windows.Interactivity;assembly=System.Windows.Interactivity"
+             d:DesignHeight="300" d:DesignWidth="800" d:DataContext="{x:Type viewmodels:ProductListViewModel}">
     <UserControl.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
@@ -26,190 +27,23 @@
         </ResourceDictionary>
     </UserControl.Resources>
     <Grid>
-        <Controls:ProgressRing IsActive="True" Width="40" Height="40" Visibility="{Binding Path=IsLoading, Converter={StaticResource BooleanToVisibilityConverterKey}}" />
-        <!-- search panel -->
-        <Border 
-            VerticalAlignment="Top" 
-            HorizontalAlignment="Right"
-            Panel.ZIndex="10"
-            Margin="0"
-            Width="200"
-            BorderThickness="2,0,0,2"
-            Background="White"
-            Visibility="{Binding IsFindPopupVisible, Converter={StaticResource BooleanToVisibilityConverter}}"
-            FocusManager.FocusedElement="{Binding ElementName=txtSearchBox}"
-            BorderBrush="{DynamicResource BackgroundSelected}">
-            <DockPanel LastChildFill="True" >
-                <Button DockPanel.Dock="Right" Width="22" Height="22" VerticalContentAlignment="Center"
-                        VerticalAlignment="Center" HorizontalAlignment="Center" HorizontalContentAlignment="Center"
-                        Background="Transparent" BorderThickness="0"
-                        Command="Find">
-                    <Button.Style>
-                        <Style TargetType="{x:Type Button}" BasedOn="{StaticResource {x:Type Button}}">
-                            <Style.Triggers>
-                                <Trigger Property="IsMouseOver" Value="True">
-                                    <Setter Property="Opacity" Value="1" />
-                                </Trigger>
-                                <Trigger Property="IsMouseOver" Value="False">
-                                    <Setter Property="Opacity" Value=".5" />
-                                </Trigger>
-                            </Style.Triggers>
-                        </Style>
-                    </Button.Style>
-                    <Rectangle Width="12" Height="12" Fill="Black">
-                        <Rectangle.OpacityMask>
-                            <VisualBrush Stretch="Fill"
-                                     Visual="{DynamicResource appbar_close}" />
-                        </Rectangle.OpacityMask>
-                    </Rectangle>
-                </Button>
-                <TextBox
-                 Controls:TextboxHelper.Watermark="{x:Static p:Resources.DoSearch}"
-                 BorderThickness="0"
-                 Margin="3,1,0,1"
-                    x:Name="txtSearchBox"
-                 Text="{Binding Path=SearchText, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
-                 Controls:TextboxHelper.ButtonCommand="{Binding SearchButtonCmd}"
-                 Style="{DynamicResource SearchMetroTextBox}" />
-            </DockPanel>
-        </Border>
-        <!-- filter panel -->
-        <Border 
-            VerticalAlignment="Top" 
-            HorizontalAlignment="Right"
-            Panel.ZIndex="10"
-            Margin="0"
-            Width="200"
-            BorderThickness="2,0,0,2"
-            Background="White"
-            Visibility="{Binding IsFilterPopupVisible, Converter={StaticResource BooleanToVisibilityConverter}}"
-            FocusManager.FocusedElement="{Binding ElementName=txtFilterBox}"
-            BorderBrush="{DynamicResource BackgroundSelected}">
-            <DockPanel LastChildFill="True" >
-                <Button DockPanel.Dock="Right" Width="22" Height="22" VerticalContentAlignment="Center"
-                        VerticalAlignment="Center" HorizontalAlignment="Center" HorizontalContentAlignment="Center"
-                        Background="Transparent" BorderThickness="0"
-                        Command="{Binding Path=FilterPopupCmd}">
-                    <Button.Style>
-                        <Style TargetType="{x:Type Button}" BasedOn="{StaticResource {x:Type Button}}">
-                            <Style.Triggers>
-                                <Trigger Property="IsMouseOver" Value="True">
-                                    <Setter Property="Opacity" Value="1" />
-                                </Trigger>
-                                <Trigger Property="IsMouseOver" Value="False">
-                                    <Setter Property="Opacity" Value=".5" />
-                                </Trigger>
-                            </Style.Triggers>
-                        </Style>
-                    </Button.Style>
-                    <Rectangle Width="12" Height="12" Fill="Black">
-                        <Rectangle.OpacityMask>
-                            <VisualBrush Stretch="Fill"
-                                     Visual="{DynamicResource appbar_close}" />
-                        </Rectangle.OpacityMask>
-                    </Rectangle>
-                </Button>
-                <TextBox
-                 Controls:TextboxHelper.Watermark="{x:Static p:Resources.DoFilter}"
-                 BorderThickness="0"
-                 Margin="3,1,0,1"
-                 x:Name="txtFilterBox"
-                 Text="{Binding Path=FilterText, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged, NotifyOnTargetUpdated=True, NotifyOnSourceUpdated=True}"
-                 Controls:TextboxHelper.ButtonCommand="{Binding FilterButtonCmd}">
-                    <TextBox.Style>
-                        <Style TargetType="{x:Type TextBox}"
-           BasedOn="{StaticResource SearchMetroTextBox}">
-                            <Setter Property="Controls:TextboxHelper.ButtonTemplate">
-                                <Setter.Value>
-                                    <ControlTemplate TargetType="{x:Type Button}">
-                                        <Grid Background="{TemplateBinding Background}">
-                                            <Grid x:Name="contentPresenter"
-                              HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"
-                              Margin="{TemplateBinding Padding}"
-                              VerticalAlignment="{TemplateBinding VerticalContentAlignment}"
-                              SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}"
-                              Opacity="0.75">
-                                                <Rectangle Width="15" Height="15" Fill="Black">
-                                                    <Rectangle.OpacityMask>
-                                                        <VisualBrush Stretch="Fill"
-                                     Visual="{DynamicResource appbar_filter}" />
-                                                    </Rectangle.OpacityMask>
-                                                </Rectangle>
-                                            </Grid>
-                                        </Grid>
-                                        <ControlTemplate.Triggers>
-                                            <Trigger Property="IsMouseOver"
-                                 Value="True">
-                                                <Setter TargetName="contentPresenter"
-                                    Property="Opacity"
-                                    Value="1" />
-                                            </Trigger>
-                                            <Trigger Property="IsMouseOver"
-                                 Value="False">
-                                                <Setter TargetName="contentPresenter"
-                                    Property="Opacity"
-                                    Value=".5" />
-                                            </Trigger>
-                                            <Trigger Property="IsEnabled"
-                                 Value="False">
-                                                <Setter Property="Foreground"
-                                    Value="#ADADAD" />
-                                            </Trigger>
-                                        </ControlTemplate.Triggers>
-                                    </ControlTemplate>
-                                </Setter.Value>
-                            </Setter>
-                        </Style>
-                    </TextBox.Style>
-                </TextBox>
-            </DockPanel>
-        </Border>
-        <DataGrid ItemsSource="{Binding Path=Source}" IsSynchronizedWithCurrentItem="True" x:Name="ProductListTable"
-                  IsReadOnly="False" SelectedItem="{Binding Path=SelectedItem}" AreRowDetailsFrozen="True"
-                  SelectionChanged="DataGrid_SelectionChanged"
-                  AutoGenerateColumns="False"
-                  Visibility="{Binding Path=IsLoading, Converter={StaticResource InverseBooleanToVisibilityConverterKey}}">
-            <DataGrid.ContextMenu>
-                <ContextMenu>
-                    <MenuItem Command="{Binding Path=EditProductCmd}" CommandParameter="{Binding Path=SelectedItem}" Header="{x:Static p:Resources.Edit}">
-                    </MenuItem>
-                    <Separator></Separator>
-                    <MenuItem Command="Cut" Header="{x:Static p:Resources.Cut}"></MenuItem>
-                    <MenuItem Command="Copy" Header="{x:Static p:Resources.Copy}"></MenuItem>
-                    <MenuItem Command="Paste" Header="{x:Static p:Resources.Paste}"></MenuItem>
-                    <MenuItem Command="Delete" Header="{x:Static p:Resources.Delete}"></MenuItem>
-                    <Separator></Separator>
-                    <MenuItem Command="SelectAll" Header="{x:Static p:Resources.Select_All}"></MenuItem>
-                    <Separator></Separator>
-                    <MenuItem Command="Find" Header="{x:Static p:Resources.Find}"></MenuItem>
-                    <MenuItem Command="{Binding Path=FilterPopupCmd}" Header="{x:Static p:Resources.Filter}"></MenuItem>
-                </ContextMenu>
-            </DataGrid.ContextMenu>
+        <Controls:ProgressRing IsActive="{Binding Path=IsLoading}" Width="40" Height="40" Visibility="{Binding Path=IsLoading, Converter={StaticResource BooleanToVisibilityConverterKey}}" />
+
+        <views:PopupView DataContext="{Binding Path=SearchPopup}" VerticalAlignment="Top" 
+                HorizontalAlignment="Right"
+                Panel.ZIndex="10"></views:PopupView>
+        <views:PopupView DataContext="{Binding Path=FilterPopup}" VerticalAlignment="Top" 
+                HorizontalAlignment="Right"
+                Panel.ZIndex="10"></views:PopupView>
+
+        <DataGrid ItemsSource="{Binding Path=Source}" Style="{StaticResource ListDetailDataGridKey}" SelectionChanged="DataGrid_SelectionChanged">
+            <DataGrid.RowStyle>
+                <Style TargetType="{x:Type DataGridRow}" BasedOn="{StaticResource {x:Type DataGridRow}}">
+                    <EventSetter Event="MouseDoubleClick" Handler="DataGrid_MouseDoubleClick"></EventSetter>
+                </Style>
+            </DataGrid.RowStyle>
             <DataGrid.Columns>
-                <DataGridTemplateColumn Width="30">
-                    <DataGridTemplateColumn.CellTemplate>
-                        <DataTemplate>
-                            <Rectangle Width="14" x:Name="EditLabel"
-                           Height="14"
-                           Fill="{Binding Path=Foreground, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type DataGridCell}}}"
-                                       Visibility="{Binding Path=HasChanges,Converter={StaticResource BooleanToVisibilityConverter}}">
-                                <Rectangle.OpacityMask>
-                                    <VisualBrush Stretch="Fill"
-                                     Visual="{DynamicResource appbar_edit_add}" />
-                                </Rectangle.OpacityMask>
-                            </Rectangle>
-                            <DataTemplate.Triggers>
-                                <MultiDataTrigger>
-                                    <MultiDataTrigger.Conditions>
-                                        <Condition Binding="{Binding IsEdit}" Value="True"></Condition>
-                                        <Condition Binding="{Binding IsValid}" Value="False"></Condition>
-                                    </MultiDataTrigger.Conditions>
-                                    <Setter Property="Fill" Value="#99D80073" TargetName="EditLabel"></Setter>
-                                </MultiDataTrigger>
-                            </DataTemplate.Triggers>
-                        </DataTemplate>
-                    </DataGridTemplateColumn.CellTemplate>
-                </DataGridTemplateColumn>
+                <DataGridTemplateColumn Width="30" CellTemplate="{StaticResource EditableLabelKey}"/>
                 <DataGridTemplateColumn Header="{x:Static p:Resources.Title}" Width="*" MaxWidth="200" MinWidth="100">
                     <DataGridTemplateColumn.CellTemplate>
                         <DataTemplate>
@@ -251,61 +85,6 @@
                     <views:ProductDetailView Margin="25,10,10,10" Padding="2"></views:ProductDetailView>
                 </DataTemplate>
             </DataGrid.RowDetailsTemplate>
-            <DataGrid.RowStyle>
-                <Style TargetType="{x:Type DataGridRow}">
-                    <Setter Property="DetailsVisibility" Value="Collapsed"></Setter>
-                    <Setter Property="Foreground" Value="{DynamicResource BlackBrush}" />
-                    <Setter Property="MinHeight"   Value="25" />
-                    <Setter Property="Padding" Value="2" />
-                    <EventSetter Event="MouseDoubleClick" Handler="ProductList_MouseDoubleClick"></EventSetter>
-                    <Style.Triggers>
-                        <DataTrigger Binding="{Binding IsHighlight}" Value="True">
-                            <Setter Property="Background" Value="#99FA6800"></Setter>
-                            <Setter Property="Foreground" Value="White"></Setter>
-                        </DataTrigger>
-                        <DataTrigger Binding="{Binding IsValid}" Value="False">
-                            <Setter Property="Background" Value="#99D80073"></Setter>
-                        </DataTrigger>
-                        <MultiDataTrigger>
-                            <MultiDataTrigger.Conditions>
-                                <Condition Binding="{Binding Path=IsEdit, Mode=TwoWay}" Value="True"></Condition>
-                            </MultiDataTrigger.Conditions>
-                            <Setter Property="DetailsVisibility" Value="Visible"></Setter>
-                        </MultiDataTrigger>
-                        <MultiDataTrigger>
-                            <MultiDataTrigger.Conditions>
-                                <Condition Binding="{Binding IsSelected, RelativeSource={RelativeSource Self}}" Value="False" />
-                                <Condition Binding="{Binding Path=IsEdit, Mode=TwoWay}" Value="True"></Condition>
-                            </MultiDataTrigger.Conditions>
-                            <Setter Property="Background" Value="{DynamicResource AccentColorBrush}" />
-                            <Setter Property="Foreground" Value="{DynamicResource AccentSelectedColorBrush}" />
-                            <Setter Property="Opacity" Value=".75"></Setter>
-                        </MultiDataTrigger>
-                        <Trigger Property="IsSelected" Value="True">
-                            <Setter Property="Background" Value="{DynamicResource AccentColorBrush}" />
-                            <Setter Property="Foreground" Value="{DynamicResource AccentSelectedColorBrush}" />
-                        </Trigger>
-                        <MultiTrigger>
-                            <MultiTrigger.Conditions>
-                                <Condition Property="IsMouseOver" Value="true"></Condition>
-                                <Condition Property="DetailsVisibility" Value="Collapsed"></Condition>
-                            </MultiTrigger.Conditions>
-                            <Setter Property="Background" Value="{DynamicResource AccentColorBrush3}" />
-                        </MultiTrigger>
-                        <Trigger Property="IsEnabled"   Value="False">
-                            <Setter Property="Foreground" Value="{DynamicResource GrayBrush7}" />
-                        </Trigger>
-                        <MultiTrigger>
-                            <MultiTrigger.Conditions>
-                                <Condition Property="IsEnabled" Value="False" />
-                                <Condition Property="IsSelected" Value="True" />
-                            </MultiTrigger.Conditions>
-                            <Setter Property="Background" Value="{DynamicResource GrayBrush7}" />
-                            <Setter Property="Foreground" Value="{DynamicResource AccentSelectedColorBrush}" />
-                        </MultiTrigger>
-                    </Style.Triggers>
-                </Style>
-            </DataGrid.RowStyle>
         </DataGrid>
     </Grid>
 </UserControl>

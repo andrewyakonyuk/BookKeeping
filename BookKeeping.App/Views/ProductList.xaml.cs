@@ -25,24 +25,13 @@ namespace BookKeeping.App.Views
             InitializeComponent();
 
             this.DataContextChanged += ProductList_DataContextChanged;
-
-            this.txtFilterBox.KeyUp += txtFilterBox_KeyUp;
         }
 
-        void ProductList_MouseDoubleClick(object sender, MouseButtonEventArgs e)
+        public void DataGrid_MouseDoubleClick(object sender, MouseButtonEventArgs e)
         {
             var viewModel = this.DataContext as ProductListViewModel;
-            if (viewModel.EditProductCmd.CanExecute(null))
-                viewModel.EditProductCmd.Execute(((Control)sender).DataContext);
-        }
-
-        void txtFilterBox_KeyUp(object sender, KeyEventArgs e)
-        {
-            var viewModel = (ProductListViewModel)DataContext;
-            if (e.Key == Key.Enter)
-            {
-                viewModel.FilterButtonCmd.Execute(new object());
-            }
+            if (viewModel.EditItemCmd.CanExecute(null))
+                viewModel.EditItemCmd.Execute(((Control)sender).DataContext);
         }
 
         void ProductList_DataContextChanged(object sender, DependencyPropertyChangedEventArgs e)
@@ -53,11 +42,9 @@ namespace BookKeeping.App.Views
             {
                 if (DataContext == null)
                     return;
-                viewModel.IsFindPopupVisible = !viewModel.IsFindPopupVisible;
+                viewModel.SearchPopup.OpenCmd.Execute(new object());
                 args.Handled = true;
             }));
-
-            viewModel.PrintArea = ProductListTable;
         }
 
         private void DataGrid_SelectionChanged(object sender, SelectionChangedEventArgs e)
@@ -65,7 +52,5 @@ namespace BookKeeping.App.Views
             var datagrid = (DataGrid)sender;
             ((ProductListViewModel)DataContext).SelectedItems = datagrid.SelectedItems;
         }
-
-
     }
 }

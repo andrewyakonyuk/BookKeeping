@@ -3,13 +3,12 @@ using BookKeeping.UI.ViewModels;
 
 namespace BookKeeping.App.ViewModels
 {
-    public class ProductViewModel : ViewModelBase
+    public class ProductViewModel : ListItemViewModel
     {
         int _countOfErrors = 0;
 
         public ProductViewModel()
         {
-            this.PropertyChanged += ProductViewModel_PropertyChanged;
             Price = CurrencyAmount.Unspecifined;
             Barcode = Barcode.Undefined;
             VatRate = VatRate.Zero;
@@ -20,18 +19,6 @@ namespace BookKeeping.App.ViewModels
             IsValid = false;
             HasChanges = true;
         }
-
-        void ProductViewModel_PropertyChanged(object sender, System.ComponentModel.PropertyChangedEventArgs e)
-        {
-            if (e.PropertyName == GetPropertyName(() => HasChanges)
-                || e.PropertyName == GetPropertyName(() => IsHighlight)
-                || e.PropertyName == GetPropertyName(() => IsValid)
-                || e.PropertyName == GetPropertyName(() => IsEdit))
-                return;
-            HasChanges = true;
-        }
-
-        public long Id { get; set; }
 
         private string _title;
 
@@ -128,19 +115,6 @@ namespace BookKeeping.App.ViewModels
             }
         }
 
-        private bool _hasChanges;
-
-        public bool HasChanges
-        {
-            get { return _hasChanges; }
-            set
-            {
-                _hasChanges = value;
-                OnPropertyChanged(() => HasChanges);
-            }
-        }
-
-
         protected override string GetErrorMessage(string columnName)
         {
             string error = null;
@@ -197,30 +171,5 @@ namespace BookKeeping.App.ViewModels
             }
             return error;
         }
-
-        private bool _isHighlight;
-
-        public bool IsHighlight
-        {
-            get { return _isHighlight; }
-            set
-            {
-                _isHighlight = value;
-                OnPropertyChanged(() => IsHighlight);
-            }
-        }
-
-        private bool _isEdit = false;
-
-        public bool IsEdit
-        {
-            get { return _isEdit; }
-            set
-            {
-                _isEdit = value;
-                OnPropertyChanged(() => IsEdit);
-            }
-        }
-
     }
 }

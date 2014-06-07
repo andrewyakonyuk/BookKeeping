@@ -8,6 +8,6 @@ namespace BookKeeping.UI
     public interface ISaveable
     {
         void SaveChanges();
-        bool CanSave { get; }
+        Func<bool> CanSave { get; }
     }
 }
