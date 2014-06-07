@@ -30,18 +30,9 @@ namespace BookKeeping.App.ViewModels
             });
         }
 
-        protected override void DoSearch(string searchText)
+        protected override System.Func<UserViewModel, bool> DoSearch(string searchText)
         {
-            if (!CollectionView.IsAddingNew && !CollectionView.IsEditingItem)
-            {
-                CollectionView.Filter = (object t) =>
-                {
-                    var product = t as ProductViewModel;
-                    if (string.IsNullOrEmpty(searchText))
-                        return true;
-                    return product.ItemNo.IndexOf(searchText) > -1;
-                };
-            }
+            return new System.Func<UserViewModel, bool>(t => t.Name.IndexOf(searchText) > -1 || t.RoleType.IndexOf(searchText) > -1);
         }
 
         public void Print()

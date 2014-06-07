@@ -27,6 +27,8 @@ namespace BookKeeping.App.ViewModels
         private readonly ExpressionHelper _expressionHelper = new ExpressionHelper();
         private bool _isLoading;
         private readonly List<TItem> _changedItems = new List<TItem>();
+        private readonly List<TItem> _deletedItems = new List<TItem>();
+        private readonly List<TItem> _newItems = new List<TItem>();
 
         protected ListViewModel()
         {
@@ -38,7 +40,7 @@ namespace BookKeeping.App.ViewModels
             SearchPopup = new PopupViewModel();
             FilterPopup = new PopupViewModel();
 
-            SearchPopup.ActionCmd = new DelegateCommand(_ => DoSearch(SearchPopup.Text), _ => CanSearch());
+            SearchPopup.ActionCmd = new DelegateCommand(_ => Search(SearchPopup.Text), _ => CanSearch());
             SearchPopup.CloseCmd = new DelegateCommand(_ => { SearchPopup.IsVisible = false; CollectionView.Filter = t => true; });
             SearchPopup.OpenCmd = new DelegateCommand(_ =>  SearchPopup.IsVisible = true, _ => CanSearch());
             SearchPopup.Placeholder = T("DoSearch");
@@ -150,27 +152,32 @@ namespace BookKeeping.App.ViewModels
 
         protected List<TItem> ChangedItems { get { return _changedItems; } }
 
+        protected List<TItem> NewItems { get { return _newItems; } }
+
+        protected List<TItem> DeletedItems { get { return _deletedItems; } }
+
         protected abstract IEnumerable<TItem> LoadItems();
 
         protected void Search(string searchText)
         {
             if (!CollectionView.IsAddingNew && !CollectionView.IsEditingItem)
             {
-                CollectionView.Filter = (object t) => true;
+                var selector = DoSearch(searchText);
+                CollectionView.Filter = new Predicate<object>(t => selector((TItem)t));
             }
         }
 
-        protected virtual void DoSearch(string searchText)
+        protected virtual Func<TItem, bool> DoSearch(string searchText)
         {
-            CollectionView.Filter = (object t) => true;
+            return new Func<TItem, bool>((t) => true);
         }
 
-        protected virtual void DoFilter(string filterExpression)
+        protected void Filter(string filterExpression)
         {
             Func<TItem, bool> selector = (p) => false;
             try
             {
-                var filterSelector = _expressionHelper.GetFilter<TItem>(filterExpression);
+                var filterSelector = DoFilter(filterExpression);
                 if (filterExpression != null)
                     selector = filterSelector;
             }
@@ -189,6 +196,11 @@ namespace BookKeeping.App.ViewModels
             }
         }
 
+        protected virtual Func<TItem, bool> DoFilter(string filterExpression)
+        {
+            return _expressionHelper.GetFilter<TItem>(filterExpression);
+        }
+
         protected virtual void ResetFilter()
         {
             FilterPopup.Text = string.Empty;
@@ -204,6 +216,11 @@ namespace BookKeeping.App.ViewModels
         }
 
         protected virtual void OnAddingItem(TItem item)
+        {
+
+        }
+
+        protected virtual void OnUpdatingItem(TItem item)
         {
 
         }
@@ -238,7 +255,11 @@ namespace BookKeeping.App.ViewModels
                         item.HasChanges = false;
                     }
                     DoSave();
-                    ChangedItems.Clear();
+
+                    _changedItems.Clear();
+                    _deletedItems.Clear();
+                    _newItems.Clear();
+
                     SendMessage(new MessageEnvelope(T("Saved")));
                 });
             }
@@ -249,9 +270,10 @@ namespace BookKeeping.App.ViewModels
         private void TViewModelItem_HasChangesPropertyChanged(object sender, PropertyChangedEventArgs e)
         {
             var item = (TItem)sender;
-            if (item.HasChanges && !_changedItems.Contains(item))
+            if (item.HasChanges && !_changedItems.Contains(item) && !_newItems.Contains(item))
             {
                 _changedItems.Add(item);
+                OnUpdatingItem(item);
             }
             if (item.HasChanges)
                 this.HasChanges = true;
@@ -277,6 +299,10 @@ namespace BookKeeping.App.ViewModels
                 foreach (TItem item in e.OldItems)
                 {
                     Unbind(item, t => t.HasChanges, TViewModelItem_HasChangesPropertyChanged);
+                    if (!_deletedItems.Contains(item))
+                    {
+                        _deletedItems.Add(item);
+                    }
                     OnDeletingItem(item);
                 }
             }
@@ -285,6 +311,10 @@ namespace BookKeeping.App.ViewModels
                 foreach (TItem item in e.NewItems)
                 {
                     Bind(item, t => t.HasChanges, TViewModelItem_HasChangesPropertyChanged);
+                    if (!_newItems.Contains(item) && !IsLoading)
+                    {
+                        _newItems.Add(item);
+                    }
                     OnAddingItem(item);
                 }
             }

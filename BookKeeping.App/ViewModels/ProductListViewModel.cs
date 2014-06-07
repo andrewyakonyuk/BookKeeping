@@ -43,23 +43,9 @@ namespace BookKeeping.App.ViewModels
             });
         }
 
-        protected override void DoSearch(string searchText)
+        protected override Func<ProductViewModel, bool> DoSearch(string searchText)
         {
-            if (!CollectionView.IsAddingNew && !CollectionView.IsEditingItem)
-            {
-                CollectionView.Filter = (object t) =>
-                {
-                    var product = t as ProductViewModel;
-                    if (string.IsNullOrEmpty(searchText))
-                        return true;
-                    return product.ItemNo.IndexOf(searchText) > -1;
-                };
-            }
-        }
-
-        protected override void OnDeletingItem(ProductViewModel item)
-        {
-            _session.Command(new DeleteProduct(new ProductId(item.Id)));
+            return new Func<ProductViewModel, bool>(t => string.IsNullOrWhiteSpace(searchText) ? true : t.ItemNo.IndexOf(searchText) > -1);
         }
 
         public void Print()
@@ -81,7 +67,7 @@ namespace BookKeeping.App.ViewModels
 
         protected override void DoSave()
         {
-            foreach (var item in ChangedItems)
+            foreach (var item in NewItems)
             {
                 var product = _productListView.Products.Find(t => t.Id == new ProductId(item.Id));
                 if (product == null)
@@ -90,48 +76,53 @@ namespace BookKeeping.App.ViewModels
                     _session.Command(new CreateProduct(new ProductId(id), item.Title, item.ItemNo, item.Price, item.Stock, item.UnitOfMeasure, item.VatRate, item.Barcode));
                     item.Id = id;
                 }
-                else
+            }
+            foreach (var item in ChangedItems)
+            {
+                var product = _productListView.Products.Find(t => t.Id == new ProductId(item.Id));
+                if (product.Barcode != item.Barcode)
                 {
-                    if (product.Barcode != item.Barcode)
+                    _session.Command(new ChangeProductBarcode(product.Id, item.Barcode));
+                }
+                if (product.IsOrderable != item.IsOrderable)
+                {
+                    if (item.IsOrderable)
                     {
-                        _session.Command(new ChangeProductBarcode(product.Id, item.Barcode));
+                        _session.Command(new MakeProductOrderable(product.Id));
                     }
-                    if (product.IsOrderable != item.IsOrderable)
+                    else
                     {
-                        if (item.IsOrderable)
-                        {
-                            _session.Command(new MakeProductOrderable(product.Id));
-                        }
-                        else
-                        {
-                            _session.Command(new MakeProductNonOrderable(product.Id, "manual edited"));
-                        }
-                    }
-                    if (product.ItemNo != item.ItemNo)
-                    {
-                        _session.Command(new ChangeProductItemNo(product.Id, item.ItemNo));
-                    }
-                    if (product.Price != item.Price)
-                    {
-                        _session.Command(new ChangeProductPrice(product.Id, item.Price));
-                    }
-                    if (product.Stock != item.Stock)
-                    {
-                        _session.Command(new UpdateProductStock(product.Id, item.Stock, "manual edited"));
-                    }
-                    if (product.Title != item.Title)
-                    {
-                        _session.Command(new RenameProduct(product.Id, item.Title));
-                    }
-                    if (product.UnitOfMeasure != item.UnitOfMeasure)
-                    {
-                        _session.Command(new ChangeProductUnitOfMeasure(product.Id, item.UnitOfMeasure));
-                    }
-                    if (product.VatRate != item.VatRate)
-                    {
-                        _session.Command(new ChangeProductVatRate(product.Id, item.VatRate));
+                        _session.Command(new MakeProductNonOrderable(product.Id, "manual edited"));
                     }
                 }
+                if (product.ItemNo != item.ItemNo)
+                {
+                    _session.Command(new ChangeProductItemNo(product.Id, item.ItemNo));
+                }
+                if (product.Price != item.Price)
+                {
+                    _session.Command(new ChangeProductPrice(product.Id, item.Price));
+                }
+                if (product.Stock != item.Stock)
+                {
+                    _session.Command(new UpdateProductStock(product.Id, item.Stock, "manual edited"));
+                }
+                if (product.Title != item.Title)
+                {
+                    _session.Command(new RenameProduct(product.Id, item.Title));
+                }
+                if (product.UnitOfMeasure != item.UnitOfMeasure)
+                {
+                    _session.Command(new ChangeProductUnitOfMeasure(product.Id, item.UnitOfMeasure));
+                }
+                if (product.VatRate != item.VatRate)
+                {
+                    _session.Command(new ChangeProductVatRate(product.Id, item.VatRate));
+                }
+            }
+            foreach (var item in DeletedItems)
+            {
+                _session.Command(new DeleteProduct(new ProductId(item.Id)));
             }
         }
     }
