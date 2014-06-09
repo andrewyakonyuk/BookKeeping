@@ -16,13 +16,13 @@ using System.Windows.Shapes;
 namespace BookKeeping.App.Views
 {
     /// <summary>
-    /// Interaction logic for UserDetailView.xaml
+    /// Interaction logic for CustomerDetailView.xaml
     /// </summary>
-    public partial class UserDetailView : UserControl
+    public partial class CustomerDetailView : UserControl
     {
         int _countOfErrors = 0;
 
-        public UserDetailView()
+        public CustomerDetailView()
         {
             InitializeComponent();
         }

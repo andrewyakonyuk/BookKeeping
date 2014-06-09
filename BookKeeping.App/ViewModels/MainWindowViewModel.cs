@@ -135,6 +135,8 @@ namespace BookKeeping.App.ViewModels
 
             ListOfProductsCmd = new DelegateCommand(_ => SetActiveWorkspace(CreateOrRetrieveWorkspace<ProductListViewModel>()));
             SaleOfGoodsCmd = new DelegateCommand(_ => SetActiveWorkspace(CreateOrRetrieveWorkspace<OrderViewModel>()));
+            ListOfCustomersCmd = new DelegateCommand(_ => SetActiveWorkspace(CreateOrRetrieveWorkspace<CustomerListViewModel>()));
+            VendorListCmd = new DelegateCommand(_ => SetActiveWorkspace(CreateOrRetrieveWorkspace<VendorListViewModel>()));
 
             //Services
             EventHistoryCmd = new DelegateCommand(_ => SetActiveWorkspace(CreateOrRetrieveWorkspace<EventHistoryViewModel>()), _ => Current.Identity.RoleType == "admin");

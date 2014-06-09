@@ -10,8 +10,8 @@ namespace BookKeeping.App.ViewModels
 {
     public class ProductListViewModel : ListViewModel<ProductViewModel>, IPrintable, ISaveable
     {
-        private Session _session = Context.Current.GetSession();
         private Projections.ProductsList.ProductListView _productListView;
+        private Session _session = Context.Current.GetSession();
 
         public ProductListViewModel()
         {
@@ -26,7 +26,6 @@ namespace BookKeeping.App.ViewModels
 
         protected virtual IEnumerable<ProductViewModel> GetProducts(ProductListView view)
         {
-            var random = new Random(100);
             return view.Products.Select((p, i) => new ProductViewModel
             {
                 Id = p.Id.Id,
@@ -65,9 +64,9 @@ namespace BookKeeping.App.ViewModels
             //}
         }
 
-        protected override void DoSave()
+        protected override void SaveNewItems(IEnumerable<ProductViewModel> newItems)
         {
-            foreach (var item in NewItems)
+            foreach (var item in newItems)
             {
                 var product = _productListView.Products.Find(t => t.Id == new ProductId(item.Id));
                 if (product == null)
@@ -77,7 +76,11 @@ namespace BookKeeping.App.ViewModels
                     item.Id = id;
                 }
             }
-            foreach (var item in ChangedItems)
+        }
+
+        protected override void SaveUpdatedItems(IEnumerable<ProductViewModel> updatesItems)
+        {
+            foreach (var item in updatesItems)
             {
                 var product = _productListView.Products.Find(t => t.Id == new ProductId(item.Id));
                 if (product.Barcode != item.Barcode)
@@ -120,10 +123,19 @@ namespace BookKeeping.App.ViewModels
                     _session.Command(new ChangeProductVatRate(product.Id, item.VatRate));
                 }
             }
-            foreach (var item in DeletedItems)
+        }
+
+        protected override void SaveDeletedItems(IEnumerable<ProductViewModel> deletedItems)
+        {
+            foreach (var item in deletedItems)
             {
                 _session.Command(new DeleteProduct(new ProductId(item.Id)));
             }
+        }
+
+        protected override void CommitChanges()
+        {
+            _session.Commit();
         }
     }
 }

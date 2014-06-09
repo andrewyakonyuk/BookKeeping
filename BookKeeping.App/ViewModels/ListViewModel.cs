@@ -9,9 +9,7 @@ using System.Collections.Specialized;
 using System.ComponentModel;
 using System.Linq;
 using System.Threading.Tasks;
-using System.Windows.Controls;
 using System.Windows.Data;
-using System.Windows.Input;
 using ICommand = System.Windows.Input.ICommand;
 
 namespace BookKeeping.App.ViewModels
@@ -41,7 +39,7 @@ namespace BookKeeping.App.ViewModels
             FilterPopup = new PopupViewModel();
 
             SearchPopup.ActionCmd = new DelegateCommand(_ => Search(SearchPopup.Text), _ => CanSearch());
-            SearchPopup.CloseCmd = new DelegateCommand(_ => { SearchPopup.IsVisible = false; CollectionView.Filter = t => true; });
+            SearchPopup.CloseCmd = new DelegateCommand(_ => { SearchPopup.IsVisible = false; CollectionView.Filter = null; });
             SearchPopup.OpenCmd = new DelegateCommand(_ =>  SearchPopup.IsVisible = true, _ => CanSearch());
             SearchPopup.Placeholder = T("DoSearch");
 
@@ -210,21 +208,6 @@ namespace BookKeeping.App.ViewModels
             }
         }
 
-        protected virtual void OnDeletingItem(TItem item)
-        {
-
-        }
-
-        protected virtual void OnAddingItem(TItem item)
-        {
-
-        }
-
-        protected virtual void OnUpdatingItem(TItem item)
-        {
-
-        }
-
         protected virtual void HasChangesPropertyChanged(object sender, PropertyChangedEventArgs e)
         {
             var end = "*";
@@ -254,7 +237,11 @@ namespace BookKeeping.App.ViewModels
                     {
                         item.HasChanges = false;
                     }
-                    DoSave();
+
+                    SaveNewItems(_newItems);
+                    SaveUpdatedItems(_changedItems);
+                    SaveDeletedItems(_deletedItems);
+                    CommitChanges();
 
                     _changedItems.Clear();
                     _deletedItems.Clear();
@@ -265,7 +252,25 @@ namespace BookKeeping.App.ViewModels
             }
         }
 
-        protected abstract void DoSave();
+        protected virtual void SaveNewItems(IEnumerable<TItem> newItems)
+        {
+
+        }
+
+        protected virtual void SaveUpdatedItems(IEnumerable<TItem> updatesItems)
+        {
+
+        }
+
+        protected virtual void SaveDeletedItems(IEnumerable<TItem> deletedItems)
+        {
+
+        }
+
+        protected virtual void CommitChanges()
+        {
+
+        }
 
         private void TViewModelItem_HasChangesPropertyChanged(object sender, PropertyChangedEventArgs e)
         {
@@ -273,7 +278,6 @@ namespace BookKeeping.App.ViewModels
             if (item.HasChanges && !_changedItems.Contains(item) && !_newItems.Contains(item))
             {
                 _changedItems.Add(item);
-                OnUpdatingItem(item);
             }
             if (item.HasChanges)
                 this.HasChanges = true;
@@ -303,7 +307,6 @@ namespace BookKeeping.App.ViewModels
                     {
                         _deletedItems.Add(item);
                     }
-                    OnDeletingItem(item);
                 }
             }
             if (e.NewItems != null)
@@ -315,7 +318,6 @@ namespace BookKeeping.App.ViewModels
                     {
                         _newItems.Add(item);
                     }
-                    OnAddingItem(item);
                 }
             }
         }

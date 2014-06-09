@@ -4,6 +4,7 @@ using BookKeeping.UI;
 using System.Collections.Generic;
 using System.Linq;
 using System.Windows.Data;
+using System;
 
 namespace BookKeeping.App.ViewModels
 {
@@ -58,34 +59,49 @@ namespace BookKeeping.App.ViewModels
             return GetUsers(_userListView);
         }
 
-        protected override void DoSave()
+        protected override void SaveNewItems(IEnumerable<UserViewModel> newItems)
         {
-            foreach (var item in ChangedItems)
+            foreach (var item in newItems)
             {
                 var product = _userListView.Users.Find(t => t.Id == new UserId(item.Id));
                 if (product == null)
                 {
+                    //todo:
                     //var userId = new UserId(_session.GetId());
                     //_session.Command(new CreateUser(userId, item.Name, item.Login, item.NewPassword, item.RoleType));
                     //item.Id = userId.Id;
                 }
-                else
-                {
-                    if (product.Name != item.Name)
-                    {
-                        _session.Command(new RenameUser(product.Id, item.Name));
-                    }
-                    if (product.RoleType != item.RoleType)
-                    {
-                        _session.Command(new AssignRoleToUser(product.Id, item.RoleType));
-                    }
-                }
+                else throw new ArgumentException();
             }
         }
 
-        protected override void OnDeletingItem(UserViewModel item)
+        protected override void SaveDeletedItems(IEnumerable<UserViewModel> deletedItems)
         {
-            _session.Command(new DeleteUser(new UserId(item.Id)));
+            foreach (var item in deletedItems)
+            {
+                _session.Command(new DeleteUser(new UserId(item.Id)));
+            }
+        }
+
+        protected override void SaveUpdatedItems(IEnumerable<UserViewModel> updatesItems)
+        {
+            foreach (var item in updatesItems)
+            {
+                 var product = _userListView.Users.Find(t => t.Id == new UserId(item.Id));
+                 if (product.Name != item.Name)
+                 {
+                     _session.Command(new RenameUser(product.Id, item.Name));
+                 }
+                 if (product.RoleType != item.RoleType)
+                 {
+                     _session.Command(new AssignRoleToUser(product.Id, item.RoleType));
+                 }
+            }
+        }
+
+        protected override void CommitChanges()
+        {
+            _session.Commit();
         }
     }
 }

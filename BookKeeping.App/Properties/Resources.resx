@@ -168,8 +168,14 @@
   <data name="Charts" xml:space="preserve">
     <value>Charts</value>
   </data>
+  <data name="City" xml:space="preserve">
+    <value>City</value>
+  </data>
   <data name="Copy" xml:space="preserve">
     <value>Copy</value>
+  </data>
+  <data name="Country" xml:space="preserve">
+    <value>Country</value>
   </data>
   <data name="Cut" xml:space="preserve">
     <value>Cut</value>
@@ -192,11 +198,17 @@
   <data name="Edit" xml:space="preserve">
     <value>Edit</value>
   </data>
+  <data name="Email" xml:space="preserve">
+    <value>Email</value>
+  </data>
   <data name="EventHistory" xml:space="preserve">
     <value>Events history</value>
   </data>
   <data name="Exit" xml:space="preserve">
     <value>Exit</value>
+  </data>
+  <data name="Fax" xml:space="preserve">
+    <value>Fax</value>
   </data>
   <data name="February" xml:space="preserve">
     <value>February</value>
@@ -209,6 +221,9 @@
   </data>
   <data name="Find" xml:space="preserve">
     <value>Find</value>
+  </data>
+  <data name="FullName" xml:space="preserve">
+    <value>Full name</value>
   </data>
   <data name="Goods" xml:space="preserve">
     <value>Goods</value>
@@ -303,6 +318,9 @@
   <data name="Paste" xml:space="preserve">
     <value>Paste</value>
   </data>
+  <data name="Phone" xml:space="preserve">
+    <value>Phone</value>
+  </data>
   <data name="Price" xml:space="preserve">
     <value>Price</value>
   </data>
@@ -375,6 +393,9 @@
   <data name="Stock" xml:space="preserve">
     <value>Stock</value>
   </data>
+  <data name="Street" xml:space="preserve">
+    <value>Street</value>
+  </data>
   <data name="Subtotal" xml:space="preserve">
     <value>Subtotal</value>
   </data>
@@ -401,5 +422,8 @@
   </data>
   <data name="VendorList" xml:space="preserve">
     <value>Vendor list</value>
+  </data>
+  <data name="ZipCode" xml:space="preserve">
+    <value>ZipCode</value>
   </data>
 </root>

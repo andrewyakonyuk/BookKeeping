@@ -171,6 +171,12 @@
                     <DataTemplate DataType="{x:Type viewmodels:UserListViewModel}">
                         <views:UserListView></views:UserListView>
                     </DataTemplate>
+                    <DataTemplate DataType="{x:Type viewmodels:CustomerListViewModel}">
+                        <views:CustomerListView></views:CustomerListView>
+                    </DataTemplate>
+                    <DataTemplate DataType="{x:Type viewmodels:VendorListViewModel}">
+                        <views:VendorListView></views:VendorListView>
+                    </DataTemplate>
                 </TabControl.Resources>
             </TabControl>
         </Grid>

@@ -57,11 +57,11 @@
         <TextBlock Text="{x:Static p:Resources.Name}" Grid.Row="1" Grid.Column="0"></TextBlock>
         <TextBox Text="{Binding Path=Name, Mode=TwoWay, UpdateSourceTrigger=LostFocus, NotifyOnValidationError=True,
             ValidatesOnExceptions=True, ValidatesOnDataErrors=True}" Grid.Row="1" Grid.Column="1"
-            Validation.ErrorTemplate="{DynamicResource ValidationErrorTemplate}"></TextBox>
+            Validation.ErrorTemplate="{DynamicResource ValidationErrorTemplate}" Validation.Error="TextBox_Error"></TextBox>
 
         <TextBlock Text="{x:Static p:Resources.Role}" Grid.Row="2" Grid.Column="0"></TextBlock>
         <ComboBox ItemsSource="{Binding Path=Roles, Mode=OneWay}" SelectedItem="{Binding Path=RoleType, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged, NotifyOnValidationError=True,
             ValidatesOnExceptions=True, ValidatesOnDataErrors=True}" Grid.Row="2" Grid.Column="1"
-            Validation.ErrorTemplate="{DynamicResource ValidationErrorTemplate}"></ComboBox>
+            Validation.ErrorTemplate="{DynamicResource ValidationErrorTemplate}" Validation.Error="TextBox_Error"></ComboBox>
     </Grid>
 </UserControl>
