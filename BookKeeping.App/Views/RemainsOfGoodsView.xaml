@@ -3,8 +3,18 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:Dialog="clr-namespace:MahApps.Metro.Controls.Dialogs;assembly=MahApps.Metro"
              mc:Ignorable="d" 
              d:DesignHeight="400" d:DesignWidth="600">
+    <UserControl.Resources>
+        <ResourceDictionary>
+            <Dialog:SimpleDialog x:Key="SimpleDialogTest"
+                                 Title="This dialog allows arbitrary content. It will close in 5 seconds."
+                                 x:Name="SimpleTestDialog">
+                <TextBlock Height="30" Text="Blah" Foreground="{DynamicResource AccentBrush}" />
+            </Dialog:SimpleDialog>
+        </ResourceDictionary>
+    </UserControl.Resources>
     <Grid>
         <FlowDocumentScrollViewer x:Name="Viewer" MaxWidth="700">
             <FlowDocument>

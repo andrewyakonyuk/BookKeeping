@@ -662,6 +662,374 @@ public partial class UserDeleted : IEvent<UserId>
             return string.Format(@"Deleted user {0}, utc - {1}", Id, Utc);
         }
     }
+    [DataContract(Namespace = "BookKeeping")]
+public partial class CreateCustomer : ICommand<CustomerId>
+    {
+        [DataMember(Order = 1)] public CustomerId Id { get; private set; }
+        [DataMember(Order = 2)] public string Name { get; private set; }
+        [DataMember(Order = 3)] public Currency Currency { get; private set; }
+        
+        CreateCustomer () {}
+        public CreateCustomer (CustomerId id, string name, Currency currency)
+        {
+            Id = id;
+            Name = name;
+            Currency = currency;
+        }
+        
+        public override string ToString()
+        {
+            return string.Format(@"Create {0} named '{1}' with currency {2}", Id, Name, Currency);
+        }
+    }
+    [DataContract(Namespace = "BookKeeping")]
+public partial class CustomerCreated : IEvent<CustomerId>
+    {
+        [DataMember(Order = 1)] public CustomerId Id { get; private set; }
+        [DataMember(Order = 2)] public string Name { get; private set; }
+        [DataMember(Order = 3)] public Currency Currency { get; private set; }
+        [DataMember(Order = 4)] public UserId UserId { get; private set; }
+        [DataMember(Order = 5)] public DateTime Utc { get; private set; }
+        
+        CustomerCreated () {}
+        public CustomerCreated (CustomerId id, string name, Currency currency, UserId userId, DateTime utc)
+        {
+            Id = id;
+            Name = name;
+            Currency = currency;
+            UserId = userId;
+            Utc = utc;
+        }
+        
+        public override string ToString()
+        {
+            return string.Format(@"{0} created with name '{1}' and currency '{2}', utc - {3}", Id, Name, Currency, Utc);
+        }
+    }
+    [DataContract(Namespace = "BookKeeping")]
+public partial class AddCustomerPayment : ICommand<CustomerId>
+    {
+        [DataMember(Order = 1)] public CustomerId Id { get; private set; }
+        [DataMember(Order = 2)] public string Name { get; private set; }
+        [DataMember(Order = 3)] public CurrencyAmount Amount { get; private set; }
+        
+        AddCustomerPayment () {}
+        public AddCustomerPayment (CustomerId id, string name, CurrencyAmount amount)
+        {
+            Id = id;
+            Name = name;
+            Amount = amount;
+        }
+        
+        public override string ToString()
+        {
+            return string.Format(@"Add {0} - {1}", Name, Amount);
+        }
+    }
+    [DataContract(Namespace = "BookKeeping")]
+public partial class CustomerPaymentAdded : IEvent<CustomerId>
+    {
+        [DataMember(Order = 1)] public CustomerId Id { get; private set; }
+        [DataMember(Order = 2)] public string PaymentName { get; private set; }
+        [DataMember(Order = 3)] public CurrencyAmount Payment { get; private set; }
+        [DataMember(Order = 4)] public CurrencyAmount NewBalance { get; private set; }
+        [DataMember(Order = 5)] public int Transaction { get; private set; }
+        [DataMember(Order = 6)] public UserId UserId { get; private set; }
+        [DataMember(Order = 7)] public DateTime Utc { get; private set; }
+        
+        CustomerPaymentAdded () {}
+        public CustomerPaymentAdded (CustomerId id, string paymentName, CurrencyAmount payment, CurrencyAmount newBalance, int transaction, UserId userId, DateTime utc)
+        {
+            Id = id;
+            PaymentName = paymentName;
+            Payment = payment;
+            NewBalance = newBalance;
+            Transaction = transaction;
+            UserId = userId;
+            Utc = utc;
+        }
+        
+        public override string ToString()
+        {
+            return string.Format(@"Added '{0}' {1} | Tx {3} => {2}", PaymentName, Payment, NewBalance, Transaction);
+        }
+    }
+    [DataContract(Namespace = "BookKeeping")]
+public partial class ChargeCustomer : ICommand<CustomerId>
+    {
+        [DataMember(Order = 1)] public CustomerId Id { get; private set; }
+        [DataMember(Order = 2)] public string Name { get; private set; }
+        [DataMember(Order = 3)] public CurrencyAmount Amount { get; private set; }
+        
+        ChargeCustomer () {}
+        public ChargeCustomer (CustomerId id, string name, CurrencyAmount amount)
+        {
+            Id = id;
+            Name = name;
+            Amount = amount;
+        }
+        
+        public override string ToString()
+        {
+            return string.Format(@"Charge {0} - '{1}'", Name, Amount);
+        }
+    }
+    [DataContract(Namespace = "BookKeeping")]
+public partial class CustomerChargeAdded : IEvent<CustomerId>
+    {
+        [DataMember(Order = 1)] public CustomerId Id { get; private set; }
+        [DataMember(Order = 2)] public string ChargeName { get; private set; }
+        [DataMember(Order = 3)] public CurrencyAmount Charge { get; private set; }
+        [DataMember(Order = 4)] public CurrencyAmount NewBalance { get; private set; }
+        [DataMember(Order = 5)] public int Transaction { get; private set; }
+        [DataMember(Order = 6)] public UserId UserId { get; private set; }
+        [DataMember(Order = 7)] public DateTime Utc { get; private set; }
+        
+        CustomerChargeAdded () {}
+        public CustomerChargeAdded (CustomerId id, string chargeName, CurrencyAmount charge, CurrencyAmount newBalance, int transaction, UserId userId, DateTime utc)
+        {
+            Id = id;
+            ChargeName = chargeName;
+            Charge = charge;
+            NewBalance = newBalance;
+            Transaction = transaction;
+            UserId = userId;
+            Utc = utc;
+        }
+        
+        public override string ToString()
+        {
+            return string.Format(@"Charged '{0}' {1} | Tx {3} => {2}", ChargeName, Charge, NewBalance, Transaction);
+        }
+    }
+    [DataContract(Namespace = "BookKeeping")]
+public partial class RenameCustomer : ICommand<CustomerId>
+    {
+        [DataMember(Order = 1)] public CustomerId Id { get; private set; }
+        [DataMember(Order = 2)] public string NewName { get; private set; }
+        
+        RenameCustomer () {}
+        public RenameCustomer (CustomerId id, string newName)
+        {
+            Id = id;
+            NewName = newName;
+        }
+        
+        public override string ToString()
+        {
+            return string.Format(@"Rename {0} to '{1}'", Id, NewName);
+        }
+    }
+    [DataContract(Namespace = "BookKeeping")]
+public partial class CustomerRenamed : IEvent<CustomerId>
+    {
+        [DataMember(Order = 1)] public CustomerId Id { get; private set; }
+        [DataMember(Order = 2)] public string Name { get; private set; }
+        [DataMember(Order = 3)] public string OldName { get; private set; }
+        [DataMember(Order = 4)] public UserId UserId { get; private set; }
+        [DataMember(Order = 5)] public DateTime Utc { get; private set; }
+        
+        CustomerRenamed () {}
+        public CustomerRenamed (CustomerId id, string name, string oldName, UserId userId, DateTime utc)
+        {
+            Id = id;
+            Name = name;
+            OldName = oldName;
+            UserId = userId;
+            Utc = utc;
+        }
+        
+        public override string ToString()
+        {
+            return string.Format(@"Customer renamed from '{1}' to '{0}'", Name, OldName);
+        }
+    }
+    [DataContract(Namespace = "BookKeeping")]
+public partial class LockCustomer : ICommand<CustomerId>
+    {
+        [DataMember(Order = 1)] public CustomerId Id { get; private set; }
+        [DataMember(Order = 2)] public string Reason { get; private set; }
+        
+        LockCustomer () {}
+        public LockCustomer (CustomerId id, string reason)
+        {
+            Id = id;
+            Reason = reason;
+        }
+    }
+    [DataContract(Namespace = "BookKeeping")]
+public partial class CustomerLocked : IEvent<CustomerId>
+    {
+        [DataMember(Order = 1)] public CustomerId Id { get; private set; }
+        [DataMember(Order = 2)] public string Reason { get; private set; }
+        [DataMember(Order = 3)] public UserId UserId { get; private set; }
+        [DataMember(Order = 4)] public DateTime Utc { get; private set; }
+        
+        CustomerLocked () {}
+        public CustomerLocked (CustomerId id, string reason, UserId userId, DateTime utc)
+        {
+            Id = id;
+            Reason = reason;
+            UserId = userId;
+            Utc = utc;
+        }
+        
+        public override string ToString()
+        {
+            return string.Format(@"{0} locked: {1}", Id, Reason);
+        }
+    }
+    [DataContract(Namespace = "BookKeeping")]
+public partial class LockCustomerForAccountOverdraft : ICommand<CustomerId>
+    {
+        [DataMember(Order = 1)] public CustomerId Id { get; private set; }
+        [DataMember(Order = 2)] public string Comment { get; private set; }
+        
+        LockCustomerForAccountOverdraft () {}
+        public LockCustomerForAccountOverdraft (CustomerId id, string comment)
+        {
+            Id = id;
+            Comment = comment;
+        }
+    }
+    [DataContract(Namespace = "BookKeeping")]
+public partial class DeleteCustomer : ICommand<CustomerId>
+    {
+        [DataMember(Order = 1)] public CustomerId Id { get; private set; }
+        
+        DeleteCustomer () {}
+        public DeleteCustomer (CustomerId id)
+        {
+            Id = id;
+        }
+    }
+    [DataContract(Namespace = "BookKeeping")]
+public partial class CustomerDeleted : IEvent<CustomerId>
+    {
+        [DataMember(Order = 1)] public CustomerId Id { get; private set; }
+        [DataMember(Order = 2)] public UserId UserId { get; private set; }
+        [DataMember(Order = 3)] public DateTime Utc { get; private set; }
+        
+        CustomerDeleted () {}
+        public CustomerDeleted (CustomerId id, UserId userId, DateTime utc)
+        {
+            Id = id;
+            UserId = userId;
+            Utc = utc;
+        }
+        
+        public override string ToString()
+        {
+            return string.Format(@"Deleted {0}, utc - {1}", Id, Utc);
+        }
+    }
+    [DataContract(Namespace = "BookKeeping")]
+public partial class UpdateCustomerAddress : ICommand<CustomerId>
+    {
+        [DataMember(Order = 1)] public CustomerId Id { get; private set; }
+        [DataMember(Order = 2)] public Address Address { get; private set; }
+        
+        UpdateCustomerAddress () {}
+        public UpdateCustomerAddress (CustomerId id, Address address)
+        {
+            Id = id;
+            Address = address;
+        }
+    }
+    [DataContract(Namespace = "BookKeeping")]
+public partial class CustomerAddressUpdated : IEvent<CustomerId>
+    {
+        [DataMember(Order = 1)] public CustomerId Id { get; private set; }
+        [DataMember(Order = 2)] public Address Address { get; private set; }
+        [DataMember(Order = 3)] public UserId UserId { get; private set; }
+        [DataMember(Order = 4)] public DateTime Utc { get; private set; }
+        
+        CustomerAddressUpdated () {}
+        public CustomerAddressUpdated (CustomerId id, Address address, UserId userId, DateTime utc)
+        {
+            Id = id;
+            Address = address;
+            UserId = userId;
+            Utc = utc;
+        }
+        
+        public override string ToString()
+        {
+            return string.Format(@"Legal address for {0} updated on {1}", Id, Address);
+        }
+    }
+    [DataContract(Namespace = "BookKeeping")]
+public partial class UpdateCustomerInfo : ICommand<CustomerId>
+    {
+        [DataMember(Order = 1)] public CustomerId Id { get; private set; }
+        [DataMember(Order = 2)] public string BankingDetails { get; private set; }
+        [DataMember(Order = 3)] public string Phone { get; private set; }
+        [DataMember(Order = 4)] public string Fax { get; private set; }
+        [DataMember(Order = 5)] public string Email { get; private set; }
+        
+        UpdateCustomerInfo () {}
+        public UpdateCustomerInfo (CustomerId id, string bankingDetails, string phone, string fax, string email)
+        {
+            Id = id;
+            BankingDetails = bankingDetails;
+            Phone = phone;
+            Fax = fax;
+            Email = email;
+        }
+    }
+    [DataContract(Namespace = "BookKeeping")]
+public partial class CustomerInfoUpdated : IEvent<CustomerId>
+    {
+        [DataMember(Order = 1)] public CustomerId Id { get; private set; }
+        [DataMember(Order = 2)] public string BankingDetails { get; private set; }
+        [DataMember(Order = 3)] public string Phone { get; private set; }
+        [DataMember(Order = 4)] public string Fax { get; private set; }
+        [DataMember(Order = 5)] public string Email { get; private set; }
+        [DataMember(Order = 6)] public UserId UserId { get; private set; }
+        [DataMember(Order = 7)] public DateTime Utc { get; private set; }
+        
+        CustomerInfoUpdated () {}
+        public CustomerInfoUpdated (CustomerId id, string bankingDetails, string phone, string fax, string email, UserId userId, DateTime utc)
+        {
+            Id = id;
+            BankingDetails = bankingDetails;
+            Phone = phone;
+            Fax = fax;
+            Email = email;
+            UserId = userId;
+            Utc = utc;
+        }
+        
+        public override string ToString()
+        {
+            return string.Format(@"{0} info updated: banking details '{1}, phone '{2}', fax '{3}', email '{4}', by {5}", Id, BankingDetails, Phone, Fax, Email, UserId);
+        }
+    }
+    
+    public interface ICustomerApplicationService
+    {
+        void When(CreateCustomer c);
+        void When(AddCustomerPayment c);
+        void When(ChargeCustomer c);
+        void When(RenameCustomer c);
+        void When(LockCustomer c);
+        void When(LockCustomerForAccountOverdraft c);
+        void When(DeleteCustomer c);
+        void When(UpdateCustomerAddress c);
+        void When(UpdateCustomerInfo c);
+    }
+    
+    public interface ICustomerState
+    {
+        void When(CustomerCreated e);
+        void When(CustomerPaymentAdded e);
+        void When(CustomerChargeAdded e);
+        void When(CustomerRenamed e);
+        void When(CustomerLocked e);
+        void When(CustomerDeleted e);
+        void When(CustomerAddressUpdated e);
+        void When(CustomerInfoUpdated e);
+    }
     
     public interface IUserApplicationService
     {

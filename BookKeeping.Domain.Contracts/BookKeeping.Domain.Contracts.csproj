@@ -48,7 +48,6 @@
     <Compile Include="Currency.cs" />
     <Compile Include="CurrencyAmount.cs" />
     <Compile Include="CustomerId.cs" />
-    <Compile Include="CustomerMessages.cs" />
     <Compile Include="ICommand.cs" />
     <Compile Include="IEvent.cs" />
     <Compile Include="IIdentity.cs" />

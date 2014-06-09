@@ -1,10 +1,9 @@
-﻿using BookKeeping.Infrastructure.Domain;
+﻿using BookKeeping.Domain.Aggregates;
 using BookKeeping.Domain.Contracts;
-using BookKeeping.Domain.Services;
-using System;
-using BookKeeping.Persistent.Storage;
+using BookKeeping.Domain.Repositories;
 using BookKeeping.Infrastructure;
-using BookKeeping.Domain.Aggregates;
+using BookKeeping.Infrastructure.Domain;
+using System;
 
 namespace BookKeeping.Domain.Services
 {
@@ -20,139 +19,99 @@ namespace BookKeeping.Domain.Services
     ///  command messages) and dispatching them to these handlers.
     /// </para></summary>
     public sealed class CustomerApplicationService :
+        ICustomerApplicationService,
         ICommandHandler<CreateCustomer>,
         ICommandHandler<RenameCustomer>,
         ICommandHandler<AddCustomerPayment>,
         ICommandHandler<ChargeCustomer>,
         ICommandHandler<LockCustomerForAccountOverdraft>,
-        ICommandHandler<LockCustomer>
+        ICommandHandler<LockCustomer>,
+        ICommandHandler<DeleteCustomer>,
+        ICommandHandler<UpdateCustomerAddress>,
+        ICommandHandler<UpdateCustomerInfo>
     {
-        private readonly IEventBus _eventBus;
-
-        // event store for accessing event streams
-        private readonly IEventStore _eventStore;
-
         // domain service that is neeeded by aggregate
         private readonly IPricingService _pricingService;
 
-        // pass dependencies for this application service via constructor
-        public CustomerApplicationService(IEventStore eventStore, IEventBus eventBus, IPricingService pricingService)
+        readonly IRepository<Customer, CustomerId> _repository;
+
+         public CustomerApplicationService(IRepository<Customer, CustomerId> repository, IPricingService pricingService)
         {
-            _eventStore = eventStore;
-            _eventBus = eventBus;
+            _repository = repository;
             _pricingService = pricingService;
+        }
+
+         private void Update(CustomerId id, Action<Customer> execute)
+        {
+            var customer = _repository.Get(id);
+            execute(customer);
         }
 
         public void LockCustomerForAccountOverdraft(CustomerId customerId, string comment)
         {
-            // Step 2.1: Load event stream for Customer, given its id
-            var stream = _eventStore.LoadEventStream(customerId);
-            // Step 2.2: Build aggregate from event stream
-            var customer = new Customer(stream.Events);
-            // Step 3: call aggregate method, passing it arguments and pricing domain service
-            customer.LockForAccountOverdraft(comment, _pricingService);
-            // Step 4: commit changes to the event stream by id
-            _eventStore.AppendToStream(customerId, stream.Version, customer.Changes);
+            if (Current.Identity == null)
+                throw new InvalidOperationException("UserIdentity should be not null");
+            var customer = _repository.Get(customerId);
+            customer.LockForAccountOverdraft(comment, _pricingService,Current.Identity.Id, Current.UtcNow);
         }
 
         public void When(CreateCustomer c)
         {
-            Update(c.Id, a => a.Create(c.Id, c.Name, c.Currency, _pricingService, Current.UtcNow));
+            if (Current.Identity == null)
+                throw new InvalidOperationException("UserIdentity should be not null");
+            Update(c.Id, a => a.Create(c.Id, c.Name, c.Currency, _pricingService, Current.Identity.Id, Current.UtcNow));
         }
 
         public void When(RenameCustomer c)
         {
-            Update(c.Id, a => a.Rename(c.NewName, Current.UtcNow));
+            if (Current.Identity == null)
+                throw new InvalidOperationException("UserIdentity should be not null");
+            Update(c.Id, a => a.Rename(c.NewName, Current.Identity.Id, Current.UtcNow));
         }
 
         public void When(AddCustomerPayment c)
         {
-            Update(c.Id, a => a.AddPayment(c.Name, c.Amount, Current.UtcNow));
+            if (Current.Identity == null)
+                throw new InvalidOperationException("UserIdentity should be not null");
+            Update(c.Id, a => a.AddPayment(c.Name, c.Amount, Current.Identity.Id, Current.UtcNow));
         }
 
         public void When(ChargeCustomer c)
         {
-            Update(c.Id, a => a.Charge(c.Name, c.Amount, Current.UtcNow));
+            if (Current.Identity == null)
+                throw new InvalidOperationException("UserIdentity should be not null");
+            Update(c.Id, a => a.Charge(c.Name, c.Amount, Current.Identity.Id, Current.UtcNow));
         }
 
         public void When(LockCustomerForAccountOverdraft c)
         {
-            Update(c.Id, a => a.LockForAccountOverdraft(c.Comment, _pricingService));
+            if (Current.Identity == null)
+                throw new InvalidOperationException("UserIdentity should be not null");
+            Update(c.Id, a => a.LockForAccountOverdraft(c.Comment, _pricingService, Current.Identity.Id, Current.UtcNow));
         }
 
         public void When(LockCustomer c)
         {
-            Update(c.Id, a => a.LockCustomer(c.Reason));
+            if (Current.Identity == null)
+                throw new InvalidOperationException("UserIdentity should be not null");
+            Update(c.Id, a => a.LockCustomer(c.Reason, Current.Identity.Id, Current.UtcNow));
         }
 
-        private static bool ConflictsWith(IEvent x, IEvent y)
+        public void When(DeleteCustomer c)
         {
-            return x.GetType() == y.GetType();
+            if (Current.Identity == null)
+                throw new InvalidOperationException("UserIdentity should be not null");
+            Update(c.Id, a => a.Delete(Current.Identity.Id, Current.UtcNow));
         }
 
-        private void Update(CustomerId id, Action<Customer> execute)
+        public void When(UpdateCustomerAddress c)
         {
-            // Load event stream from the store
-            EventStream stream = _eventStore.LoadEventStream(id);
-            // create new Customer aggregate from the history
-            Customer customer = new Customer(stream.Events);
-            // execute delegated action
-            execute(customer);
-            // append resulting changes to the stream
-            _eventStore.AppendToStream(id, stream.Version, customer.Changes);
-
-            foreach (var @event in customer.Changes)
-            {
-                var realEvent = (dynamic)System.Convert.ChangeType(@event, @event.GetType());
-                _eventBus.Publish(realEvent);
-            }
+            Update(c.Id, a => a.UpdateAddress(c.Address, Current.Identity.Id, Current.UtcNow));
         }
 
-        // Sample of method that would apply simple conflict resolution.
-        // see IDDD book or Greg Young's videos for more in-depth explanation
-        private void UpdateWithSimpleConflictResolution(CustomerId id, Action<Customer> execute)
+        public void When(UpdateCustomerInfo c)
         {
-            while (true)
-            {
-                EventStream eventStream = _eventStore.LoadEventStream(id);
-                Customer customer = new Customer(eventStream.Events);
-                execute(customer);
-
-                try
-                {
-                    _eventStore.AppendToStream(id, eventStream.Version, customer.Changes);
-
-                    foreach (var @event in customer.Changes)
-                    {
-                        var realEvent = System.Convert.ChangeType(@event, @event.GetType());
-                        _eventBus.Publish(@event);
-                    }
-                    return;
-                }
-                catch (OptimisticConcurrencyException ex)
-                {
-                    foreach (var clientEvent in customer.Changes)
-                    {
-                        foreach (var actualEvent in ex.ActualEvents)
-                        {
-                            if (ConflictsWith(clientEvent, actualEvent))
-                            {
-                                var msg = string.Format("Conflict between {0} and {1}",
-                                    clientEvent, actualEvent);
-                                throw new RealConcurrencyException(msg, ex);
-                            }
-                        }
-                    }
-                    // there are no conflicts and we can append
-                    _eventStore.AppendToStream(id, ex.ActualVersion, customer.Changes);
-
-                    foreach (var @event in customer.Changes)
-                    {
-                        var realEvent = System.Convert.ChangeType(@event, @event.GetType());
-                        _eventBus.Publish(@event);
-                    }
-                }
-            }
+            Update(c.Id, a => a.UpdateInfo(c.BankingDetails, c.Phone, c.Fax, c.Email, Current.Identity.Id, Current.UtcNow));
         }
     }
 }

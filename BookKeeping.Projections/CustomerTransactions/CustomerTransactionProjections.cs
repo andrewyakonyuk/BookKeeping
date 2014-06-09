@@ -23,12 +23,12 @@ namespace BookKeeping.Projections.CustomerTransactions
 
         public void When(CustomerChargeAdded e)
         {
-            _store.UpdateOrThrow(e.Id, v => v.AddTx(e.ChargeName, -e.Charge, e.NewBalance, e.TimeUtc));
+            _store.UpdateOrThrow(e.Id, v => v.AddTx(e.ChargeName, -e.Charge, e.NewBalance, e.Utc));
         }
 
         public void When(CustomerPaymentAdded e)
         {
-            _store.UpdateOrThrow(e.Id, v => v.AddTx(e.PaymentName, e.Payment, e.NewBalance, e.TimeUtc));
+            _store.UpdateOrThrow(e.Id, v => v.AddTx(e.PaymentName, e.Payment, e.NewBalance, e.Utc));
         }
     }
 }

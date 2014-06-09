@@ -1,6 +1,7 @@
 ﻿using BookKeeping.Domain.Contracts;
 using BookKeeping.Persistent;
 using BookKeeping.Persistent.AtomicStorage;
+using BookKeeping.Projections.CustomerList;
 using BookKeeping.Projections.CustomerTransactions;
 using BookKeeping.Projections.ProductsList;
 using BookKeeping.Projections.UserList;
@@ -15,6 +16,7 @@ namespace BookKeeping.Projections
             yield return new CustomerTransactionsProjection(docs.GetWriter<CustomerId, CustomerTransactionsListView>());
             yield return new ProductsProjection(docs.GetWriter<unit, ProductListView>());
             yield return new UsersProjection(docs.GetWriter<unit, UserListView>());
+            yield return new CustomersProjection(docs.GetWriter<unit, CustomerListView>());
         }
     }
 }

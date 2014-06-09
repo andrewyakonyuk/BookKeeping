@@ -22,7 +22,7 @@ namespace BookKeeping.App.ViewModels
 
         private long _id;
 
-        public long Id
+        public virtual long Id
         {
             get { return _id; }
             set
@@ -34,7 +34,7 @@ namespace BookKeeping.App.ViewModels
 
         private bool _isNew;
 
-        public bool IsNew
+        public virtual bool IsNew
         {
             get { return _isNew; }
             set
@@ -46,7 +46,7 @@ namespace BookKeeping.App.ViewModels
 
         private bool _isHighlight;
 
-        public bool IsHighlight
+        public virtual bool IsHighlight
         {
             get { return _isHighlight; }
             set
@@ -58,7 +58,7 @@ namespace BookKeeping.App.ViewModels
 
         private bool _isEdit = false;
 
-        public bool IsEdit
+        public virtual bool IsEdit
         {
             get { return _isEdit; }
             set
@@ -70,7 +70,7 @@ namespace BookKeeping.App.ViewModels
 
         private bool _hasChanges;
 
-        public bool HasChanges
+        public virtual bool HasChanges
         {
             get { return _hasChanges; }
             set

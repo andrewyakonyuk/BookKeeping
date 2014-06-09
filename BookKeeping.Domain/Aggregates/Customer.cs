@@ -13,7 +13,7 @@ namespace BookKeeping.Domain.Aggregates
     /// <para>In test environments (e.g. in unit tests), this aggregate can be
     /// instantiated directly.</para>
     /// </summary>
-    public class Customer : AggregateBase
+    public class Customer : AggregateBase, ICustomerState
     {
         public string Name { get; private set; }
 
@@ -31,109 +31,109 @@ namespace BookKeeping.Domain.Aggregates
 
         public int MaxTransactionId { get; private set; }
 
+        public Address LegalAddress { get; private set; }
+
+        public string BankingDetails { get; private set; }
+
+        public string Phone { get; private set; }
+
+        public string Fax { get; private set; }
+
+        public string Email { get; private set; }
+
         public Customer(IEnumerable<IEvent> events)
             : base(events)
         {
+            LegalAddress = new Address();
         }
 
-        public void Create(CustomerId id, string name, Currency currency, IPricingService service, DateTime utc)
+        public void Create(CustomerId id, string name, Currency currency, IPricingService service, UserId userId, DateTime utc)
         {
             if (this.Created)
                 throw new InvalidOperationException("Customer was already created");
-            Apply(new CustomerCreated
-            {
-                Created = utc,
-                Name = name,
-                Id = id,
-                Currency = currency
-            });
+            Apply(new CustomerCreated(id, name, currency, userId, utc));
 
             var bonus = service.GetWelcomeBonus(currency);
             if (bonus.Amount > 0)
-                AddPayment("Welcome bonus", bonus, utc);
+                AddPayment("Welcome bonus", bonus, userId, utc);
         }
 
-        public void Rename(string name, DateTime dateTime)
+        public void Rename(string name, UserId userId, DateTime utc)
         {
             if (this.Name == name)
                 return;
-            Apply(new CustomerRenamed
-            {
-                Name = name,
-                Id = this.Id,
-                OldName = this.Name,
-                Renamed = dateTime
-            });
+            Apply(new CustomerRenamed(this.Id, name, this.Name, userId, utc));
         }
 
-        public void LockCustomer(string reason)
+        public void LockCustomer(string reason, UserId userId, DateTime utc)
         {
             if (this.ConsumptionLocked)
                 return;
 
-            Apply(new CustomerLocked
-            {
-                Id = this.Id,
-                Reason = reason
-            });
+            Apply(new CustomerLocked(this.Id, reason, userId, utc));
         }
 
-        public void LockForAccountOverdraft(string comment, IPricingService service)
+        public void LockForAccountOverdraft(string comment, IPricingService service, UserId userId, DateTime utc)
         {
             if (this.ManualBilling) return;
             var threshold = service.GetOverdraftThreshold(this.Currency);
             if (this.Balance < threshold)
             {
-                LockCustomer("Overdraft. " + comment);
+                LockCustomer("Overdraft. " + comment, userId, utc);
             }
         }
 
-        public void AddPayment(string name, CurrencyAmount amount, DateTime utc)
+        public void AddPayment(string name, CurrencyAmount amount, UserId userId, DateTime utc)
         {
-            Apply(new CustomerPaymentAdded()
-            {
-                Id = this.Id,
-                Payment = amount,
-                NewBalance = this.Balance + amount,
-                PaymentName = name,
-                Transaction = this.MaxTransactionId + 1,
-                TimeUtc = utc
-            });
+            Apply(new CustomerPaymentAdded(this.Id, name, amount, this.Balance + amount, this.MaxTransactionId + 1, userId, utc));
         }
 
-        public void Charge(string name, CurrencyAmount amount, DateTime time)
+        public void Charge(string name, CurrencyAmount amount, UserId userId, DateTime utc)
         {
             if (this.Currency == Currency.Undefined)
                 throw new InvalidOperationException("Customer currency was not assigned!");
-            Apply(new CustomerChargeAdded()
-            {
-                Id = this.Id,
-                Charge = amount,
-                NewBalance = this.Balance - amount,
-                ChargeName = name,
-                Transaction = this.MaxTransactionId + 1,
-                TimeUtc = time
-            });
+            Apply(new CustomerChargeAdded(this.Id, name, amount, this.Balance - amount, this.MaxTransactionId + 1, userId, utc));
         }
 
-        public void When(CustomerLocked e)
+        public void Delete(UserId userId, DateTime utc)
+        {
+            Apply(new CustomerDeleted(this.Id, userId, utc));
+        }
+
+        public void UpdateAddress(Address address, UserId userId, DateTime utc)
+        {
+            Apply(new CustomerAddressUpdated(this.Id, address, userId, utc));
+        }
+
+        public void UpdateInfo(string bankingDetails, string phone, string fax, string email, UserId userId, DateTime utc)
+        {
+            Apply(new CustomerInfoUpdated(this.Id, bankingDetails, phone, fax, email, userId, utc));
+        }
+
+        protected override void Mutate(IEvent e)
+        {
+            Version += 1;
+            ((ICustomerState)this).When((dynamic)e);
+        }
+
+        void ICustomerState.When(CustomerLocked e)
         {
             ConsumptionLocked = true;
         }
 
-        public void When(CustomerPaymentAdded e)
+        void ICustomerState.When(CustomerPaymentAdded e)
         {
             Balance = e.NewBalance;
             MaxTransactionId = e.Transaction;
         }
 
-        public void When(CustomerChargeAdded e)
+        void ICustomerState.When(CustomerChargeAdded e)
         {
             Balance = e.NewBalance;
             MaxTransactionId = e.Transaction;
         }
 
-        public void When(CustomerCreated e)
+        void ICustomerState.When(CustomerCreated e)
         {
             Created = true;
             Name = e.Name;
@@ -142,9 +142,27 @@ namespace BookKeeping.Domain.Aggregates
             Balance = new CurrencyAmount(0, e.Currency);
         }
 
-        public void When(CustomerRenamed e)
+        void ICustomerState.When(CustomerRenamed e)
         {
             Name = e.Name;
+        }
+
+        void ICustomerState.When(CustomerDeleted e)
+        {
+            this.Version = -1;
+        }
+
+        void ICustomerState.When(CustomerAddressUpdated e)
+        {
+            LegalAddress = e.Address;
+        }
+
+        void ICustomerState.When(CustomerInfoUpdated e)
+        {
+            BankingDetails = e.BankingDetails;
+            Fax = e.Fax;
+            Email = e.Email;
+            Phone = e.Phone;
         }
     }
 }

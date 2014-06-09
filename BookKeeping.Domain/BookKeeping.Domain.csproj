@@ -98,10 +98,13 @@
   <ItemGroup>
     <Compile Include="Aggregates\Customer.cs" />
     <Compile Include="InvalidDomainOperationException.cs" />
+    <Compile Include="Projections\CustomerIndex\CustomerIndexLookup.cs" />
+    <Compile Include="Projections\CustomerIndex\CustomerIndexProjection.cs" />
     <Compile Include="Projections\ProductIndex\ProductIndexLookup.cs" />
     <Compile Include="Projections\ProductIndex\ProductIndexProjection.cs" />
     <Compile Include="Projections\UserIndex\UserIndexLookup.cs" />
     <Compile Include="Projections\UserIndex\UserIndexProjection.cs" />
+    <Compile Include="Repositories\CustomerRepository.cs" />
     <Compile Include="Repositories\ProductRepository.cs" />
     <Compile Include="Services\CustomerApplicationService.cs" />
     <Compile Include="Aggregates\Order.cs" />

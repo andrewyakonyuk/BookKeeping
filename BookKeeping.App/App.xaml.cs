@@ -39,6 +39,7 @@ namespace BookKeeping.App
             {
                 window.Close();
             };
+            Current.MainWindow = window;
             window.Show();
         }
 

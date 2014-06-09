@@ -16,6 +16,8 @@ using System.Windows.Shapes;
 using System.Windows.Xps.Packaging;
 using System.Windows.Xps;
 using BookKeeping.App.ViewModels;
+using MahApps.Metro.Controls.Dialogs;
+using MahApps.Metro.Controls;
 
 namespace BookKeeping.App.Views
 {

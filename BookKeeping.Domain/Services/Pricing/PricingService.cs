@@ -62,6 +62,10 @@ namespace BookKeeping.Domain.Services
         {
             if (currency == Currency.Eur)
                 return new CurrencyAmount(15, Currency.Eur);
+            if (currency == Currency.Uah)
+                return new CurrencyAmount(150, Currency.Uah);
+            if (currency == Currency.Usd)
+                return new CurrencyAmount(20, Currency.Usd);
             throw new NotImplementedException("TODO: implement other currencies");
         }
     }

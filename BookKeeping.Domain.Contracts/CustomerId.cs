@@ -14,6 +14,12 @@ namespace BookKeeping.Domain.Contracts
     {
         public const string Tag = "customer";
 
+        public CustomerId()
+            : base(0)
+        {
+
+        }
+
         public CustomerId(long id) : base(id) { }
 
         public override string ToString()

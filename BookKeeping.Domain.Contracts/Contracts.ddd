@@ -105,3 +105,49 @@ interface User(UserId id)
         UserDeleted! (DateTime utc)
             explicit "Deleted user {Id}, utc - {utc}"
 }
+
+interface Customer(CustomerId id)
+{
+     // define shortcut for commands
+    if ? = ICommand<CustomerId>
+    // define shortcut for events
+    if ! = IEvent<CustomerId>
+
+    CreateCustomer?(string name, Currency currency)
+        explicit "Create {id} named '{name}' with currency {currency}"
+        CustomerCreated!(string name, Currency currency, UserId userId, DateTime utc)
+            explicit "{id} created with name '{name}' and currency '{currency}', utc - {utc}"
+
+    AddCustomerPayment?(string name, CurrencyAmount amount)
+        explicit "Add {name} - {amount}"
+        CustomerPaymentAdded!(string paymentName, CurrencyAmount payment, CurrencyAmount newBalance, int transaction, UserId userId, DateTime utc)
+            explicit "Added '{paymentName}' {payment} | Tx {transaction} => {newBalance}"
+
+    ChargeCustomer?(string name, CurrencyAmount amount)
+        explicit "Charge {name} - '{amount}'"
+        CustomerChargeAdded!(string chargeName, CurrencyAmount charge, CurrencyAmount newBalance, int transaction, UserId userId, DateTime utc)
+            explicit "Charged '{chargeName}' {charge} | Tx {transaction} => {newBalance}"
+
+    RenameCustomer?(string newName)
+        explicit "Rename {id} to '{newName}'"
+        CustomerRenamed!(string name, string oldName, UserId userId, DateTime utc)
+            explicit "Customer renamed from '{oldName}' to '{name}'"
+
+    LockCustomer?(string reason)
+        CustomerLocked!(string reason, UserId userId, DateTime utc)
+            explicit "{id} locked: {reason}"
+
+    LockCustomerForAccountOverdraft?(string comment)
+
+    DeleteCustomer? ()
+    CustomerDeleted! (UserId userId, DateTime utc)
+        explicit "Deleted {id}, utc - {utc}"
+
+    UpdateCustomerAddress?(Address address)
+        CustomerAddressUpdated!(Address address, UserId userId, DateTime utc)
+            explicit "Legal address for {id} updated on {address}"
+    
+    UpdateCustomerInfo?(string bankingDetails, string phone, string fax, string email)
+        CustomerInfoUpdated!(string bankingDetails, string phone, string fax, string email,UserId userId, DateTime utc)
+            explicit "{id} info updated: banking details '{bankingDetails}, phone '{phone}', fax '{fax}', email '{email}', by {userId}"
+}
