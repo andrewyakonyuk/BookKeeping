@@ -83,7 +83,7 @@ namespace BookKeeping.App.ViewModels
 
         private bool _hasChanges;
 
-        public virtual bool HasChanges
+        public override bool HasChanges
         {
             get { return _hasChanges; }
             set

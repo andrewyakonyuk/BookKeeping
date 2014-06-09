@@ -14,7 +14,7 @@ namespace BookKeeping.App.ViewModels
 
         public CustomerListViewModel()
         {
-            DisplayName = T("ListOfProducts");
+            DisplayName = T("ListOfCustomers");
         }
 
         protected override IEnumerable<CustomerViewModel> LoadItems()

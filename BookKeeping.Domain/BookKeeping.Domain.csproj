@@ -104,8 +104,12 @@
     <Compile Include="Projections\ProductIndex\ProductIndexProjection.cs" />
     <Compile Include="Projections\UserIndex\UserIndexLookup.cs" />
     <Compile Include="Projections\UserIndex\UserIndexProjection.cs" />
+    <Compile Include="Projections\VendorIndex\VendorIndexLookup.cs" />
+    <Compile Include="Projections\VendorIndex\VendorIndexProjection.cs" />
     <Compile Include="Repositories\CustomerRepository.cs" />
     <Compile Include="Repositories\ProductRepository.cs" />
+    <Compile Include="Repositories\VendorRepository.cs" />
+    <Compile Include="Services\VendorApplicationService.cs" />
     <Compile Include="Services\CustomerApplicationService.cs" />
     <Compile Include="Aggregates\Order.cs" />
     <Compile Include="Aggregates\OrderLine.cs" />

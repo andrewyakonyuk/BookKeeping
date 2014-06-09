@@ -1005,6 +1005,374 @@ public partial class CustomerInfoUpdated : IEvent<CustomerId>
             return string.Format(@"{0} info updated: banking details '{1}, phone '{2}', fax '{3}', email '{4}', by {5}", Id, BankingDetails, Phone, Fax, Email, UserId);
         }
     }
+    [DataContract(Namespace = "BookKeeping")]
+public partial class CreateVendor : ICommand<VendorId>
+    {
+        [DataMember(Order = 1)] public VendorId Id { get; private set; }
+        [DataMember(Order = 2)] public string Name { get; private set; }
+        [DataMember(Order = 3)] public Currency Currency { get; private set; }
+        
+        CreateVendor () {}
+        public CreateVendor (VendorId id, string name, Currency currency)
+        {
+            Id = id;
+            Name = name;
+            Currency = currency;
+        }
+        
+        public override string ToString()
+        {
+            return string.Format(@"Create {0} named '{1}' with currency {2}", Id, Name, Currency);
+        }
+    }
+    [DataContract(Namespace = "BookKeeping")]
+public partial class VendorCreated : IEvent<VendorId>
+    {
+        [DataMember(Order = 1)] public VendorId Id { get; private set; }
+        [DataMember(Order = 2)] public string Name { get; private set; }
+        [DataMember(Order = 3)] public Currency Currency { get; private set; }
+        [DataMember(Order = 4)] public UserId UserId { get; private set; }
+        [DataMember(Order = 5)] public DateTime Utc { get; private set; }
+        
+        VendorCreated () {}
+        public VendorCreated (VendorId id, string name, Currency currency, UserId userId, DateTime utc)
+        {
+            Id = id;
+            Name = name;
+            Currency = currency;
+            UserId = userId;
+            Utc = utc;
+        }
+        
+        public override string ToString()
+        {
+            return string.Format(@"{0} created with name '{1}' and currency '{2}', utc - {3}", Id, Name, Currency, Utc);
+        }
+    }
+    [DataContract(Namespace = "BookKeeping")]
+public partial class AddVendorPayment : ICommand<VendorId>
+    {
+        [DataMember(Order = 1)] public VendorId Id { get; private set; }
+        [DataMember(Order = 2)] public string Name { get; private set; }
+        [DataMember(Order = 3)] public CurrencyAmount Amount { get; private set; }
+        
+        AddVendorPayment () {}
+        public AddVendorPayment (VendorId id, string name, CurrencyAmount amount)
+        {
+            Id = id;
+            Name = name;
+            Amount = amount;
+        }
+        
+        public override string ToString()
+        {
+            return string.Format(@"Add {0} - {1}", Name, Amount);
+        }
+    }
+    [DataContract(Namespace = "BookKeeping")]
+public partial class VendorPaymentAdded : IEvent<VendorId>
+    {
+        [DataMember(Order = 1)] public VendorId Id { get; private set; }
+        [DataMember(Order = 2)] public string PaymentName { get; private set; }
+        [DataMember(Order = 3)] public CurrencyAmount Payment { get; private set; }
+        [DataMember(Order = 4)] public CurrencyAmount NewBalance { get; private set; }
+        [DataMember(Order = 5)] public int Transaction { get; private set; }
+        [DataMember(Order = 6)] public UserId UserId { get; private set; }
+        [DataMember(Order = 7)] public DateTime Utc { get; private set; }
+        
+        VendorPaymentAdded () {}
+        public VendorPaymentAdded (VendorId id, string paymentName, CurrencyAmount payment, CurrencyAmount newBalance, int transaction, UserId userId, DateTime utc)
+        {
+            Id = id;
+            PaymentName = paymentName;
+            Payment = payment;
+            NewBalance = newBalance;
+            Transaction = transaction;
+            UserId = userId;
+            Utc = utc;
+        }
+        
+        public override string ToString()
+        {
+            return string.Format(@"Added '{0}' {1} | Tx {3} => {2}", PaymentName, Payment, NewBalance, Transaction);
+        }
+    }
+    [DataContract(Namespace = "BookKeeping")]
+public partial class ChargeVendor : ICommand<VendorId>
+    {
+        [DataMember(Order = 1)] public VendorId Id { get; private set; }
+        [DataMember(Order = 2)] public string Name { get; private set; }
+        [DataMember(Order = 3)] public CurrencyAmount Amount { get; private set; }
+        
+        ChargeVendor () {}
+        public ChargeVendor (VendorId id, string name, CurrencyAmount amount)
+        {
+            Id = id;
+            Name = name;
+            Amount = amount;
+        }
+        
+        public override string ToString()
+        {
+            return string.Format(@"Charge {0} - '{1}'", Name, Amount);
+        }
+    }
+    [DataContract(Namespace = "BookKeeping")]
+public partial class VendorChargeAdded : IEvent<VendorId>
+    {
+        [DataMember(Order = 1)] public VendorId Id { get; private set; }
+        [DataMember(Order = 2)] public string ChargeName { get; private set; }
+        [DataMember(Order = 3)] public CurrencyAmount Charge { get; private set; }
+        [DataMember(Order = 4)] public CurrencyAmount NewBalance { get; private set; }
+        [DataMember(Order = 5)] public int Transaction { get; private set; }
+        [DataMember(Order = 6)] public UserId UserId { get; private set; }
+        [DataMember(Order = 7)] public DateTime Utc { get; private set; }
+        
+        VendorChargeAdded () {}
+        public VendorChargeAdded (VendorId id, string chargeName, CurrencyAmount charge, CurrencyAmount newBalance, int transaction, UserId userId, DateTime utc)
+        {
+            Id = id;
+            ChargeName = chargeName;
+            Charge = charge;
+            NewBalance = newBalance;
+            Transaction = transaction;
+            UserId = userId;
+            Utc = utc;
+        }
+        
+        public override string ToString()
+        {
+            return string.Format(@"Charged '{0}' {1} | Tx {3} => {2}", ChargeName, Charge, NewBalance, Transaction);
+        }
+    }
+    [DataContract(Namespace = "BookKeeping")]
+public partial class RenameVendor : ICommand<VendorId>
+    {
+        [DataMember(Order = 1)] public VendorId Id { get; private set; }
+        [DataMember(Order = 2)] public string NewName { get; private set; }
+        
+        RenameVendor () {}
+        public RenameVendor (VendorId id, string newName)
+        {
+            Id = id;
+            NewName = newName;
+        }
+        
+        public override string ToString()
+        {
+            return string.Format(@"Rename {0} to '{1}'", Id, NewName);
+        }
+    }
+    [DataContract(Namespace = "BookKeeping")]
+public partial class VendorRenamed : IEvent<VendorId>
+    {
+        [DataMember(Order = 1)] public VendorId Id { get; private set; }
+        [DataMember(Order = 2)] public string Name { get; private set; }
+        [DataMember(Order = 3)] public string OldName { get; private set; }
+        [DataMember(Order = 4)] public UserId UserId { get; private set; }
+        [DataMember(Order = 5)] public DateTime Utc { get; private set; }
+        
+        VendorRenamed () {}
+        public VendorRenamed (VendorId id, string name, string oldName, UserId userId, DateTime utc)
+        {
+            Id = id;
+            Name = name;
+            OldName = oldName;
+            UserId = userId;
+            Utc = utc;
+        }
+        
+        public override string ToString()
+        {
+            return string.Format(@"Vendor renamed from '{1}' to '{0}'", Name, OldName);
+        }
+    }
+    [DataContract(Namespace = "BookKeeping")]
+public partial class LockVendor : ICommand<VendorId>
+    {
+        [DataMember(Order = 1)] public VendorId Id { get; private set; }
+        [DataMember(Order = 2)] public string Reason { get; private set; }
+        
+        LockVendor () {}
+        public LockVendor (VendorId id, string reason)
+        {
+            Id = id;
+            Reason = reason;
+        }
+    }
+    [DataContract(Namespace = "BookKeeping")]
+public partial class VendorLocked : IEvent<VendorId>
+    {
+        [DataMember(Order = 1)] public VendorId Id { get; private set; }
+        [DataMember(Order = 2)] public string Reason { get; private set; }
+        [DataMember(Order = 3)] public UserId UserId { get; private set; }
+        [DataMember(Order = 4)] public DateTime Utc { get; private set; }
+        
+        VendorLocked () {}
+        public VendorLocked (VendorId id, string reason, UserId userId, DateTime utc)
+        {
+            Id = id;
+            Reason = reason;
+            UserId = userId;
+            Utc = utc;
+        }
+        
+        public override string ToString()
+        {
+            return string.Format(@"{0} locked: {1}", Id, Reason);
+        }
+    }
+    [DataContract(Namespace = "BookKeeping")]
+public partial class LockVendorForAccountOverdraft : ICommand<VendorId>
+    {
+        [DataMember(Order = 1)] public VendorId Id { get; private set; }
+        [DataMember(Order = 2)] public string Comment { get; private set; }
+        
+        LockVendorForAccountOverdraft () {}
+        public LockVendorForAccountOverdraft (VendorId id, string comment)
+        {
+            Id = id;
+            Comment = comment;
+        }
+    }
+    [DataContract(Namespace = "BookKeeping")]
+public partial class DeleteVendor : ICommand<VendorId>
+    {
+        [DataMember(Order = 1)] public VendorId Id { get; private set; }
+        
+        DeleteVendor () {}
+        public DeleteVendor (VendorId id)
+        {
+            Id = id;
+        }
+    }
+    [DataContract(Namespace = "BookKeeping")]
+public partial class VendorDeleted : IEvent<VendorId>
+    {
+        [DataMember(Order = 1)] public VendorId Id { get; private set; }
+        [DataMember(Order = 2)] public UserId UserId { get; private set; }
+        [DataMember(Order = 3)] public DateTime Utc { get; private set; }
+        
+        VendorDeleted () {}
+        public VendorDeleted (VendorId id, UserId userId, DateTime utc)
+        {
+            Id = id;
+            UserId = userId;
+            Utc = utc;
+        }
+        
+        public override string ToString()
+        {
+            return string.Format(@"Deleted {0}, utc - {1}", Id, Utc);
+        }
+    }
+    [DataContract(Namespace = "BookKeeping")]
+public partial class UpdateVendorAddress : ICommand<VendorId>
+    {
+        [DataMember(Order = 1)] public VendorId Id { get; private set; }
+        [DataMember(Order = 2)] public Address Address { get; private set; }
+        
+        UpdateVendorAddress () {}
+        public UpdateVendorAddress (VendorId id, Address address)
+        {
+            Id = id;
+            Address = address;
+        }
+    }
+    [DataContract(Namespace = "BookKeeping")]
+public partial class VendorAddressUpdated : IEvent<VendorId>
+    {
+        [DataMember(Order = 1)] public VendorId Id { get; private set; }
+        [DataMember(Order = 2)] public Address Address { get; private set; }
+        [DataMember(Order = 3)] public UserId UserId { get; private set; }
+        [DataMember(Order = 4)] public DateTime Utc { get; private set; }
+        
+        VendorAddressUpdated () {}
+        public VendorAddressUpdated (VendorId id, Address address, UserId userId, DateTime utc)
+        {
+            Id = id;
+            Address = address;
+            UserId = userId;
+            Utc = utc;
+        }
+        
+        public override string ToString()
+        {
+            return string.Format(@"Legal address for {0} updated on {1}", Id, Address);
+        }
+    }
+    [DataContract(Namespace = "BookKeeping")]
+public partial class UpdateVendorInfo : ICommand<VendorId>
+    {
+        [DataMember(Order = 1)] public VendorId Id { get; private set; }
+        [DataMember(Order = 2)] public string BankingDetails { get; private set; }
+        [DataMember(Order = 3)] public string Phone { get; private set; }
+        [DataMember(Order = 4)] public string Fax { get; private set; }
+        [DataMember(Order = 5)] public string Email { get; private set; }
+        
+        UpdateVendorInfo () {}
+        public UpdateVendorInfo (VendorId id, string bankingDetails, string phone, string fax, string email)
+        {
+            Id = id;
+            BankingDetails = bankingDetails;
+            Phone = phone;
+            Fax = fax;
+            Email = email;
+        }
+    }
+    [DataContract(Namespace = "BookKeeping")]
+public partial class VendorInfoUpdated : IEvent<VendorId>
+    {
+        [DataMember(Order = 1)] public VendorId Id { get; private set; }
+        [DataMember(Order = 2)] public string BankingDetails { get; private set; }
+        [DataMember(Order = 3)] public string Phone { get; private set; }
+        [DataMember(Order = 4)] public string Fax { get; private set; }
+        [DataMember(Order = 5)] public string Email { get; private set; }
+        [DataMember(Order = 6)] public UserId UserId { get; private set; }
+        [DataMember(Order = 7)] public DateTime Utc { get; private set; }
+        
+        VendorInfoUpdated () {}
+        public VendorInfoUpdated (VendorId id, string bankingDetails, string phone, string fax, string email, UserId userId, DateTime utc)
+        {
+            Id = id;
+            BankingDetails = bankingDetails;
+            Phone = phone;
+            Fax = fax;
+            Email = email;
+            UserId = userId;
+            Utc = utc;
+        }
+        
+        public override string ToString()
+        {
+            return string.Format(@"{0} info updated: banking details '{1}, phone '{2}', fax '{3}', email '{4}', by {5}", Id, BankingDetails, Phone, Fax, Email, UserId);
+        }
+    }
+    
+    public interface IVendorApplicationService
+    {
+        void When(CreateVendor c);
+        void When(AddVendorPayment c);
+        void When(ChargeVendor c);
+        void When(RenameVendor c);
+        void When(LockVendor c);
+        void When(LockVendorForAccountOverdraft c);
+        void When(DeleteVendor c);
+        void When(UpdateVendorAddress c);
+        void When(UpdateVendorInfo c);
+    }
+    
+    public interface IVendorState
+    {
+        void When(VendorCreated e);
+        void When(VendorPaymentAdded e);
+        void When(VendorChargeAdded e);
+        void When(VendorRenamed e);
+        void When(VendorLocked e);
+        void When(VendorDeleted e);
+        void When(VendorAddressUpdated e);
+        void When(VendorInfoUpdated e);
+    }
     
     public interface ICustomerApplicationService
     {

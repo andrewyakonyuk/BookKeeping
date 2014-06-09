@@ -64,6 +64,7 @@
       <SubType>
       </SubType>
     </Compile>
+    <Compile Include="VendorId.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Contracts.ddd" />

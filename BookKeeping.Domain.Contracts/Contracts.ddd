@@ -151,3 +151,49 @@ interface Customer(CustomerId id)
         CustomerInfoUpdated!(string bankingDetails, string phone, string fax, string email,UserId userId, DateTime utc)
             explicit "{id} info updated: banking details '{bankingDetails}, phone '{phone}', fax '{fax}', email '{email}', by {userId}"
 }
+
+interface Vendor(VendorId id)
+{
+     // define shortcut for commands
+    if ? = ICommand<VendorId>
+    // define shortcut for events
+    if ! = IEvent<VendorId>
+
+    CreateVendor?(string name, Currency currency)
+        explicit "Create {id} named '{name}' with currency {currency}"
+        VendorCreated!(string name, Currency currency, UserId userId, DateTime utc)
+            explicit "{id} created with name '{name}' and currency '{currency}', utc - {utc}"
+
+    AddVendorPayment?(string name, CurrencyAmount amount)
+        explicit "Add {name} - {amount}"
+        VendorPaymentAdded!(string paymentName, CurrencyAmount payment, CurrencyAmount newBalance, int transaction, UserId userId, DateTime utc)
+            explicit "Added '{paymentName}' {payment} | Tx {transaction} => {newBalance}"
+
+    ChargeVendor?(string name, CurrencyAmount amount)
+        explicit "Charge {name} - '{amount}'"
+        VendorChargeAdded!(string chargeName, CurrencyAmount charge, CurrencyAmount newBalance, int transaction, UserId userId, DateTime utc)
+            explicit "Charged '{chargeName}' {charge} | Tx {transaction} => {newBalance}"
+
+    RenameVendor?(string newName)
+        explicit "Rename {id} to '{newName}'"
+        VendorRenamed!(string name, string oldName, UserId userId, DateTime utc)
+            explicit "Vendor renamed from '{oldName}' to '{name}'"
+
+    LockVendor?(string reason)
+        VendorLocked!(string reason, UserId userId, DateTime utc)
+            explicit "{id} locked: {reason}"
+
+    LockVendorForAccountOverdraft?(string comment)
+
+    DeleteVendor? ()
+    VendorDeleted! (UserId userId, DateTime utc)
+        explicit "Deleted {id}, utc - {utc}"
+
+    UpdateVendorAddress?(Address address)
+        VendorAddressUpdated!(Address address, UserId userId, DateTime utc)
+            explicit "Legal address for {id} updated on {address}"
+    
+    UpdateVendorInfo?(string bankingDetails, string phone, string fax, string email)
+        VendorInfoUpdated!(string bankingDetails, string phone, string fax, string email,UserId userId, DateTime utc)
+            explicit "{id} info updated: banking details '{bankingDetails}, phone '{phone}', fax '{fax}', email '{email}', by {userId}"
+}

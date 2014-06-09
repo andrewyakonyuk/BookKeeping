@@ -1,6 +1,6 @@
 ﻿using BookKeeping.Domain.Aggregates;
 using BookKeeping.Domain.Contracts;
-using BookKeeping.Domain.Projections.CustomerIndex;
+using BookKeeping.Domain.Projections.VendorIndex;
 using BookKeeping.Infrastructure.Domain;
 using BookKeeping.Persistent;
 using BookKeeping.Persistent.AtomicStorage;
@@ -9,22 +9,22 @@ using System.Collections.Generic;
 
 namespace BookKeeping.Domain.Repositories
 {
-    public class CustomerRepository : IRepository<Customer, CustomerId>
+    public class VendorRepository : IRepository<Vendor, VendorId>
     {
         readonly IEventStore _eventStore;
-        readonly IDocumentReader<unit, CustomerIndexLookup> _customerIndexReader;
+        readonly IDocumentReader<unit, VendorIndexLookup> _customerIndexReader;
         readonly IUnitOfWork _unitOfWork;
 
-        public CustomerRepository(IEventStore eventStore, IUnitOfWork unitOfWork, IDocumentReader<unit, CustomerIndexLookup> customerIndexReader)
+        public VendorRepository(IEventStore eventStore, IUnitOfWork unitOfWork, IDocumentReader<unit, VendorIndexLookup> customerIndexReader)
         {
             _eventStore = eventStore;
             _customerIndexReader = customerIndexReader;
             _unitOfWork = unitOfWork;
         }
 
-        public IEnumerable<Customer> All()
+        public IEnumerable<Vendor> All()
         {
-            var index = _customerIndexReader.Get<CustomerIndexLookup>();
+            var index = _customerIndexReader.Get<VendorIndexLookup>();
             if (index.HasValue)
             {
                 foreach (var item in index.Value.Identities)
@@ -35,31 +35,31 @@ namespace BookKeeping.Domain.Repositories
             yield break;
         }
 
-        public Customer Get(CustomerId id)
+        public Vendor Get(VendorId id)
         {
-            Customer customer = null;
-            customer = _unitOfWork.Get<Customer>(id);
-            if (customer == null)
+            Vendor vendor = null;
+            vendor = _unitOfWork.Get<Vendor>(id);
+            if (vendor == null)
             {
                 var stream = _eventStore.LoadEventStream(id);
-                customer = new Customer(stream.Events);
-                _unitOfWork.RegisterForTracking(customer, id);
+                vendor = new Vendor(stream.Events);
+                _unitOfWork.RegisterForTracking(vendor, id);
             }
-            return customer;
+            return vendor;
         }
 
-        public Customer Load(CustomerId id)
+        public Vendor Load(VendorId id)
         {
-            Customer customer = null;
-            customer = _unitOfWork.Get<Customer>(id);
-            if (customer == null)
+            Vendor vendor = null;
+            vendor = _unitOfWork.Get<Vendor>(id);
+            if (vendor == null)
             {
                 var stream = _eventStore.LoadEventStream(id);
                 if (stream.Version > 0)
                 {
-                    customer = new Customer(stream.Events);
-                    _unitOfWork.RegisterForTracking(customer, id);
-                    return customer;
+                    vendor = new Vendor(stream.Events);
+                    _unitOfWork.RegisterForTracking(vendor, id);
+                    return vendor;
                 }
             }
             return null;
