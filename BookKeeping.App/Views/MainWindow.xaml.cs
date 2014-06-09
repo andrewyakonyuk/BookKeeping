@@ -22,11 +22,17 @@ namespace BookKeeping.App.Views
     /// </summary>
     public partial class MainWindow : MahApps.Metro.Controls.MetroWindow
     {
-        //private bool _shutdown;
+        private bool _shutdown = false;
 
         public MainWindow()
         {
             InitializeComponent();
+            this.DataContextChanged += MainWindow_DataContextChanged;
+        }
+
+        void MainWindow_DataContextChanged(object sender, DependencyPropertyChangedEventArgs e)
+        {
+            var viewModel = this.DataContext as MainWindowViewModel;
         }
 
         private void MetroWindow_Closing(object sender, System.ComponentModel.CancelEventArgs e)
@@ -46,8 +52,8 @@ namespace BookKeeping.App.Views
             //    "Sure you want to quit application?",
             //    MessageDialogStyle.AffirmativeAndNegative, mySettings);
 
-            //_shutdown = result.Result == MessageDialogResult.Affirmative;
-            
+            //_shutdown = result == MessageDialogResult.Affirmative;
+
             //if (_shutdown)
             //    Application.Current.Shutdown();
         }

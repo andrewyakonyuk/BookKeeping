@@ -25,7 +25,7 @@ namespace BookKeeping.App.ViewModels
             DisplayName = T("ReportBySellers");
 
             Title = DisplayName;
-            SubTitle = "Chart with fixed width and height";
+            SubTitle = string.Empty;
 
             Monthes = new ObservableCollection<ReportOnSellerData>();
             var months = new[] { T("January"), T("February"), T("March"), T("April"), T("May"), T("June"), T("July"), T("August"), T("September"), T("October"), T("November"), T("December") };
