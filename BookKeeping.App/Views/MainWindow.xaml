@@ -143,6 +143,7 @@
                 <ColumnDefinition Width="*" />
                 <ColumnDefinition Width="auto" />
             </Grid.ColumnDefinitions>
+
             <TabControl Margin="15,5" ItemsSource="{Binding Path=Workspaces, Mode=OneWay}"
                 IsSynchronizedWithCurrentItem="True" DisplayMemberPath="DisplayName" ClipToBounds="True"
                         behaviors:TabContent.IsCached="True" Visibility="{Binding Path=IsWorkspacesVisible, Converter={StaticResource BooleanToVisibilityConverterKey}}">

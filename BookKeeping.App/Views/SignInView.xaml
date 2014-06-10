@@ -6,12 +6,18 @@
              mc:Ignorable="d"
              xmlns:p="clr-namespace:BookKeeping.App.Properties"
              xmlns:Controls="clr-namespace:MahApps.Metro.Controls;assembly=MahApps.Metro"
+             xmlns:converters.ui="clr-namespace:BookKeeping.UI.Converters;assembly=BookKeeping.UI"
              d:DesignHeight="300" d:DesignWidth="600">
     <UserControl.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
                 <ResourceDictionary>
                     <BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverterKey" />
+                    <converters.ui:InverseBooleanConverter x:Key="InverseBooleanConverterKey"></converters.ui:InverseBooleanConverter>
+                    <converters.ui:ValueConverterGroup x:Key="InverseBooleanToVisibilityConverterKey">
+                        <converters.ui:InverseBooleanConverter></converters.ui:InverseBooleanConverter>
+                        <BooleanToVisibilityConverter></BooleanToVisibilityConverter>
+                    </converters.ui:ValueConverterGroup>
                 </ResourceDictionary>
                 <ResourceDictionary Source="pack://application:,,,/BookKeeping.App;component/Resources/Icons.xaml" />
             </ResourceDictionary.MergedDictionaries>
@@ -27,6 +33,7 @@
             <RowDefinition Height="Auto" />
             <RowDefinition Height="Auto"></RowDefinition>
             <RowDefinition Height="Auto"></RowDefinition>
+            <RowDefinition Height="65"></RowDefinition>
         </Grid.RowDefinitions>
 
         <StackPanel Orientation="Horizontal" Visibility="{Binding Path=IsValidationMessageVisible, Converter={StaticResource BooleanToVisibilityConverterKey}}" Margin="5" Grid.ColumnSpan="2">
@@ -60,6 +67,16 @@
                 Content="{x:Static p:Resources.SignIn}"
                 Command="{Binding Path=SignInCmd}"
                 CommandParameter="{Binding ElementName=txtPassword}"
-                Style="{DynamicResource SquareButtonStyle}" />
+                Style="{DynamicResource SquareButtonStyle}"
+                IsEnabled="{Binding Path=IsLoading, Mode=OneWay, Converter={StaticResource InverseBooleanConverterKey}}"/>
+
+        <Grid Visibility="{Binding Path=IsLoading, Converter={StaticResource BooleanToVisibilityConverterKey}}" Grid.Row="4" VerticalAlignment="Bottom" Grid.ColumnSpan="2">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="auto"></RowDefinition>
+                <RowDefinition Height="auto"></RowDefinition>
+            </Grid.RowDefinitions>
+            <Controls:ProgressRing IsActive="{Binding Path=IsLoading}" Width="40" Height="40" Foreground="White" />
+            <TextBlock Text="{x:Static p:Resources.RebuildingProjection}" Grid.Row="1" HorizontalAlignment="Center" Margin="0,5,0,0"></TextBlock>
+        </Grid>
     </Grid>
 </UserControl>

@@ -336,6 +336,9 @@
   <data name="QuantityByDefault" xml:space="preserve">
     <value>Quantity by default</value>
   </data>
+  <data name="RebuildingProjection" xml:space="preserve">
+    <value>Rebuilding projections. Please wait</value>
+  </data>
   <data name="Redo" xml:space="preserve">
     <value>Redo</value>
   </data>

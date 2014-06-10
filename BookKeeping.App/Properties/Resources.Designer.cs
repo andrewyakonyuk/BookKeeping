@@ -718,6 +718,15 @@ namespace BookKeeping.App.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Rebuilding projections. Please wait.
+        /// </summary>
+        public static string RebuildingProjection {
+            get {
+                return ResourceManager.GetString("RebuildingProjection", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Redo.
         /// </summary>
         public static string Redo {

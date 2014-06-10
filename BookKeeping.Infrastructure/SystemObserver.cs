@@ -45,8 +45,6 @@ namespace BookKeeping.Infrastructure
 
         public static void Notify(string message, params object[] args)
         {
-            Contract.Requires<ArgumentNullException>(message != null);
-            Contract.Requires<ArgumentNullException>(args != null);
             Notify(new MessageEvent(string.Format(CultureInfo.InvariantCulture, message, args)));
         }
 

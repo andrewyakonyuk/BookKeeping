@@ -53,6 +53,8 @@
     <Compile Include="AtomicStorage\IDocumentStore.cs" />
     <Compile Include="AtomicStorage\IDocumentStrategy.cs" />
     <Compile Include="AtomicStorage\IDocumentWriter.cs" />
+    <Compile Include="AtomicStorage\MemoryDocumentReaderWriter.cs" />
+    <Compile Include="AtomicStorage\MemoryDocumentStore.cs" />
     <Compile Include="ContractsEvil.cs" />
     <Compile Include="Maybe.cs" />
     <Compile Include="NameCache.cs" />

@@ -11,6 +11,8 @@ using System.Collections.Generic;
 using BookKeeping.Auth;
 using System.Windows.Input;
 using System.Windows.Controls;
+using System.Threading;
+using BookKeeping.Projections;
 
 namespace BookKeeping.App
 {
@@ -27,9 +29,7 @@ namespace BookKeeping.App
 
             ResourceLocalizer.Initialize(BookKeeping.App.Properties.Resources.ResourceManager);
 
-            InitUsers();
-
-          //  GenerateProducts();
+            //  GenerateProducts();
 
             MainWindow window = new MainWindow();
             var viewModel = new MainWindowViewModel();
@@ -41,39 +41,6 @@ namespace BookKeeping.App
             };
             Current.MainWindow = window;
             window.Show();
-        }
-
-        protected void InitUsers()
-        {
-            using (var session = Context.Current.GetSession())
-            {
-                var userIndex = session.Query<UserIndexLookup>();
-                var createAdminCmd = new CreateUser(new UserId(1), "Адміністратор", "admin", "qwerty", "admin");
-                var createSellerCmd = new CreateUser(new UserId(2), "Продавець 1", "seller", "qwerty", "seller");
-                var createAnotherSellerCmd = new CreateUser(new UserId(3), "Продавець 2", "anotherseller", "qwerty", "seller");
-                if (userIndex.HasValue)
-                {
-                    if (!userIndex.Value.Logins.ContainsKey("admin"))
-                    {
-                        session.Command(createAdminCmd);
-                    }
-                    if (!userIndex.Value.Logins.ContainsKey("seller"))
-                    {
-                        session.Command(createSellerCmd);
-                    }
-                    if (!userIndex.Value.Logins.ContainsKey("anotherseller"))
-                    {
-                        session.Command(createAnotherSellerCmd);
-                    }
-                }
-                else
-                {
-                    session.Command(createAdminCmd);
-                    session.Command(createSellerCmd);
-                    session.Command(createAnotherSellerCmd);
-                }
-                session.Commit();
-            }
         }
 
         protected void GenerateProducts()

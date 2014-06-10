@@ -72,6 +72,8 @@ namespace BookKeeping.App
 
         public IEventStore EventStore { get { return _eventStore; } }
 
+        public IDocumentStore Projections { get { return _projections; } }
+
         public Session GetSession()
         {
             return new Session(_eventStore, _eventBus, _projections);

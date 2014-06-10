@@ -85,6 +85,18 @@ namespace BookKeeping.App.ViewModels
             }
         }
 
+        private bool _isLoading;
+
+        public bool IsLoading
+        {
+            get { return _isLoading; }
+            set
+            {
+                _isLoading = value;
+                OnPropertyChanged(() => IsLoading);
+            }
+        }
+
         protected override string GetErrorMessage(string columnName)
         {
             return null;

@@ -3,13 +3,19 @@ using BookKeeping.Domain.Aggregates;
 using BookKeeping.Domain.Contracts;
 using BookKeeping.Domain.Repositories;
 using BookKeeping.Infrastructure;
+using BookKeeping.Projections;
 using BookKeeping.UI;
 using BookKeeping.UI.ViewModels;
 using System;
 using System.Collections.Specialized;
 using System.ComponentModel;
+using System.Threading;
 using System.Windows.Input;
 using ICommand = System.Windows.Input.ICommand;
+using System.Linq;
+using System.Threading.Tasks;
+using BookKeeping.Domain.Projections.UserIndex;
+using System.Collections.Generic;
 
 namespace BookKeeping.App.ViewModels
 {
@@ -26,11 +32,14 @@ namespace BookKeeping.App.ViewModels
         {
             this.QuitConfirmationEnabled = true;
 
+            IsLoading = true;
+
             var userRepository = (IUserRepository)_session.GetRepo<User, UserId>();
             _repostory = userRepository;
 
             var authService = new AuthenticationService(userRepository);
             SignIn = new SignInViewModel(authService);
+            SignIn.IsLoading = true;
             SignIn.AuthenticationSuccessful += AuthorizationSuccessful;
 
             Profile = new ProfileViewModel(authService, _contextUserProvider);
@@ -38,6 +47,16 @@ namespace BookKeeping.App.ViewModels
 
             MainMenu.Clear();
             BuildMainMenu();
+
+
+            var cts = new CancellationTokenSource();
+            var startupTasks = Task.Factory.StartNew(() =>
+            {
+                ExecuteStartupTasks(cts.Token);
+                IsLoading = false;
+                SignIn.IsLoading = false;
+                cts.Dispose();
+            });
         }
 
         void AuthorizationSuccessful(object sender, EventArgs e)
@@ -66,6 +85,8 @@ namespace BookKeeping.App.ViewModels
         public SignInViewModel SignIn { get; private set; }
 
         public ProfileViewModel Profile { get; private set; }
+
+        #region Commands
 
         public ICommand CloseLoginCmd { get; private set; }
 
@@ -101,6 +122,8 @@ namespace BookKeeping.App.ViewModels
 
         public ICommand PrintCmd { get; private set; }
 
+        #endregion
+
         public bool IsWorkspacesVisible
         {
             get { return _isWorkspacesVisible; }
@@ -108,6 +131,18 @@ namespace BookKeeping.App.ViewModels
             {
                 _isWorkspacesVisible = value;
                 OnPropertyChanged(() => IsWorkspacesVisible);
+            }
+        }
+
+        private bool _isLoading;
+
+        public bool IsLoading
+        {
+            get { return _isLoading; }
+            set
+            {
+                _isLoading = value;
+                OnPropertyChanged(() => IsLoading);
             }
         }
 
@@ -152,6 +187,84 @@ namespace BookKeeping.App.ViewModels
         {
             base.OnWorkspacesChanged(sender, e);
             IsWorkspacesVisible = Workspaces.Count > 0;
+        }
+
+        public void ExecuteStartupTasks(CancellationToken token)
+        {
+            StartupProjectionRebuilder.Rebuild(
+                token,
+                Context.Current.Projections,
+                Context.Current.EventStore,
+                projections => DomainBoundedContext.Projections(projections)
+                .Concat(ClientBoundedContext.Projections(projections)));
+
+            InitUsers();
+
+            //GenerateProducts();
+        }
+
+        protected void InitUsers()
+        {
+            using (var session = Context.Current.GetSession())
+            {
+                var userIndex = session.Query<UserIndexLookup>();
+                var createAdminCmd = new CreateUser(new UserId(session.GetId()), "Адміністратор", "admin", "qwerty", "admin");
+                var createSellerCmd = new CreateUser(new UserId(session.GetId()), "Продавець 1", "seller", "qwerty", "seller");
+                var createAnotherSellerCmd = new CreateUser(new UserId(session.GetId()), "Продавець 2", "anotherseller", "qwerty", "seller");
+                if (userIndex.HasValue)
+                {
+                    if (!userIndex.Value.Logins.ContainsKey("admin"))
+                    {
+                        session.Command(createAdminCmd);
+                    }
+                    if (!userIndex.Value.Logins.ContainsKey("seller"))
+                    {
+                        session.Command(createSellerCmd);
+                    }
+                    if (!userIndex.Value.Logins.ContainsKey("anotherseller"))
+                    {
+                        session.Command(createAnotherSellerCmd);
+                    }
+                }
+                else
+                {
+                    session.Command(createAdminCmd);
+                    session.Command(createSellerCmd);
+                    session.Command(createAnotherSellerCmd);
+                }
+                session.Commit();
+            }
+        }
+
+        protected void GenerateProducts()
+        {
+            var random = new Random();
+            using (var session = Context.Current.GetSession())
+            {
+                var userRepo = session.GetRepo<User, UserId>();
+                var identities = new List<IUserIdentity>();
+
+                foreach (var user in userRepo.All())
+                {
+                    identities.Add(new UserIdentity(new AccountEntry(user), user.Name));
+                }
+
+                for (int i = 0; i < 500; i++)
+                {
+                    BookKeeping.Infrastructure.Current.IdentityIs(identities[random.Next(0, identities.Count - 1)]);
+                    session.Command(new CreateProduct(new ProductId(session.GetId()),
+                        new string("qwertyuiopasdfghjklzxcvbnm".Substring(random.Next(0, 12)).OrderBy(t => Guid.NewGuid()).ToArray()),
+                        "item no. " + (i + 1),
+                        new CurrencyAmount(random.Next(10, 100), Currency.Eur),
+                        random.Next(1, 1000),
+                        "m2",
+                        new VatRate(new decimal(random.NextDouble())),
+                        new Barcode("12342323", BarcodeType.EAN13)
+                        ));
+                }
+                session.Commit();
+            }
+            BookKeeping.Infrastructure.Current.Reset();
         }
     }
 }
