@@ -303,7 +303,7 @@ namespace BookKeeping.App.ViewModels
                 foreach (TItem item in e.OldItems)
                 {
                     Unbind(item, t => t.HasChanges, TViewModelItem_HasChangesPropertyChanged);
-                    if (!_deletedItems.Contains(item))
+                    if (!_newItems.Contains(item) && !_deletedItems.Contains(item))
                     {
                         _deletedItems.Add(item);
                     }
