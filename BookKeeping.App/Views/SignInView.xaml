@@ -46,7 +46,7 @@
         </StackPanel>
 
         <Label Margin="5" VerticalAlignment="Center" Grid.Row="1" Content="{x:Static p:Resources.Login}" />
-        <TextBox Margin="5" Grid.Row="1" Grid.Column="1" x:Name="txtLogin" Foreground="Black" Controls:TextboxHelper.ClearTextButton="True"
+        <TextBox Margin="5" Grid.Row="1" Grid.Column="1" FontFamily="Segoe UI Symbol"  x:Name="txtLogin" Foreground="Black" Controls:TextboxHelper.ClearTextButton="True"
                 Background="White"
                 CaretBrush="Black"
                 VerticalContentAlignment="Center">
@@ -57,7 +57,7 @@
         </TextBox>
 
         <Label Margin="5" Grid.Row="2" Grid.Column="0" VerticalAlignment="Center" Content="{x:Static p:Resources.Password}" />
-        <PasswordBox Margin="5" Controls:TextboxHelper.ClearTextButton="True" Foreground="Black"
+        <PasswordBox Margin="5" Controls:TextboxHelper.ClearTextButton="True" Foreground="Black" FontFamily="Segoe UI Symbol" 
                                  Background="White"
                                  CaretBrush="Black"
                                  x:Name="txtPassword" IsEnabled="True" Grid.Row="2" Grid.Column="1">
@@ -67,16 +67,6 @@
                 Content="{x:Static p:Resources.SignIn}"
                 Command="{Binding Path=SignInCmd}"
                 CommandParameter="{Binding ElementName=txtPassword}"
-                Style="{DynamicResource SquareButtonStyle}"
-                IsEnabled="{Binding Path=IsLoading, Mode=OneWay, Converter={StaticResource InverseBooleanConverterKey}}"/>
-
-        <Grid Visibility="{Binding Path=IsLoading, Converter={StaticResource BooleanToVisibilityConverterKey}}" Grid.Row="4" VerticalAlignment="Bottom" Grid.ColumnSpan="2">
-            <Grid.RowDefinitions>
-                <RowDefinition Height="auto"></RowDefinition>
-                <RowDefinition Height="auto"></RowDefinition>
-            </Grid.RowDefinitions>
-            <Controls:ProgressRing IsActive="{Binding Path=IsLoading}" Width="40" Height="40" Foreground="White" />
-            <TextBlock Text="{x:Static p:Resources.RebuildingProjection}" Grid.Row="1" HorizontalAlignment="Center" Margin="0,5,0,0"></TextBlock>
-        </Grid>
+                Style="{DynamicResource SquareButtonStyle}"/>
     </Grid>
 </UserControl>

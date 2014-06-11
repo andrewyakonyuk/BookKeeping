@@ -40,7 +40,7 @@ namespace BookKeeping.App.ViewModels
                     IsValidationMessageVisible = true;
                     ValidationMessage = T("SignInFailed");
                 }
-            });
+            }, _ => CanSignIn);
         }
 
         public string Login
@@ -85,24 +85,14 @@ namespace BookKeeping.App.ViewModels
             }
         }
 
-        private bool _isLoading;
-
-        public bool IsLoading
-        {
-            get { return _isLoading; }
-            set
-            {
-                _isLoading = value;
-                OnPropertyChanged(() => IsLoading);
-            }
-        }
-
         protected override string GetErrorMessage(string columnName)
         {
             return null;
         }
 
         public ICommand SignInCmd { get; private set; }
+
+        public bool CanSignIn { get; set; }
 
         public bool SignIn(string login, string password)
         {

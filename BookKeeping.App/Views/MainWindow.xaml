@@ -41,7 +41,23 @@
                         Position="Right" IsOpen="{Binding Path=Profile.IsAuthorization, Mode=OneWay, Converter={converters:InverseBooleanConverter}}"
                         Width="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType=Controls:MetroWindow}, Path=ActualWidth}"
                         CloseCommand="{Binding Path=CloseLoginCmd}">
-                <views:SignInView Margin="10" Width="400" DataContext="{Binding Path=SignIn}" VerticalAlignment="Center"></views:SignInView>
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="*"></RowDefinition>
+                        <RowDefinition Height="auto"></RowDefinition>
+                        <RowDefinition Height="*"></RowDefinition>
+                    </Grid.RowDefinitions>
+                    <!-- nothing -->
+                    <views:SignInView Margin="10" Width="400" DataContext="{Binding Path=SignIn}" VerticalAlignment="Center" Grid.Row="1"></views:SignInView>
+                    <Grid Visibility="{Binding Path=IsLoading, Converter={StaticResource BooleanToVisibilityConverterKey}}" Grid.Row="2" VerticalAlignment="Bottom" Margin="25">
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="auto"></RowDefinition>
+                            <RowDefinition Height="auto"></RowDefinition>
+                        </Grid.RowDefinitions>
+                        <Controls:ProgressRing IsActive="{Binding Path=IsLoading}" Width="40" Height="40" Foreground="White" />
+                        <TextBlock Text="{x:Static p:Resources.RebuildingProjection}" Grid.Row="1" HorizontalAlignment="Center" Margin="0,5,0,0" FontFamily="Segoe UI Symbol" FontSize="14"></TextBlock>
+                    </Grid>
+                </Grid>
             </Controls:Flyout>
             <!-- account profile-->
             <Controls:Flyout Header="{x:Static p:Resources.Account}"  Background="#3F3F46" IsOpen="{Binding Path=Profile.IsOpen}" Position="Right" Width="300">

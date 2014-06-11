@@ -37,6 +37,7 @@
                 <Setter Property="VerticalContentAlignment" Value="Center"></Setter>
                 <Setter Property="Padding" Value="2"></Setter>
                 <Setter Property="Background" Value="Transparent"></Setter>
+                <Setter Property="FontFamily" Value="Segoe UI Symbol"></Setter>
             </Style>
             <Style TargetType="{x:Type ComboBox}">
                 <Setter Property="Margin" Value="4,4"></Setter>
@@ -45,10 +46,12 @@
                 <Setter Property="VerticalContentAlignment" Value="Center"></Setter>
                 <Setter Property="Padding" Value="2"></Setter>
                 <Setter Property="Background" Value="Transparent"></Setter>
+                <Setter Property="FontFamily" Value="Segoe UI Symbol"></Setter>
             </Style>
             <Style TargetType="{x:Type TextBlock}">
                 <Setter Property="Margin" Value="4,4"></Setter>
                 <Setter Property="Height" Value="25"></Setter>
+                <Setter Property="FontFamily" Value="Segoe UI Symbol"></Setter>
                 <Setter Property="VerticalAlignment" Value="Center"></Setter>
             </Style>
         </Grid.Resources>

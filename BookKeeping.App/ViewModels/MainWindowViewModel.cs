@@ -32,29 +32,27 @@ namespace BookKeeping.App.ViewModels
         {
             this.QuitConfirmationEnabled = true;
 
-            IsLoading = true;
-
             var userRepository = (IUserRepository)_session.GetRepo<User, UserId>();
             _repostory = userRepository;
 
             var authService = new AuthenticationService(userRepository);
             SignIn = new SignInViewModel(authService);
-            SignIn.IsLoading = true;
             SignIn.AuthenticationSuccessful += AuthorizationSuccessful;
 
             Profile = new ProfileViewModel(authService, _contextUserProvider);
             Bind(Profile, t => t.IsAuthorization, IsAuthorization_PropertyChanged);
+            Bind(this, t => t.IsLoading, (sender, e) => { SignIn.CanSignIn = !IsLoading; });
 
             MainMenu.Clear();
             BuildMainMenu();
 
+            IsLoading = true;
 
             var cts = new CancellationTokenSource();
             var startupTasks = Task.Factory.StartNew(() =>
             {
                 ExecuteStartupTasks(cts.Token);
                 IsLoading = false;
-                SignIn.IsLoading = false;
                 cts.Dispose();
             });
         }

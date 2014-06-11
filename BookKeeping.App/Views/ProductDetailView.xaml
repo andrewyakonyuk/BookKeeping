@@ -38,11 +38,13 @@
                 <Setter Property="VerticalContentAlignment" Value="Center"></Setter>
                 <Setter Property="Padding" Value="2"></Setter>
                 <Setter Property="Background" Value="Transparent"></Setter>
+                <Setter Property="FontFamily" Value="Segoe UI Symbol"></Setter>
             </Style>
             <Style TargetType="{x:Type TextBlock}">
                 <Setter Property="Margin" Value="4,4"></Setter>
                 <Setter Property="Height" Value="25"></Setter>
                 <Setter Property="VerticalAlignment" Value="Center"></Setter>
+                <Setter Property="FontFamily" Value="Segoe UI Symbol"></Setter>
             </Style>
         </Grid.Resources>
         <TextBlock Text="{x:Static p:Resources.Title}" Grid.Row="0" Grid.Column="0"></TextBlock>
