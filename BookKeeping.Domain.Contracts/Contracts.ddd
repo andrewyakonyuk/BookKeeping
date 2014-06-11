@@ -197,3 +197,31 @@ interface Vendor(VendorId id)
         VendorInfoUpdated!(string bankingDetails, string phone, string fax, string email,UserId userId, DateTime utc)
             explicit "{id} info updated: banking details '{bankingDetails}, phone '{phone}', fax '{fax}', email '{email}', by {userId}"
 }
+
+interface Order(OrderId id)
+{
+  // define shortcut for commands
+    if ? = ICommand<OrderId>
+    // define shortcut for events
+    if ! = IEvent<OrderId>
+
+	CreateOrder?(CustomerId customerId)
+		OrderCreated!(CustomerId customerId, UserId userId, DateTime utc)
+			explicit "{id} created by {userId} on {utc}"
+
+	CompleteOrder?()
+		OrderCompleted!(UserId userId, DateTime utc)
+			explicit "{id} completed by {userId} on {utc}"
+
+	AddProductToOrder?(ProductId productId, string itemNo, string title,decimal quantity, CurrencyAmount amount, VatRate vatRate)
+		ProductAddedToOrder!(long lineId, ProductId productId, string itemNo, string title, decimal quantity, CurrencyAmount amount, VatRate vatRate, UserId userId, DateTime utc)
+			explicit "{productId} was added to {id} with quantity '{quantity}' by {userId} on {utc}"
+
+	UpdateProductQuantityInOrder?(ProductId productId, decimal quantity)
+		ProductQuantityUpdatedInOrder!(ProductId productId, decimal quantity, UserId userId, DateTime utc)
+			explicit "{productId} quantity was updated on {quantity} in {id} by {userId} on {utc}"
+			
+	RemoveProductFromOrder?(ProductId productId)
+		ProductRemovedFromOrder!(ProductId productId, UserId userId, DateTime utc)
+			explicit "{productId} was removed from {id} by {userId} on {utc}"
+}

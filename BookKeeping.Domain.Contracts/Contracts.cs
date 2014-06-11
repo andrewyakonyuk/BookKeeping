@@ -1348,6 +1348,221 @@ public partial class VendorInfoUpdated : IEvent<VendorId>
             return string.Format(@"{0} info updated: banking details '{1}, phone '{2}', fax '{3}', email '{4}', by {5}", Id, BankingDetails, Phone, Fax, Email, UserId);
         }
     }
+    [DataContract(Namespace = "BookKeeping")]
+public partial class CreateOrder : ICommand<OrderId>
+    {
+        [DataMember(Order = 1)] public OrderId Id { get; private set; }
+        [DataMember(Order = 2)] public CustomerId CustomerId { get; private set; }
+        
+        CreateOrder () {}
+        public CreateOrder (OrderId id, CustomerId customerId)
+        {
+            Id = id;
+            CustomerId = customerId;
+        }
+    }
+    [DataContract(Namespace = "BookKeeping")]
+public partial class OrderCreated : IEvent<OrderId>
+    {
+        [DataMember(Order = 1)] public OrderId Id { get; private set; }
+        [DataMember(Order = 2)] public CustomerId CustomerId { get; private set; }
+        [DataMember(Order = 3)] public UserId UserId { get; private set; }
+        [DataMember(Order = 4)] public DateTime Utc { get; private set; }
+        
+        OrderCreated () {}
+        public OrderCreated (OrderId id, CustomerId customerId, UserId userId, DateTime utc)
+        {
+            Id = id;
+            CustomerId = customerId;
+            UserId = userId;
+            Utc = utc;
+        }
+        
+        public override string ToString()
+        {
+            return string.Format(@"{0} created by {1} on {2}", Id, UserId, Utc);
+        }
+    }
+    [DataContract(Namespace = "BookKeeping")]
+public partial class CompleteOrder : ICommand<OrderId>
+    {
+        [DataMember(Order = 1)] public OrderId Id { get; private set; }
+        
+        CompleteOrder () {}
+        public CompleteOrder (OrderId id)
+        {
+            Id = id;
+        }
+    }
+    [DataContract(Namespace = "BookKeeping")]
+public partial class OrderCompleted : IEvent<OrderId>
+    {
+        [DataMember(Order = 1)] public OrderId Id { get; private set; }
+        [DataMember(Order = 2)] public UserId UserId { get; private set; }
+        [DataMember(Order = 3)] public DateTime Utc { get; private set; }
+        
+        OrderCompleted () {}
+        public OrderCompleted (OrderId id, UserId userId, DateTime utc)
+        {
+            Id = id;
+            UserId = userId;
+            Utc = utc;
+        }
+        
+        public override string ToString()
+        {
+            return string.Format(@"{0} completed by {1} on {2}", Id, UserId, Utc);
+        }
+    }
+    [DataContract(Namespace = "BookKeeping")]
+public partial class AddProductToOrder : ICommand<OrderId>
+    {
+        [DataMember(Order = 1)] public OrderId Id { get; private set; }
+        [DataMember(Order = 2)] public ProductId ProductId { get; private set; }
+        [DataMember(Order = 3)] public string ItemNo { get; private set; }
+        [DataMember(Order = 4)] public string Title { get; private set; }
+        [DataMember(Order = 5)] public decimal Quantity { get; private set; }
+        [DataMember(Order = 6)] public CurrencyAmount Amount { get; private set; }
+        [DataMember(Order = 7)] public VatRate VatRate { get; private set; }
+        
+        AddProductToOrder () {}
+        public AddProductToOrder (OrderId id, ProductId productId, string itemNo, string title, decimal quantity, CurrencyAmount amount, VatRate vatRate)
+        {
+            Id = id;
+            ProductId = productId;
+            ItemNo = itemNo;
+            Title = title;
+            Quantity = quantity;
+            Amount = amount;
+            VatRate = vatRate;
+        }
+    }
+    [DataContract(Namespace = "BookKeeping")]
+public partial class ProductAddedToOrder : IEvent<OrderId>
+    {
+        [DataMember(Order = 1)] public OrderId Id { get; private set; }
+        [DataMember(Order = 2)] public long LineId { get; private set; }
+        [DataMember(Order = 3)] public ProductId ProductId { get; private set; }
+        [DataMember(Order = 4)] public string ItemNo { get; private set; }
+        [DataMember(Order = 5)] public string Title { get; private set; }
+        [DataMember(Order = 6)] public decimal Quantity { get; private set; }
+        [DataMember(Order = 7)] public CurrencyAmount Amount { get; private set; }
+        [DataMember(Order = 8)] public VatRate VatRate { get; private set; }
+        [DataMember(Order = 9)] public UserId UserId { get; private set; }
+        [DataMember(Order = 10)] public DateTime Utc { get; private set; }
+        
+        ProductAddedToOrder () {}
+        public ProductAddedToOrder (OrderId id, long lineId, ProductId productId, string itemNo, string title, decimal quantity, CurrencyAmount amount, VatRate vatRate, UserId userId, DateTime utc)
+        {
+            Id = id;
+            LineId = lineId;
+            ProductId = productId;
+            ItemNo = itemNo;
+            Title = title;
+            Quantity = quantity;
+            Amount = amount;
+            VatRate = vatRate;
+            UserId = userId;
+            Utc = utc;
+        }
+        
+        public override string ToString()
+        {
+            return string.Format(@"{1} was added to {0} with quantity '{2}' by {3} on {4}", Id, ProductId, Quantity, UserId, Utc);
+        }
+    }
+    [DataContract(Namespace = "BookKeeping")]
+public partial class UpdateProductQuantityInOrder : ICommand<OrderId>
+    {
+        [DataMember(Order = 1)] public OrderId Id { get; private set; }
+        [DataMember(Order = 2)] public ProductId ProductId { get; private set; }
+        [DataMember(Order = 3)] public decimal Quantity { get; private set; }
+        
+        UpdateProductQuantityInOrder () {}
+        public UpdateProductQuantityInOrder (OrderId id, ProductId productId, decimal quantity)
+        {
+            Id = id;
+            ProductId = productId;
+            Quantity = quantity;
+        }
+    }
+    [DataContract(Namespace = "BookKeeping")]
+public partial class ProductQuantityUpdatedInOrder : IEvent<OrderId>
+    {
+        [DataMember(Order = 1)] public OrderId Id { get; private set; }
+        [DataMember(Order = 2)] public ProductId ProductId { get; private set; }
+        [DataMember(Order = 3)] public decimal Quantity { get; private set; }
+        [DataMember(Order = 4)] public UserId UserId { get; private set; }
+        [DataMember(Order = 5)] public DateTime Utc { get; private set; }
+        
+        ProductQuantityUpdatedInOrder () {}
+        public ProductQuantityUpdatedInOrder (OrderId id, ProductId productId, decimal quantity, UserId userId, DateTime utc)
+        {
+            Id = id;
+            ProductId = productId;
+            Quantity = quantity;
+            UserId = userId;
+            Utc = utc;
+        }
+        
+        public override string ToString()
+        {
+            return string.Format(@"{1} quantity was updated on {2} in {0} by {3} on {4}", Id, ProductId, Quantity, UserId, Utc);
+        }
+    }
+    [DataContract(Namespace = "BookKeeping")]
+public partial class RemoveProductFromOrder : ICommand<OrderId>
+    {
+        [DataMember(Order = 1)] public OrderId Id { get; private set; }
+        [DataMember(Order = 2)] public ProductId ProductId { get; private set; }
+        
+        RemoveProductFromOrder () {}
+        public RemoveProductFromOrder (OrderId id, ProductId productId)
+        {
+            Id = id;
+            ProductId = productId;
+        }
+    }
+    [DataContract(Namespace = "BookKeeping")]
+public partial class ProductRemovedFromOrder : IEvent<OrderId>
+    {
+        [DataMember(Order = 1)] public OrderId Id { get; private set; }
+        [DataMember(Order = 2)] public ProductId ProductId { get; private set; }
+        [DataMember(Order = 3)] public UserId UserId { get; private set; }
+        [DataMember(Order = 4)] public DateTime Utc { get; private set; }
+        
+        ProductRemovedFromOrder () {}
+        public ProductRemovedFromOrder (OrderId id, ProductId productId, UserId userId, DateTime utc)
+        {
+            Id = id;
+            ProductId = productId;
+            UserId = userId;
+            Utc = utc;
+        }
+        
+        public override string ToString()
+        {
+            return string.Format(@"{1} was removed from {0} by {2} on {3}", Id, ProductId, UserId, Utc);
+        }
+    }
+    
+    public interface IOrderApplicationService
+    {
+        void When(CreateOrder c);
+        void When(CompleteOrder c);
+        void When(AddProductToOrder c);
+        void When(UpdateProductQuantityInOrder c);
+        void When(RemoveProductFromOrder c);
+    }
+    
+    public interface IOrderState
+    {
+        void When(OrderCreated e);
+        void When(OrderCompleted e);
+        void When(ProductAddedToOrder e);
+        void When(ProductQuantityUpdatedInOrder e);
+        void When(ProductRemovedFromOrder e);
+    }
     
     public interface IVendorApplicationService
     {

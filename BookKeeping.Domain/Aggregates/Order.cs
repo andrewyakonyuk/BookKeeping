@@ -1,112 +1,129 @@
-﻿//using BookKeeping.Domain.Services;
-//using BookKeeping.Infrastructure;
-//using System;
-//using System.Collections.Generic;
-//using System.Linq;
-//using System.Diagnostics.Contracts;
+﻿using BookKeeping.Domain.Contracts;
+using BookKeeping.Infrastructure.Domain;
+using System;
+using System.Collections.Generic;
+using System.Linq;
 
-//namespace BookKeeping.Domain.Aggregates
-//{
-//    public class Order : IEntity
-//    {
-//        readonly IOrderCalculator _calculator;
-//        readonly IProductService _productService;
-//        const string OrderNumberPrefix = "order no.";
+namespace BookKeeping.Domain.Aggregates
+{
+    public sealed class Order : AggregateBase, IOrderState
+    {
+        readonly List<OrderLine> _orderLines = new List<OrderLine>();
 
-//        public long Id { get; set; }
+        public IEnumerable<OrderLine> Lines { get { return _orderLines; } }
 
-//        public string OrderNumber { get; set; }
+        public CurrencyAmount Total { get; private set; }
 
-//        public DateTime DateCreated { get; protected set; }
+        public CurrencyAmount TotalWithVat { get; private set; }
 
-//        public DateTime DateModified { get; set; }
+        public VatRate VatRate { get; private set; }
 
-//        public DateTime? DateFinalized { get; protected set; }
+        public OrderId Id { get; private set; }
 
-//        public bool IsFinalized { get { return DateFinalized.HasValue; } }
+        public CustomerId CustomerId { get; private set; }
 
-//        public decimal TotalQuantity
-//        {
-//            get
-//            {
-//                return this.OrderLines.Sum((OrderLine ol) => ol.Quantity);
-//            }
-//        }
+        public bool IsCompleted { get; private set; }
 
-//        public OrderLineCollection OrderLines { get; protected set; }
+        public decimal TotalQuantity { get { return this.Lines.Sum((OrderLine ol) => ol.Quantity); } }
 
-//        public VatRate VatRate { get; protected set; }
+        public Order(IEnumerable<IEvent> events) :
+            base(events)
+        {
+            Total = CurrencyAmount.Unspecifined;
+            TotalWithVat = CurrencyAmount.Unspecifined;
+            VatRate = VatRate.Zero;
+        }
 
-//        public CurrencyAmount TotalPriceInclVat { get; protected set; }
+        protected override void Mutate(IEvent e)
+        {
+            ((IOrderState)this).When((dynamic)e);
+        }
 
-//        public CurrencyAmount TotalPrice { get; protected set; }
+        public void Create(OrderId id, CustomerId customerId, UserId userId, DateTime utc)
+        {
+            Apply(new OrderCreated(id, customerId, userId, utc));
+        }
 
-//        public Order(IOrderCalculator calculator, IProductService productService)
-//        {
-//            Contract.Requires<ArgumentNullException>(calculator != null);
-//            Contract.Requires<ArgumentNullException>(productService != null);
+        public void Complete(UserId userId, DateTime utc)
+        {
+            Apply(new OrderCompleted(this.Id, userId, utc));
+        }
 
-//            _calculator = calculator;
-//            _productService = productService;
+        public void UpdateLineQuantity(ProductId productId, decimal quantity, UserId userId, DateTime utc)
+        {
+            if (_orderLines.Any(t => t.ProductId.Equals(productId)))
+            {
+                if (quantity <= 0)
+                {
+                    Apply(new ProductRemovedFromOrder(this.Id, productId, userId, utc));
+                }
+                else Apply(new ProductQuantityUpdatedInOrder(this.Id, productId, quantity, userId, utc));
+            }
+            else throw new ArgumentException();
+        }
 
-//            this.OrderNumber = string.Empty;
-//            this.OrderLines = new OrderLineCollection();
-//            this.VatRate = Domain.VatRate.Zero;
-//            this.TotalPriceInclVat = CurrencyAmount.Unspecifined;
-//            this.TotalPrice = CurrencyAmount.Unspecifined;
-//            this.DateCreated = Current.UtcNow;
-//        }
+        public void AddLine(ProductId productId, string itemNo, string title, decimal quantity, CurrencyAmount amount, VatRate vatRate, UserId userId, DateTime utc)
+        {
+            int count = this._orderLines.Count;
+            Apply(new ProductAddedToOrder(this.Id, count + 1, productId, itemNo, title, quantity, amount, vatRate, userId, utc));
+        }
 
-//        public void Calculate()
-//        {
-//            var result = _calculator.CalculateOrder(this);
-//            TotalPrice = result.TotalPrice;
-//            TotalPriceInclVat = result.TotalPriceInclVat;
-//            VatRate = result.VatRate;
-//        }
+        public void RemoveLine(ProductId productId, UserId userId, DateTime utc)
+        {
+            Apply(new ProductRemovedFromOrder(this.Id, productId, userId, utc));
+        }
 
-//        public void Complete()
-//        {
-//            if (!this.IsFinalized)
-//            {
-//                Calculate();
-//                this.DateFinalized = Current.UtcNow;
-//                this.OrderNumber = string.Format("{0}{1:##########}", OrderNumberPrefix, Id);
-//                RemoveItemsFromStock(this.OrderLines, 1m, _productService);
-//            }
-//        }
+        public void Calculate()
+        {
+            var currency = Currency.Uah;//todo: bug
+           Total = Lines.Aggregate(new CurrencyAmount(0, currency), (seed, line) => seed = seed + line.Amount);
+            TotalWithVat = Lines.Aggregate(new CurrencyAmount(0, currency), (seed, line) => seed = seed + (line.Amount + new CurrencyAmount(line.Amount.Amount * line.VatRate, currency)));
+            VatRate = new VatRate((TotalWithVat - Total).Amount / 100);
+        }
 
-//        private static void RemoveItemsFromStock(IEnumerable<OrderLine> orderLines, decimal parentOrderLineQuantity, IProductService productService)
-//        {
-//            foreach (OrderLine current in orderLines)
-//            {
-//                decimal? stock = productService.GetStock(current.ProductId);
-//                if (stock.HasValue)
-//                {
-//                    productService.SetStock(current.ProductId, stock.Value - current.Quantity * parentOrderLineQuantity);
-//                }
-//            }
-//        }
+        void IOrderState.When(OrderCreated e)
+        {
+            this.Id = e.Id;
+            this.CustomerId = e.CustomerId;
+        }
 
-//        public override bool Equals(object obj)
-//        {
-//            Order order = obj as Order;
-//            return order != null
-//                && (this.Id == order.Id
-//                && this.OrderNumber == order.OrderNumber
-//                && this.DateCreated.AddTicks(-(this.DateCreated.Ticks % 10000000L)) == order.DateCreated.AddTicks(-(order.DateCreated.Ticks % 10000000L))
-//                && this.DateModified.AddTicks(-(this.DateModified.Ticks % 10000000L)) == order.DateModified.AddTicks(-(order.DateModified.Ticks % 10000000L))
-//                && ((!this.DateFinalized.HasValue && !order.DateFinalized.HasValue) || (this.DateFinalized.HasValue && order.DateFinalized.HasValue
-//                && this.DateFinalized.Value.AddTicks(-(this.DateFinalized.Value.Ticks % 10000000L)) == order.DateFinalized.Value.AddTicks(-(order.DateFinalized.Value.Ticks % 10000000L))))
-//                && this.OrderLines.Equals(order.OrderLines)
-//                && this.VatRate.Equals(order.VatRate)
-//                && this.TotalPriceInclVat.Equals(order.TotalPriceInclVat)
-//                && this.TotalPrice.Equals(order.TotalPrice));
-//        }
+        void IOrderState.When(OrderCompleted e)
+        {
+            this.IsCompleted = true;
+        }
 
-//        public override int GetHashCode()
-//        {
-//            return base.GetHashCode();
-//        }
-//    }
-//}
+        void IOrderState.When(ProductAddedToOrder e)
+        {
+            var line = _orderLines.SingleOrDefault(t => t.ProductId.Equals(e.ProductId));
+            if (line == null)
+            {
+                this._orderLines.Add(new OrderLine
+                {
+                    Id = e.LineId,
+                    ItemNo = e.ItemNo,
+                    Quantity = e.Quantity,
+                    Amount = e.Amount,
+                    Title = e.Title,
+                    VatRate = e.VatRate
+                });
+            }
+            else
+            {
+                UpdateLineQuantity(e.ProductId, e.Quantity, e.UserId, e.Utc);
+            }
+        }
+
+        void IOrderState.When(ProductQuantityUpdatedInOrder e)
+        {
+            _orderLines.Single(t => t.ProductId.Equals(e.ProductId)).Quantity = e.Quantity;
+        }
+
+        void IOrderState.When(ProductRemovedFromOrder e)
+        {
+            var line = _orderLines.Find(t => t.ProductId.Equals(e.ProductId));
+            if (line == null)
+                return;
+            _orderLines.Remove(line);
+        }
+    }
+}

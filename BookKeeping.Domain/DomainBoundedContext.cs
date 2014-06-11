@@ -1,4 +1,5 @@
 ﻿using BookKeeping.Domain.Projections.CustomerIndex;
+using BookKeeping.Domain.Projections.OrderIndex;
 using BookKeeping.Domain.Projections.ProductIndex;
 using BookKeeping.Domain.Projections.UserIndex;
 using BookKeeping.Domain.Projections.VendorIndex;
@@ -28,6 +29,7 @@ namespace BookKeeping
             yield return new ProductApplicationService(new ProductRepository(store, unitOfWork, docs.GetReader<unit, ProductIndexLookup>()));
             yield return new UserApplicationService(new UserRepository(store, unitOfWork, docs.GetReader<unit, UserIndexLookup>()), docs.GetReader<unit, UserIndexLookup>());
             yield return new VendorApplicationService(new VendorRepository(store, unitOfWork, docs.GetReader<unit, VendorIndexLookup>()), new PricingService());
+            yield return new OrderApplicationService(new OrderRepository(store, unitOfWork, docs.GetReader<unit, OrderIndexLookup>()));
         }
     }
 }

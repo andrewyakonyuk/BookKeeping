@@ -42,6 +42,8 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="ClientBoundedContext.cs" />
+    <Compile Include="OrderList\OrderListView.cs" />
+    <Compile Include="OrderList\OrdersProjection.cs" />
     <Compile Include="VendorList\VendorListView.cs" />
     <Compile Include="VendorList\VendorProjection.cs" />
     <Compile Include="CustomerList\CustomerListView.cs" />

@@ -1,34 +1,56 @@
 ﻿using BookKeeping.Domain.Aggregates;
 using BookKeeping.Domain.Contracts;
+using BookKeeping.Domain.Repositories;
+using BookKeeping.Infrastructure;
 using BookKeeping.Infrastructure.Domain;
 using BookKeeping.Persistent.Storage;
 using System;
 
 namespace BookKeeping.Domain.Services
 {
-    public class OrderApplicationService
+    public class OrderApplicationService : IOrderApplicationService,
+        ICommandHandler<CreateOrder>,
+        ICommandHandler<CompleteOrder>,
+        ICommandHandler<AddProductToOrder>,
+        ICommandHandler<UpdateProductQuantityInOrder>,
+        ICommandHandler<RemoveProductFromOrder>
     {
-        private readonly IEventBus _eventBus;
-        private readonly IEventStore _eventStore;
+        readonly IRepository<Order, OrderId> _repository;
 
-        public OrderApplicationService(IEventStore eventStore, IEventBus eventBus)
+        public OrderApplicationService(IRepository<Order, OrderId> repository)
         {
-            _eventStore = eventStore;
-            _eventBus = eventBus;
+            _repository = repository;
         }
 
         private void Update(OrderId id, Action<Order> execute)
         {
-            var stream = _eventStore.LoadEventStream(id);
-            var customer = new Order(stream.Events);
-            execute(customer);
-            _eventStore.AppendToStream(id, stream.Version, customer.Changes);
+            var product = _repository.Get(id);
+            execute(product);
+        }
 
-            foreach (var @event in customer.Changes)
-            {
-                var realEvent = (dynamic)System.Convert.ChangeType(@event, @event.GetType());
-                _eventBus.Publish(realEvent);
-            }
+        public void When(CreateOrder c)
+        {
+            Update(c.Id, o => o.Create(c.Id, c.CustomerId, Current.Identity.Id, Current.UtcNow));
+        }
+
+        public void When(CompleteOrder c)
+        {
+            Update(c.Id, o => o.Complete(Current.Identity.Id, Current.UtcNow));
+        }
+
+        public void When(AddProductToOrder c)
+        {
+            Update(c.Id, o => o.AddLine(c.ProductId, c.ItemNo, c.Title, c.Quantity, c.Amount, c.VatRate, Current.Identity.Id, Current.UtcNow));
+        }
+
+        public void When(UpdateProductQuantityInOrder c)
+        {
+            Update(c.Id, o => o.UpdateLineQuantity(c.ProductId, c.Quantity, Current.Identity.Id, Current.UtcNow));
+        }
+
+        public void When(RemoveProductFromOrder c)
+        {
+            Update(c.Id, o => o.RemoveLine(c.ProductId, Current.Identity.Id, Current.UtcNow));
         }
     }
 }

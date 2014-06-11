@@ -55,7 +55,6 @@
     <Compile Include="IUserIdentity.cs" />
     <Compile Include="NullId.cs" />
     <Compile Include="OrderId.cs" />
-    <Compile Include="OrderMessages.cs" />
     <Compile Include="Password.cs" />
     <Compile Include="ProductId.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
