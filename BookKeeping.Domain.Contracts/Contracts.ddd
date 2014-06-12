@@ -1,0 +1,227 @@
+﻿// main namespace for commands and messages
+namespace BookKeeping.Domain.Contracts
+// define data contract namespace for all classes
+extern "BookKeeping"
+
+// define shortcut for interface IIdentity
+if ! = IIdentity
+
+// define alias
+const name = string name
+const dateUtc = DateTime dateUtc
+
+// Define application service IUniverseApplicationService
+interface Product(ProductId Id)
+{
+    // define shortcut for commands
+    if ? = ICommand<ProductId>
+    // define shortcut for events
+    if ! = IEvent<ProductId>
+
+    CreateProduct?(string title, string itemNo, CurrencyAmount price, decimal stock, string unitOfMeasure, VatRate vatRate, Barcode barcode)
+        explicit "Create product - {title}, {itemNo}, {price}, {stock}, {unitOfMeasure}, {vatRate}, {barcode}"
+        ProductCreated!(string title, string itemNo, CurrencyAmount price, decimal stock, string unitOfMeasure, VatRate vatRate, Barcode barcode, UserId userId, DateTime utc)
+            explicit "Product {itemNo} created, {title}, {price}, {stock}, {unitOfMeasure}, {vatRate}, {barcode} by {userId} on {utc}"
+
+    ChangeProductBarcode?(Barcode newBarcode)
+        explicit "Change product barcode - {newBarcode}"
+        ProductBarcodeChanged!(Barcode newBarcode,UserId userId, DateTime utc)
+            explicit "Product barcode changed on {newBarcode} by {userId} on {utc}"
+
+    ChangeProductItemNo?(string newItemNo)
+        explicit "Change product item no. - {newItemNo}"
+        ProductItemNoChanged!(string newItemNo, UserId userId, DateTime utc)
+            explicit "{id} item changed on {newItemNo} by {userId} on {utc}"
+
+    MakeProductOrderable?()
+        explicit "Make {id} orderable"
+        ProductMakedOrderable!(UserId userId, DateTime utc)
+            explicit "{id} maked orderable by {userId} on {utc}"
+
+    MakeProductNonOrderable?(string reason)
+        explicit "Make {id} non-orderable, reason - {reason}"
+        ProductMakedNonOrderable!(string reason, UserId userId, DateTime utc)
+            explicit "{id} maked non-orderable, reason - {reason} by {userId} on {utc}"
+
+    UpdateProductStock?(decimal quantity, string reason)
+        explicit "update {id} stock {qunatity}, reason - {reason}"
+        ProductStockUpdated!(decimal quantity, string reason, UserId userId, DateTime utc)
+            explicit "{id} stock updated {quantity}, reason - {reason} by {userId} on {utc}"
+
+    RenameProduct?(string newTitle)
+        explicit "rename {id}"
+        ProductRenamed!(string newTitle, UserId userId, DateTime utc)
+            explicit "{id} renamed by {userId} on {utc}"
+
+     ChangeProductVatRate?(VatRate newVatRate)
+        explicit "Change product vat rate - {newVatRate}"
+        ProductVatRateChanged!(VatRate newVatRate, UserId userId, DateTime utc)
+            explicit "{id} item changed on {newVatRate} by {userId} on {utc}"
+
+    ChangeProductUnitOfMeasure?(string newUnitOfMeasure)
+        explicit "Change product unit of measure - {newItemNo}"
+        ProductUnitOfMeasureChanged!(string newUnitOfMeasure, UserId userId, DateTime utc)
+            explicit "{id} item changed on {newUnitOfMeasure} by {userId} on {utc}"
+
+    ChangeProductPrice?(CurrencyAmount newPrice)
+        explicit "Change product price - {newPrice}"
+        ProductPriceChanged!(CurrencyAmount newPrice, UserId userId, DateTime utc)
+            explicit "{id} item changed on {newPrice} by {userId} on {utc}"
+
+    DeleteProduct?()
+        explicit "delete {id}"
+        ProductDeleted!(UserId userId, DateTime utc)
+            explicit "{id} deleted by {userId} on {utc}"
+}
+
+interface User(UserId id)
+{
+    // define shortcut for commands
+    if ? = ICommand<UserId>
+    // define shortcut for events
+    if ! = IEvent<UserId>
+        
+    CreateUser?(string name, string login, string password, string role)
+        explicit "Create {id} with name '{name}', login '{login}' and role '{role}'"
+        UserCreated!(string name, string login, Password password, string role, DateTime utc)
+            explicit "{id} created with name '{name}', login '{login}' and role '{role}', utc - {utc}"
+
+    AssignRoleToUser?(string role)
+        explicit "Assign role '{role}'  to '{id}'"
+        RoleAssignedToUser!(string role, DateTime utc)
+            explicit "Role '{role}' assigned to '{id}', utc - {utc}"
+
+    ChangeUserPassword?(string oldPassword, string newPassword)
+        explicit "Change password for '{id}'"
+        UserPasswordChanged!(Password password, DateTime utc)
+            explicit "Password for '{id}' changed, utc - {utc}"
+
+    RenameUser?(string newName)
+        explicit "Rename {id} on '{newName}'"
+        UserRenamed!(string newName, DateTime utc)
+            explicit "{id} renamed on '{newName}'"
+
+    DeleteUser? ()
+        UserDeleted! (DateTime utc)
+            explicit "Deleted user {Id}, utc - {utc}"
+}
+
+interface Customer(CustomerId id)
+{
+     // define shortcut for commands
+    if ? = ICommand<CustomerId>
+    // define shortcut for events
+    if ! = IEvent<CustomerId>
+
+    CreateCustomer?(string name, Currency currency)
+        explicit "Create {id} named '{name}' with currency {currency}"
+        CustomerCreated!(string name, Currency currency, UserId userId, DateTime utc)
+            explicit "{id} created with name '{name}' and currency '{currency}', utc - {utc}"
+
+    AddCustomerPayment?(string name, CurrencyAmount amount)
+        explicit "Add {name} - {amount}"
+        CustomerPaymentAdded!(string paymentName, CurrencyAmount payment, CurrencyAmount newBalance, int transaction, UserId userId, DateTime utc)
+            explicit "Added '{paymentName}' {payment} | Tx {transaction} => {newBalance}"
+
+    ChargeCustomer?(string name, CurrencyAmount amount)
+        explicit "Charge {name} - '{amount}'"
+        CustomerChargeAdded!(string chargeName, CurrencyAmount charge, CurrencyAmount newBalance, int transaction, UserId userId, DateTime utc)
+            explicit "Charged '{chargeName}' {charge} | Tx {transaction} => {newBalance}"
+
+    RenameCustomer?(string newName)
+        explicit "Rename {id} to '{newName}'"
+        CustomerRenamed!(string name, string oldName, UserId userId, DateTime utc)
+            explicit "Customer renamed from '{oldName}' to '{name}'"
+
+    LockCustomer?(string reason)
+        CustomerLocked!(string reason, UserId userId, DateTime utc)
+            explicit "{id} locked: {reason}"
+
+    LockCustomerForAccountOverdraft?(string comment)
+
+    DeleteCustomer? ()
+    CustomerDeleted! (UserId userId, DateTime utc)
+        explicit "Deleted {id}, utc - {utc}"
+
+    UpdateCustomerAddress?(Address address)
+        CustomerAddressUpdated!(Address address, UserId userId, DateTime utc)
+            explicit "Legal address for {id} updated on {address}"
+    
+    UpdateCustomerInfo?(string bankingDetails, string phone, string fax, string email)
+        CustomerInfoUpdated!(string bankingDetails, string phone, string fax, string email,UserId userId, DateTime utc)
+            explicit "{id} info updated: banking details '{bankingDetails}, phone '{phone}', fax '{fax}', email '{email}', by {userId}"
+}
+
+interface Vendor(VendorId id)
+{
+     // define shortcut for commands
+    if ? = ICommand<VendorId>
+    // define shortcut for events
+    if ! = IEvent<VendorId>
+
+    CreateVendor?(string name, Currency currency)
+        explicit "Create {id} named '{name}' with currency {currency}"
+        VendorCreated!(string name, Currency currency, UserId userId, DateTime utc)
+            explicit "{id} created with name '{name}' and currency '{currency}', utc - {utc}"
+
+    AddVendorPayment?(string name, CurrencyAmount amount)
+        explicit "Add {name} - {amount}"
+        VendorPaymentAdded!(string paymentName, CurrencyAmount payment, CurrencyAmount newBalance, int transaction, UserId userId, DateTime utc)
+            explicit "Added '{paymentName}' {payment} | Tx {transaction} => {newBalance}"
+
+    ChargeVendor?(string name, CurrencyAmount amount)
+        explicit "Charge {name} - '{amount}'"
+        VendorChargeAdded!(string chargeName, CurrencyAmount charge, CurrencyAmount newBalance, int transaction, UserId userId, DateTime utc)
+            explicit "Charged '{chargeName}' {charge} | Tx {transaction} => {newBalance}"
+
+    RenameVendor?(string newName)
+        explicit "Rename {id} to '{newName}'"
+        VendorRenamed!(string name, string oldName, UserId userId, DateTime utc)
+            explicit "Vendor renamed from '{oldName}' to '{name}'"
+
+    LockVendor?(string reason)
+        VendorLocked!(string reason, UserId userId, DateTime utc)
+            explicit "{id} locked: {reason}"
+
+    LockVendorForAccountOverdraft?(string comment)
+
+    DeleteVendor? ()
+    VendorDeleted! (UserId userId, DateTime utc)
+        explicit "Deleted {id}, utc - {utc}"
+
+    UpdateVendorAddress?(Address address)
+        VendorAddressUpdated!(Address address, UserId userId, DateTime utc)
+            explicit "Legal address for {id} updated on {address}"
+    
+    UpdateVendorInfo?(string bankingDetails, string phone, string fax, string email)
+        VendorInfoUpdated!(string bankingDetails, string phone, string fax, string email,UserId userId, DateTime utc)
+            explicit "{id} info updated: banking details '{bankingDetails}, phone '{phone}', fax '{fax}', email '{email}', by {userId}"
+}
+
+interface Order(OrderId id)
+{
+  // define shortcut for commands
+    if ? = ICommand<OrderId>
+    // define shortcut for events
+    if ! = IEvent<OrderId>
+
+	CreateOrder?(CustomerId customerId)
+		OrderCreated!(CustomerId customerId, UserId userId, DateTime utc)
+			explicit "{id} created by {userId} on {utc}"
+
+	CompleteOrder?()
+		OrderCompleted!(UserId userId, DateTime utc)
+			explicit "{id} completed by {userId} on {utc}"
+
+	AddProductToOrder?(ProductId productId, string itemNo, string title,decimal quantity, CurrencyAmount amount, VatRate vatRate)
+		ProductAddedToOrder!(long lineId, ProductId productId, string itemNo, string title, decimal quantity, CurrencyAmount amount, VatRate vatRate, UserId userId, DateTime utc)
+			explicit "{productId} was added to {id} with quantity '{quantity}' by {userId} on {utc}"
+
+	UpdateProductQuantityInOrder?(ProductId productId, decimal quantity)
+		ProductQuantityUpdatedInOrder!(ProductId productId, decimal quantity, UserId userId, DateTime utc)
+			explicit "{productId} quantity was updated on {quantity} in {id} by {userId} on {utc}"
+			
+	RemoveProductFromOrder?(ProductId productId)
+		ProductRemovedFromOrder!(ProductId productId, UserId userId, DateTime utc)
+			explicit "{productId} was removed from {id} by {userId} on {utc}"
+}

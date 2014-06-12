@@ -4,108 +4,198 @@
         xmlns:controls="http://metro.mahapps.com/winfx/xaml/controls"
         xmlns:views="clr-namespace:BookKeeping.App.Views"
         xmlns:viewmodels="clr-namespace:BookKeeping.App.ViewModels"
-        xmlns:extension="clr-namespace:BookKeeping.App.XamlExtensions"
+        xmlns:viewmodels.ui="clr-namespace:BookKeeping.UI.ViewModels;assembly=BookKeeping.UI"
+        xmlns:converters="clr-namespace:BookKeeping.UI.Converters;assembly=BookKeeping.UI"
+        xmlns:converters.ui="clr-namespace:BookKeeping.UI.Converters;assembly=BookKeeping.UI"
         xmlns:p="clr-namespace:BookKeeping.App.Properties"
         Title="{Binding Path=DisplayName}" Height="400" Width="800"
-        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
-        xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
                        xmlns:Controls="clr-namespace:MahApps.Metro.Controls;assembly=MahApps.Metro"
                       xmlns:System="clr-namespace:System;assembly=mscorlib"
+                      xmlns:behaviors="clr-namespace:BookKeeping.UI.Behaviors;assembly=BookKeeping.UI"
         mc:Ignorable="d"
+        xmlns:i="clr-namespace:System.Windows.Interactivity;assembly=System.Windows.Interactivity"
         d:DesignHeight="400" d:DesignWidth="500"
+        Closing="MetroWindow_Closing"
+                      WindowState="Maximized"
         d:DataContext="{Binding viewmodels:MainWindowViewModel}"
-                        WindowStartupLocation="CenterScreen"
-                      Style="{DynamicResource VSWindowStyleKey}">
-
+                        WindowStartupLocation="CenterScreen">
     <Window.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
                 <ResourceDictionary Source="pack://application:,,,/BookKeeping.App;component/Styles/Styles.xaml" />
                 <ResourceDictionary Source="pack://application:,,,/BookKeeping.App;component/Styles/Colors.xaml" />
+                <ResourceDictionary Source="pack://application:,,,/BookKeeping.App;component/Resources/Icons.xaml" />
                 <ResourceDictionary>
-                    <DataTemplate DataType="{x:Type viewmodels:CustomerTransactionsViewModel}">
-                        <views:CustomerTransactions></views:CustomerTransactions>
-                    </DataTemplate>
+                    <BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverterKey" />
                 </ResourceDictionary>
             </ResourceDictionary.MergedDictionaries>
         </ResourceDictionary>
     </Window.Resources>
 
+    <Controls:MetroWindow.Flyouts>
+        <Controls:FlyoutsControl>
+            <!-- login form -->
+            <Controls:Flyout Header="{x:Static p:Resources.LoginForm}" x:Name="Login" Background="#3F3F46"
+                        Position="Right" IsOpen="{Binding Path=Profile.IsAuthorization, Mode=OneWay, Converter={converters:InverseBooleanConverter}}"
+                        Width="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType=Controls:MetroWindow}, Path=ActualWidth}"
+                        CloseCommand="{Binding Path=CloseLoginCmd}">
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="*"></RowDefinition>
+                        <RowDefinition Height="auto"></RowDefinition>
+                        <RowDefinition Height="*"></RowDefinition>
+                    </Grid.RowDefinitions>
+                    <!-- nothing -->
+                    <views:SignInView Margin="10" Width="400" DataContext="{Binding Path=SignIn}" VerticalAlignment="Center" Grid.Row="1"></views:SignInView>
+                    <Grid Visibility="{Binding Path=IsLoading, Converter={StaticResource BooleanToVisibilityConverterKey}}" Grid.Row="2" VerticalAlignment="Bottom" Margin="25">
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="auto"></RowDefinition>
+                            <RowDefinition Height="auto"></RowDefinition>
+                        </Grid.RowDefinitions>
+                        <Controls:ProgressRing IsActive="{Binding Path=IsLoading}" Width="40" Height="40" Foreground="White" />
+                        <TextBlock Text="{x:Static p:Resources.RebuildingProjection}" Grid.Row="1" HorizontalAlignment="Center" Margin="0,5,0,0" FontFamily="Segoe UI Symbol" FontSize="14"></TextBlock>
+                    </Grid>
+                </Grid>
+            </Controls:Flyout>
+            <!-- account profile-->
+            <Controls:Flyout Header="{x:Static p:Resources.Account}"  Background="#3F3F46" IsOpen="{Binding Path=Profile.IsOpen}" Position="Right" Width="300">
+                <DockPanel LastChildFill="True" DataContext="{Binding Path=Profile}">
+                    <Button Width="75" Height="30" DockPanel.Dock="Bottom" Style="{DynamicResource SquareButtonStyle}" Command="{Binding Path=SignOutCmd}" Content="{x:Static p:Resources.SignOut}" VerticalContentAlignment="Center" HorizontalContentAlignment="Center" HorizontalAlignment="Right" Foreground="White" Margin="5"></Button>
+                    <views:ChangePasswordView DataContext="{Binding Path=ChangePassword}" Margin="5" Visibility="{Binding Path=IsVisible, Converter={StaticResource BooleanToVisibilityConverterKey}}"></views:ChangePasswordView>
+                </DockPanel>
+            </Controls:Flyout>
+            <Controls:Flyout>
+            </Controls:Flyout>
+        </Controls:FlyoutsControl>
+    </Controls:MetroWindow.Flyouts>
+
+    <Controls:MetroWindow.WindowCommands>
+        <Controls:WindowCommands>
+            <Button Foreground="White" Command="{Binding Path=Profile.OpenProfile}">
+                <StackPanel Orientation="Horizontal">
+                    <Rectangle Width="18"
+                           Height="18"
+                           Fill="White">
+                        <Rectangle.OpacityMask>
+                            <VisualBrush Stretch="Uniform"
+                                     Visual="{DynamicResource appbar_user}" />
+                        </Rectangle.OpacityMask>
+                    </Rectangle>
+                    <TextBlock Text="{Binding Path=Profile.Username, Mode=OneWay}"
+                               Margin="3,0"
+                               VerticalAlignment="Center"
+                               HorizontalAlignment="Center"
+                               Foreground="White">
+                    </TextBlock>
+                </StackPanel>
+            </Button>
+        </Controls:WindowCommands>
+    </Controls:MetroWindow.WindowCommands>
+
     <DockPanel>
         <Menu DockPanel.Dock="Top"
               SnapsToDevicePixels="True"
               Margin="2,0,0,0">
+            <!--<Menu.Resources>
+                <Style TargetType="{x:Type Menu}" BasedOn="{StaticResource {x:Type Menu}}"></Style>
+                <Style TargetType="{x:Type MenuItem}" BasedOn="{StaticResource {x:Type MenuItem}}">
+                    <Setter Property="Command" Value="{Binding Command}" />
+                    <Setter Property="Header" Value="{Binding Title}" />
+                    <Setter Property="ItemsSource" Value="{Binding Children}" />
+                </Style>
+            </Menu.Resources>-->
             <MenuItem Header="{x:Static p:Resources.File}">
-                <MenuItem Header="Rocket slot 1">
-                    <MenuItem Header="Fire slot" Command="{Binding OpenCustomerTransactions}"/>
-                    <Separator />
-                    <MenuItem Header="Relaod slot" />
-                    <MenuItem Header="Report damage to control room" />
+                <MenuItem Header="{x:Static p:Resources.Thesaurus}">
+                    <MenuItem Header="{x:Static p:Resources.ListOfProducts}" Command="{Binding Path=ListOfProductsCmd}"></MenuItem>
+                    <MenuItem Header="{x:Static p:Resources.ListOfCustomers}" Command="{Binding Path=ListOfCustomersCmd}"></MenuItem>
+                    <MenuItem Header="{x:Static p:Resources.VendorList}" Command="{Binding Path=VendorListCmd}"></MenuItem>
                 </MenuItem>
-                <MenuItem Header="Rocket slot 2">
-                    <MenuItem Header="damaged .. being repaired" IsEnabled="False" />
+                <MenuItem Header="{x:Static p:Resources.Goods}">
+                    <MenuItem Header="{x:Static p:Resources.SaleOfGoods}" Command="{Binding Path=SaleOfGoodsCmd}"></MenuItem>
+                    <MenuItem Header="{x:Static p:Resources.PurchaseOfGoods}" Command="{Binding Path=PurchaseofGoodsCmd}"></MenuItem>
                 </MenuItem>
                 <Separator></Separator>
-                <MenuItem Header="{x:Static p:Resources.Exit}" Command="{Binding Exit}"></MenuItem>
+                <MenuItem Header="{x:Static p:Resources.Save}" Command="{Binding Path=SaveCmd}"></MenuItem>
+                <MenuItem Header="{x:Static p:Resources.Print}" Command="{Binding Path=PrintCmd}"></MenuItem>
+                <Separator></Separator>
+                <MenuItem Header="{x:Static p:Resources.Settings}"></MenuItem>
+                <Separator></Separator>
+                <MenuItem Header="{x:Static p:Resources.Exit}"></MenuItem>
             </MenuItem>
             <MenuItem Header="{x:Static p:Resources.Edit}">
-                <MenuItem Command="Undo" Header="{x:Static p:Resources.Undo}"></MenuItem>
-                <MenuItem Command="Redo" Header="{x:Static p:Resources.Redo}"></MenuItem>
+                <MenuItem Header="{x:Static p:Resources.Undo}" Command="Undo"></MenuItem>
+                <MenuItem Header="{x:Static p:Resources.Redo}" Command="Redo"></MenuItem>
                 <Separator></Separator>
-                <MenuItem Command="Cut" Header="{x:Static p:Resources.Cut}"></MenuItem>
-                <MenuItem Command="Copy" Header="{x:Static p:Resources.Copy}"></MenuItem>
-                <MenuItem Command="Paste" Header="{x:Static p:Resources.Paste}"></MenuItem>
+                <MenuItem Header="{x:Static p:Resources.Cut}" Command="Cut"></MenuItem>
+                <MenuItem Header="{x:Static p:Resources.Copy}" Command="Copy"></MenuItem>
+                <MenuItem Header="{x:Static p:Resources.Paste}" Command="Paste"></MenuItem>
+                <MenuItem Header="{x:Static p:Resources.Delete}" Command="Delete"></MenuItem>
                 <Separator></Separator>
-                <MenuItem Command="SelectAll" Header="{x:Static p:Resources.Select_All}"></MenuItem>
+                <MenuItem Header="{x:Static p:Resources.Find}" Command="Find"></MenuItem>
             </MenuItem>
-            
+            <MenuItem Header="{x:Static p:Resources.Service}">
+                <MenuItem Header="{x:Static p:Resources.EventHistory}" Command="{Binding Path=EventHistoryCmd}"></MenuItem>
+                <MenuItem Header="{x:Static p:Resources.ListOfUsers}" Command="{Binding Path=UserListCmd}"></MenuItem>
+            </MenuItem>
+            <MenuItem Header="{x:Static p:Resources.Reports}">
+                <MenuItem Header="{x:Static p:Resources.RemainsOfGoods}" Command="{Binding Path=RemainsOfGoodsReportCmd}"></MenuItem>
+                <MenuItem Header="{x:Static p:Resources.HistoryOfGoods}" Command="{Binding Path=HistoryOfGoodsRepostCmd}"></MenuItem>
+                <MenuItem Header="{x:Static p:Resources.ReportBySellers}" Command="{Binding Path=ReportBySellersReportCmd}"></MenuItem>
+                <MenuItem Header="{x:Static p:Resources.SalesForPeriod}" Command="{Binding Path=SalesForPeriodReportCmd}"></MenuItem>
+            </MenuItem>
+            <MenuItem Header="{x:Static p:Resources.Help}">
+                <MenuItem Header="{x:Static p:Resources.AboutApplication}"></MenuItem>
+            </MenuItem>
         </Menu>
-        <TextBlock DockPanel.Dock="Left"
-                   Foreground="{StaticResource Foreground}"
-                   Margin="5"
-                   VerticalAlignment="Center">
-            <TextBlock.LayoutTransform>
-                <RotateTransform Angle="90" />
-            </TextBlock.LayoutTransform>
-            Starship ENTERPRISE
-        </TextBlock>
+        <StatusBar DockPanel.Dock="Bottom" Height="30" Background="Transparent">
+            <StatusBarItem>
+                <TextBlock Text="{Binding Path=StatusMessage, Mode=OneWay}"></TextBlock>
+            </StatusBarItem>
+        </StatusBar>
         <Grid>
             <Grid.ColumnDefinitions>
-                <ColumnDefinition />
-                <ColumnDefinition Width="300" />
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="auto" />
             </Grid.ColumnDefinitions>
-            <TabControl Margin="0,10,0,0" ItemsSource="{Binding Workspaces}" IsSynchronizedWithCurrentItem="True" DisplayMemberPath="DisplayName">
+
+            <TabControl Margin="15,5" ItemsSource="{Binding Path=Workspaces, Mode=OneWay}"
+                IsSynchronizedWithCurrentItem="True" DisplayMemberPath="DisplayName" ClipToBounds="True"
+                        behaviors:TabContent.IsCached="True" Visibility="{Binding Path=IsWorkspacesVisible, Converter={StaticResource BooleanToVisibilityConverterKey}}">
+                <TabControl.Resources>
+                    <DataTemplate DataType="{x:Type viewmodels.ui:WorkspaceViewModel}">
+                        <views:Workspace></views:Workspace>
+                    </DataTemplate>
+                    <DataTemplate DataType="{x:Type viewmodels:ProductListViewModel}">
+                        <views:ProductList></views:ProductList>
+                    </DataTemplate>
+                    <DataTemplate DataType="{x:Type viewmodels:OrderViewModel}">
+                        <views:OrderView></views:OrderView>
+                    </DataTemplate>
+                    <DataTemplate DataType="{x:Type viewmodels:SalesForPeriodViewModel}">
+                        <views:SalesForPeriodView></views:SalesForPeriodView>
+                    </DataTemplate>
+                    <DataTemplate DataType="{x:Type viewmodels:RemainsOfGoodsViewModel}">
+                        <views:RemainsOfGoodsView></views:RemainsOfGoodsView>
+                    </DataTemplate>
+                    <DataTemplate DataType="{x:Type viewmodels:ReportBySellersViewModel}">
+                        <views:ReportBySellersView></views:ReportBySellersView>
+                    </DataTemplate>
+                    <DataTemplate DataType="{x:Type viewmodels:EventHistoryViewModel}">
+                        <views:EventHistoryView></views:EventHistoryView>
+                    </DataTemplate>
+                    <DataTemplate DataType="{x:Type viewmodels:UserListViewModel}">
+                        <views:UserListView></views:UserListView>
+                    </DataTemplate>
+                    <DataTemplate DataType="{x:Type viewmodels:CustomerListViewModel}">
+                        <views:CustomerListView></views:CustomerListView>
+                    </DataTemplate>
+                    <DataTemplate DataType="{x:Type viewmodels:VendorListViewModel}">
+                        <views:VendorListView></views:VendorListView>
+                    </DataTemplate>
+                </TabControl.Resources>
             </TabControl>
-            <StackPanel Grid.Column="1"
-                        Margin="50,25,25,0">
-                <TextBlock Margin="0,10,0,10"
-                           FontSize="18"
-                           Foreground="{StaticResource Foreground}"
-                           Text="Actions" />
-                <Separator Background="#11FFFFFF" />
-                <Button FontSize="14"
-                        Margin="0,10,0,3"
-                        Content="Fire rocket..."
-                        Style="{StaticResource LinkButton}" />
-                <Button FontSize="14"
-                        Margin="0,3,0,10"
-                        Content="Throw something over board..."
-                        Style="{StaticResource LinkButton}" />
-                <Separator Background="#11FFFFFF" />
-                <TextBlock Margin="0,10,0,10"
-                           FontSize="18"
-                           Foreground="{StaticResource Foreground}"
-                           Text="Recent" />
-                <Separator Background="#11FFFFFF" />
-                <Button FontSize="14"
-                        Margin="0,10,0,3"
-                        Content="blastallenemies.cmd"
-                        Style="{StaticResource LinkButton}" />
-                <Button FontSize="14"
-                        Margin="0,3,0,3"
-                        Content="verysecretmessage.txt"
-                        Style="{StaticResource LinkButton}" />
-            </StackPanel>
         </Grid>
     </DockPanel>
 </controls:MetroWindow>

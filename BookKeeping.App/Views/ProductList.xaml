@@ -1,0 +1,91 @@
+﻿<UserControl x:Class="BookKeeping.App.Views.ProductList"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             mc:Ignorable="d" 
+             xmlns:gl="clr-namespace:System.Globalization;assembly=mscorlib"
+             xmlns:viewmodels="clr-namespace:BookKeeping.App.ViewModels"
+             xmlns:p="clr-namespace:BookKeeping.App.Properties"
+             xmlns:Controls="http://metro.mahapps.com/winfx/xaml/controls"
+             xmlns:views="clr-namespace:BookKeeping.App.Views"
+             xmlns:converters.ui="clr-namespace:BookKeeping.UI.Converters;assembly=BookKeeping.UI"
+              xmlns:i="clr-namespace:System.Windows.Interactivity;assembly=System.Windows.Interactivity"
+             d:DesignHeight="300" d:DesignWidth="800" d:DataContext="{x:Type viewmodels:ProductListViewModel}">
+    <UserControl.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="pack://application:,,,/BookKeeping.App;component/Resources/Icons.xaml" />
+                <ResourceDictionary>
+                    <BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverterKey"/>
+                    <converters.ui:ValueConverterGroup x:Key="InverseBooleanToVisibilityConverterKey">
+                        <converters.ui:InverseBooleanConverter></converters.ui:InverseBooleanConverter>
+                        <BooleanToVisibilityConverter></BooleanToVisibilityConverter>
+                    </converters.ui:ValueConverterGroup>
+                </ResourceDictionary>
+            </ResourceDictionary.MergedDictionaries>
+        </ResourceDictionary>
+    </UserControl.Resources>
+    <Grid>
+        <Controls:ProgressRing IsActive="{Binding Path=IsLoading}" Width="40" Height="40" Visibility="{Binding Path=IsLoading, Converter={StaticResource BooleanToVisibilityConverterKey}}" />
+
+        <views:PopupView DataContext="{Binding Path=SearchPopup}" VerticalAlignment="Top" 
+                HorizontalAlignment="Right"
+                Panel.ZIndex="10"></views:PopupView>
+        <views:PopupView DataContext="{Binding Path=FilterPopup}" VerticalAlignment="Top" 
+                HorizontalAlignment="Right"
+                Panel.ZIndex="10"></views:PopupView>
+
+        <DataGrid ItemsSource="{Binding Path=Source}" Style="{StaticResource ListDetailDataGridKey}" SelectionChanged="DataGrid_SelectionChanged">
+            <DataGrid.RowStyle>
+                <Style TargetType="{x:Type DataGridRow}" BasedOn="{StaticResource {x:Type DataGridRow}}">
+                    <EventSetter Event="MouseDoubleClick" Handler="DataGrid_MouseDoubleClick"></EventSetter>
+                </Style>
+            </DataGrid.RowStyle>
+            <DataGrid.Columns>
+                <DataGridTemplateColumn Width="30" CellTemplate="{StaticResource EditableLabelKey}"/>
+                <DataGridTemplateColumn Header="{x:Static p:Resources.Title}" Width="*" MaxWidth="200" MinWidth="100">
+                    <DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate>
+                            <TextBlock Text="{Binding Title}"></TextBlock>
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellTemplate>
+                </DataGridTemplateColumn>
+                <DataGridTemplateColumn Header="{x:Static p:Resources.ItemNo}" Width="*" MaxWidth="200" MinWidth="100">
+                    <DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate>
+                            <TextBlock Text="{Binding ItemNo}"></TextBlock>
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellTemplate>
+                </DataGridTemplateColumn>
+                <DataGridTemplateColumn Header="{x:Static p:Resources.Price}" Width="*" MaxWidth="200" MinWidth="100">
+                    <DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate>
+                            <TextBlock Text="{Binding Price}"></TextBlock>
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellTemplate>
+                </DataGridTemplateColumn>
+                <DataGridTemplateColumn Header="{x:Static p:Resources.Stock}" Width="*" MaxWidth="200" MinWidth="100" >
+                    <DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate>
+                            <TextBlock Text="{Binding Stock}"></TextBlock>
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellTemplate>
+                </DataGridTemplateColumn>
+                <DataGridTemplateColumn Header="{x:Static p:Resources.UnitOfMeasure}" Width="*" MaxWidth="200" MinWidth="100" >
+                    <DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate>
+                            <TextBlock Text="{Binding UnitOfMeasure}"></TextBlock>
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellTemplate>
+                </DataGridTemplateColumn>
+            </DataGrid.Columns>
+            <DataGrid.RowDetailsTemplate>
+                <DataTemplate>
+                    <views:ProductDetailView Margin="25,10,10,10" Padding="2"></views:ProductDetailView>
+                </DataTemplate>
+            </DataGrid.RowDetailsTemplate>
+        </DataGrid>
+    </Grid>
+</UserControl>
+

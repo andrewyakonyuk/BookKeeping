@@ -1,0 +1,19 @@
+﻿<UserControl x:Class="BookKeeping.App.Views.EventHistoryView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             mc:Ignorable="d" 
+             xmlns:p="clr-namespace:BookKeeping.App.Properties"
+             d:DesignHeight="300" d:DesignWidth="600">
+    <Grid>
+        <ListBox ItemsSource="{Binding Path=Events, Mode=OneWay}" BorderThickness="0" BorderBrush="Transparent" SelectedIndex="0" Style="{DynamicResource MetroListBox}">
+            <ListBox.ContextMenu>
+                <ContextMenu>
+                    <MenuItem Header="{x:Static p:Resources.Reload}" Command="{Binding Path=ReloadCmd}"></MenuItem>
+                    <MenuItem Header="{x:Static p:Resources.Copy}" Command="Copy"></MenuItem>
+                </ContextMenu>
+            </ListBox.ContextMenu>
+        </ListBox>
+    </Grid>
+</UserControl>
