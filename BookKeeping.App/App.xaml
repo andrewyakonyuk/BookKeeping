@@ -118,7 +118,7 @@
                 <Rectangle Width="14" x:Name="EditLabel"
                            Height="14"
                            Fill="{Binding Path=Foreground, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type DataGridCell}}}"
-                                       Visibility="{Binding Path=HasChanges,Converter={StaticResource BooleanToVisibilityConverterKey}}">
+                                       Visibility="{Binding Path=HasChanges, Converter={StaticResource BooleanToVisibilityConverterKey}}">
                     <Rectangle.OpacityMask>
                         <VisualBrush Stretch="Fill" Visual="{DynamicResource appbar_edit_add}" />
                     </Rectangle.OpacityMask>
@@ -133,6 +133,11 @@
                     </MultiDataTrigger>
                 </DataTemplate.Triggers>
             </DataTemplate>
+
+            <Style x:Key="DescriptionHeaderStyle" TargetType="Label">
+                <Setter Property="FontSize" Value="20" />
+                <Setter Property="HorizontalAlignment" Value="Left" />
+            </Style>
         </ResourceDictionary>
     </Application.Resources>
 </Application>

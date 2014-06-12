@@ -393,4 +393,25 @@
   <data name="RebuildingProjection" xml:space="preserve">
     <value>Побудова індексів. Будь ласка, чекайте</value>
   </data>
+  <data name="Delivery" xml:space="preserve">
+    <value>Доставка</value>
+  </data>
+  <data name="Discount" xml:space="preserve">
+    <value>Знижка</value>
+  </data>
+  <data name="OrderOverview" xml:space="preserve">
+    <value>Вiдомостi про замовлення</value>
+  </data>
+  <data name="Quantity" xml:space="preserve">
+    <value>Кiлькiсть</value>
+  </data>
+  <data name="TotalPrice" xml:space="preserve">
+    <value>Товар ({0} одиниць)</value>
+  </data>
+  <data name="TotalPriceInclVat" xml:space="preserve">
+    <value>Усього</value>
+  </data>
+  <data name="TotalVatRate" xml:space="preserve">
+    <value>НДС</value>
+  </data>
 </root>

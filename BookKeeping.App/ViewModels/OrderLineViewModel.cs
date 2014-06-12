@@ -34,8 +34,10 @@ namespace BookKeeping.App.ViewModels
         public decimal Quantity
         {
             get { return _quantity; }
-            set { _quantity = value;
-            OnPropertyChanged(() => Quantity);
+            set
+            {
+                _quantity = value;
+                OnPropertyChanged(() => Quantity);
             }
         }
 
@@ -74,7 +76,18 @@ namespace BookKeeping.App.ViewModels
                 OnPropertyChanged(() => IsSelected);
             }
         }
-        
 
+        private long _productId;
+
+        public long ProductId
+        {
+            get { return _productId; }
+            set
+            {
+                _productId = value;
+                OnPropertyChanged(() => ProductId);
+            }
+        }
+        
     }
 }
