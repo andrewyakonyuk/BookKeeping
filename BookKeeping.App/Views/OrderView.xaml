@@ -3,17 +3,82 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:controls="http://metro.mahapps.com/winfx/xaml/controls"
+             xmlns:viewmodels="clr-namespace:BookKeeping.App.ViewModels"
             xmlns:System.Globalization="clr-namespace:System.Globalization;assembly=mscorlib"
              mc:Ignorable="d" 
              xmlns:p="clr-namespace:BookKeeping.App.Properties"
              xmlns:converters.domain="clr-namespace:BookKeeping.App.Converters" 
-             d:DesignHeight="300" d:DesignWidth="600">
-    <Grid>
+             d:DataContext="{x:Type viewmodels:OrderViewModel}"
+             d:DesignHeight="300" d:DesignWidth="800">
+    <Grid Background="White">
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="3*"></ColumnDefinition>
             <ColumnDefinition Width="*"></ColumnDefinition>
         </Grid.ColumnDefinitions>
         <!-- basket -->
+        <Grid Grid.Column="0">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="auto"></RowDefinition>
+                <RowDefinition Height="*"></RowDefinition>
+            </Grid.RowDefinitions>
+            <StackPanel Orientation="Horizontal">
+                <ComboBox HorizontalAlignment="Left" Foreground="Black"
+                          Width="400"
+                          MinWidth="250"
+                          MaxWidth="600"
+                          Margin="10, 10, 5, 10"
+                          controls:TextboxHelper.Watermark="Autocompletion with grouping/virtualization"
+                          IsEditable="True"
+                          IsEnabled="True"
+                          ItemsSource="{Binding Products}"
+                          controls:ComboBoxHelper.EnableVirtualizationWithGrouping="True">
+                    <ComboBox.ItemsPanel>
+                        <ItemsPanelTemplate>
+                            <VirtualizingStackPanel IsItemsHost="True" />
+                        </ItemsPanelTemplate>
+                    </ComboBox.ItemsPanel>
+                </ComboBox>
+                <controls:NumericUpDown Margin="5,10,5,10" Minimum="0" Maximum="999" HideUpDownButtons="True" Width="60" Value="1" TextAlignment="Center"></controls:NumericUpDown>
+                <Button Style="{DynamicResource SquareButtonStyle}" Margin="5,10,5,10" Padding="15,5">Add</Button>
+            </StackPanel>
+            <ListView Grid.Row="1" Background="Transparent" SelectedItem="{Binding Path=SelectedItem}" IsSynchronizedWithCurrentItem="True"
+                      BorderThickness="0"
+                      ItemsSource="{Binding Path=Lines, Mode=OneWay}">
+                <ListView.View>
+                    <GridView x:Name="GridViewContainer">
+                        <GridViewColumn Width="25"
+                                        Header="" DisplayMemberBinding="{Binding Nothing}"/>
+                        <GridViewColumn DisplayMemberBinding="{Binding ItemNo}" Width="150"
+                                        Header="{x:Static p:Resources.ItemNo}" />
+                        <GridViewColumn DisplayMemberBinding="{Binding Title}" Width="150"
+                                        Header="{x:Static p:Resources.Title}" />
+                        <GridViewColumn Width="150"
+                                        Header="{x:Static p:Resources.Quantity}">
+                            <GridViewColumn.CellTemplate>
+                                <DataTemplate>
+                                    <Grid>
+                                        <controls:NumericUpDown Value="{Binding Path=Quantity}" Minimum="0" Maximum="999" Visibility="Collapsed" x:Name="EditableTextBox"></controls:NumericUpDown>
+                                        <TextBlock Text="{Binding Path=Quantity}" x:Name="ReadonlyTextBox"></TextBlock>
+                                    </Grid>
+                                    <DataTemplate.Triggers>
+                                        <MultiDataTrigger>
+                                            <MultiDataTrigger.Conditions>
+                                                <Condition Binding="{Binding Path=IsSelected}" Value="True"></Condition>
+                                            </MultiDataTrigger.Conditions>
+                                            <Setter Property="Visibility" Value="Visible" TargetName="EditableTextBox"></Setter>
+                                            <Setter Property="Visibility" Value="Collapsed" TargetName="ReadonlyTextBox"></Setter>
+                                        </MultiDataTrigger>
+                                    </DataTemplate.Triggers>
+                                </DataTemplate>
+                            </GridViewColumn.CellTemplate>
+                        </GridViewColumn>
+                        <GridViewColumn DisplayMemberBinding="{Binding Amount, Converter={converters.domain:PriceConverter}}" Width="150"
+                                        Header="{x:Static p:Resources.Amount}" />
+                    </GridView>
+                </ListView.View>
+            </ListView>
+        </Grid>
         <!-- basket overview panel -->
         <Grid Grid.Column="1">
             <StackPanel Orientation="Vertical">

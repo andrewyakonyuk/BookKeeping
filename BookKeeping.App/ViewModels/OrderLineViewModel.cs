@@ -51,17 +51,30 @@ namespace BookKeeping.App.ViewModels
             }
         }
 
-        private CurrencyAmount _untiPrice;
+        private CurrencyAmount _amount;
 
-        public CurrencyAmount UnitPrice
+        public CurrencyAmount Amount
         {
-            get { return _untiPrice; }
+            get { return _amount; }
             set
             {
-                _untiPrice = value;
-                OnPropertyChanged(() => UnitPrice);
+                _amount = value;
+                OnPropertyChanged(() => Amount);
             }
         }
+
+        private bool _isSelected;
+
+        public bool IsSelected
+        {
+            get { return _isSelected; }
+            set
+            {
+                _isSelected = value;
+                OnPropertyChanged(() => IsSelected);
+            }
+        }
+        
 
     }
 }

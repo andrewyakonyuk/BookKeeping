@@ -106,6 +106,15 @@ namespace BookKeeping.App.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Amount.
+        /// </summary>
+        public static string Amount {
+            get {
+                return ResourceManager.GetString("Amount", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Main window.
         /// </summary>
         public static string Application_Name {
