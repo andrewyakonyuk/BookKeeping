@@ -30,26 +30,26 @@ namespace BookKeeping.App.ViewModels
 
         protected ListViewModel()
         {
-            CanEdit = () => SelectedItems.Count == 1;
-            CanSave = () => CollectionView == null ? false : HasChanges && IsValid && CollectionView.OfType<ViewModelBase>().All(t => t.IsValid);
-            CanSearch = () => true;
-            CanFilter = () => true;
+            CanEdit =  SelectedItems.Count == 1;
+            CanSave = CollectionView == null ? false : HasChanges && IsValid && CollectionView.OfType<ViewModelBase>().All(t => t.IsValid);
+            CanSearch = true;
+            CanFilter = true;
 
             SearchPopup = new PopupViewModel();
             FilterPopup = new PopupViewModel();
 
-            SearchPopup.ActionCmd = new DelegateCommand(_ => Search(SearchPopup.Text), _ => CanSearch());
+            SearchPopup.ActionCmd = new DelegateCommand(_ => Search(SearchPopup.Text), _ => CanSearch);
             SearchPopup.CloseCmd = new DelegateCommand(_ => { SearchPopup.IsVisible = false; CollectionView.Filter = null; });
-            SearchPopup.OpenCmd = new DelegateCommand(_ =>  SearchPopup.IsVisible = true, _ => CanSearch());
+            SearchPopup.OpenCmd = new DelegateCommand(_ =>  SearchPopup.IsVisible = true, _ => CanSearch);
             SearchPopup.Placeholder = T("DoSearch");
 
-            FilterPopup.ActionCmd = new DelegateCommand(_ => Filter(FilterPopup.Text), _ => CanFilter());
+            FilterPopup.ActionCmd = new DelegateCommand(_ => Filter(FilterPopup.Text), _ => CanFilter);
             FilterPopup.CloseCmd = new DelegateCommand(_ => { FilterPopup.IsVisible = false; ResetFilter(); });
-            FilterPopup.OpenCmd = new DelegateCommand(_ => FilterPopup.IsVisible = true, _ => CanFilter());
+            FilterPopup.OpenCmd = new DelegateCommand(_ => FilterPopup.IsVisible = true, _ => CanFilter);
             FilterPopup.Placeholder = T("DoFilter");
 
-            EditItemCmd = new DelegateCommand(item => { EditingItem = item == EditingItem ? null : item as TItem; }, _ => CanEdit());
-            SaveCmd = new DelegateCommand(_ => SaveChanges(), _ => CanSave());
+            EditItemCmd = new DelegateCommand(item => { EditingItem = item == EditingItem ? null : item as TItem; }, _ => CanEdit);
+            SaveCmd = new DelegateCommand(_ => SaveChanges(), _ => CanSave);
 
             IsLoading = true;
 
@@ -140,13 +140,13 @@ namespace BookKeeping.App.ViewModels
 
         public ListCollectionView CollectionView { get { return (ListCollectionView)CollectionViewSource.GetDefaultView(Source); } }
 
-        public Func<bool> CanSave { get; protected set; }
+        public bool CanSave { get; protected set; }
 
-        public Func<bool> CanEdit { get; protected set; }
+        public bool CanEdit { get; protected set; }
 
-        public Func<bool> CanSearch { get; protected set; }
+        public bool CanSearch { get; protected set; }
 
-        public Func<bool> CanFilter { get; protected set; }
+        public bool CanFilter { get; protected set; }
 
         protected List<TItem> ChangedItems { get { return _changedItems; } }
 
@@ -227,7 +227,7 @@ namespace BookKeeping.App.ViewModels
 
         public virtual void SaveChanges()
         {
-            if (CanSave())
+            if (CanSave)
             {
                 var saveTask = Task.Factory.StartNew(() =>
                 {
