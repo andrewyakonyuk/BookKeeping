@@ -1,4 +1,5 @@
 ﻿using BookKeeping.UI.ViewModels;
+using System.Linq;
 
 namespace BookKeeping.App.ViewModels
 {
@@ -11,10 +12,9 @@ namespace BookKeeping.App.ViewModels
 
         void AddressViewModel_PropertyChanged(object sender, System.ComponentModel.PropertyChangedEventArgs e)
         {
-            if (GetPropertyName(() => Country) == e.PropertyName
-                || GetPropertyName(() => City) == e.PropertyName
-                || GetPropertyName(() => Street) == e.PropertyName
-                || GetPropertyName(() => ZipCode) == e.PropertyName)
+            var fields = new[] { GetPropertyName(() => Country), GetPropertyName(() => City), 
+                GetPropertyName(() => Street), GetPropertyName(() => ZipCode) };
+            if (fields.Contains(e.PropertyName))
             {
                 HasChanges = true;
             }

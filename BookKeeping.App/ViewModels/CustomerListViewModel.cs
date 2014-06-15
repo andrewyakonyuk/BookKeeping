@@ -10,7 +10,7 @@ namespace BookKeeping.App.ViewModels
     public class CustomerListViewModel : ListViewModel<CustomerViewModel>
     {
         private Projections.CustomerList.CustomerListView _customerListView;
-        private Session _session = Context.Current.GetSession();
+        private ISession _session = Context.Current.GetSession();
 
         public CustomerListViewModel()
         {

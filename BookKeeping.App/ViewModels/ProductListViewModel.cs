@@ -11,7 +11,7 @@ namespace BookKeeping.App.ViewModels
     public class ProductListViewModel : ListViewModel<ProductViewModel>, IPrintable, ISaveable
     {
         private Projections.ProductsList.ProductListView _productListView;
-        private Session _session = Context.Current.GetSession();
+        private ISession _session = Context.Current.GetSession();
 
         public ProductListViewModel()
         {

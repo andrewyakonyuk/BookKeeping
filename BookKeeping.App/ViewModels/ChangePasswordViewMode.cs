@@ -8,25 +8,24 @@ namespace BookKeeping.App.ViewModels
 {
     public class ChangePasswordViewModel : ViewModelBase
     {
-        private readonly Session _session;
+        private readonly ISession _session;
         private bool _isValidationMessageVisible = false;
         private bool _isVisible = false;
         private string _newPassword;
         private string _oldPassword;
         private string _validationMessage;
 
-        public ChangePasswordViewModel(Session session)
+        public ChangePasswordViewModel(ISession session)
         {
             IsVisible = true;
             _session = session;
 
-            ChangePasswordCmd = new DelegateCommand(_ =>
-            {
-                ChangePassword(OldPassword, NewPassword);
-            }, _ => !string.IsNullOrEmpty(NewPassword) && !string.IsNullOrEmpty(OldPassword));
+            ChangePasswordCmd = new DelegateCommand(_ => ChangePassword(OldPassword, NewPassword), _ => CanChangePassword);
         }
 
         public System.Windows.Input.ICommand ChangePasswordCmd { get; private set; }
+
+        public bool CanChangePassword { get { return !string.IsNullOrEmpty(NewPassword) && !string.IsNullOrEmpty(OldPassword); } }
 
         public bool IsValidationMessageVisible
         {

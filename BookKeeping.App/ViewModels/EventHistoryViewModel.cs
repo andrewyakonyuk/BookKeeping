@@ -1,10 +1,7 @@
-﻿using BookKeeping.Persistent.Storage;
-using BookKeeping.UI;
+﻿using BookKeeping.UI;
 using BookKeeping.UI.ViewModels;
-using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.IO;
 using System.Linq;
 using System.Windows.Input;
 

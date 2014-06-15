@@ -26,20 +26,20 @@ namespace BookKeeping.App.ViewModels
         private readonly IRepository<User,UserId> _repostory;
         private UserId _previousUserId;
         private bool _isWorkspacesVisible;
-        private Session _session = Context.Current.GetSession();
+        private ISession _session = Context.Current.GetSession();
 
         public MainWindowViewModel()
         {
             this.QuitConfirmationEnabled = true;
 
-            var userRepository = (IUserRepository)_session.GetRepo<User, UserId>();
+            var userRepository = (IUserRepository)((Session)_session).GetRepo<User, UserId>();
             _repostory = userRepository;
 
             var authService = new AuthenticationService(userRepository);
             SignIn = new SignInViewModel(authService);
             SignIn.AuthenticationSuccessful += AuthorizationSuccessful;
 
-            Profile = new ProfileViewModel(authService, _contextUserProvider);
+            Profile = new ProfileViewModel(authService);
             Bind(Profile, t => t.IsAuthorization, IsAuthorization_PropertyChanged);
             Bind(this, t => t.IsLoading, (sender, e) => { SignIn.CanSignIn = !IsLoading; });
 
@@ -239,7 +239,7 @@ namespace BookKeeping.App.ViewModels
             var random = new Random();
             using (var session = Context.Current.GetSession())
             {
-                var userRepo = session.GetRepo<User, UserId>();
+                var userRepo = ((Session)session).GetRepo<User, UserId>();
                 var identities = new List<IUserIdentity>();
 
                 foreach (var user in userRepo.All())

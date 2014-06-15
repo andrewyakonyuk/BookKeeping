@@ -1,5 +1,5 @@
-﻿
-using System.ComponentModel;
+﻿using System.ComponentModel;
+
 namespace BookKeeping.App.ViewModels
 {
     public class CustomerViewModel : ListItemViewModel

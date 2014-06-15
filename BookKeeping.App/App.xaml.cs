@@ -1,18 +1,7 @@
-﻿using System.Windows;
-using BookKeeping.App.ViewModels;
+﻿using BookKeeping.App.ViewModels;
 using BookKeeping.App.Views;
 using BookKeeping.UI.Localization;
-using BookKeeping.Domain.Contracts;
-using BookKeeping.Domain.Projections.UserIndex;
-using System;
-using System.Linq;
-using BookKeeping.Domain.Aggregates;
-using System.Collections.Generic;
-using BookKeeping.Auth;
-using System.Windows.Input;
-using System.Windows.Controls;
-using System.Threading;
-using BookKeeping.Projections;
+using System.Windows;
 
 namespace BookKeeping.App
 {
@@ -25,7 +14,8 @@ namespace BookKeeping.App
         {
             base.OnStartup(e);
 
-            System.Threading.Thread.CurrentThread.CurrentUICulture = new System.Globalization.CultureInfo("uk-ua");//System.Globalization.CultureInfo.CurrentCulture;
+            var culture = System.Configuration.ConfigurationManager.AppSettings["culture"];
+            System.Threading.Thread.CurrentThread.CurrentUICulture = new System.Globalization.CultureInfo(culture);
 
             ResourceLocalizer.Initialize(BookKeeping.App.Properties.Resources.ResourceManager);
 
@@ -41,37 +31,6 @@ namespace BookKeeping.App
             };
             Current.MainWindow = window;
             window.Show();
-        }
-
-        protected void GenerateProducts()
-        {
-            var random = new Random();
-            using (var session = Context.Current.GetSession())
-            {
-                var userRepo = session.GetRepo<User, UserId>();
-                var identities = new List<IUserIdentity>();
-
-                foreach (var user in userRepo.All())
-                {
-                    identities.Add(new UserIdentity(new AccountEntry(user), user.Name));
-                }
-
-                for (int i = 0; i < 500; i++)
-                {
-                    BookKeeping.Infrastructure.Current.IdentityIs(identities[random.Next(0, identities.Count - 1)]);
-                    session.Command(new CreateProduct(new ProductId(session.GetId()),
-                        new string("qwertyuiopasdfghjklzxcvbnm".Substring(random.Next(0, 12)).OrderBy(t => Guid.NewGuid()).ToArray()),
-                        "item no. " + (i + 1),
-                        new CurrencyAmount(random.Next(10, 100), Currency.Eur),
-                        random.Next(1, 1000),
-                        "m2",
-                        new VatRate(new decimal(random.NextDouble())),
-                        new Barcode("12342323", BarcodeType.EAN13)
-                        ));
-                }
-                session.Commit();
-            }
-            BookKeeping.Infrastructure.Current.Reset();
         }
     }
 }

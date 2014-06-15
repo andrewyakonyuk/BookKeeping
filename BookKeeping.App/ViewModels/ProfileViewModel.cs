@@ -12,16 +12,14 @@ namespace BookKeeping.App.ViewModels
     public class ProfileViewModel : ViewModelBase
     {
         private readonly IAuthenticationService _authService;
-        private readonly IContextUserProvider _userProvider;
         private string _username;
         private bool _isOpen = false;
         private bool _isAuthorization = false;
         private ChangePasswordViewModel _changePassword;
 
-        public ProfileViewModel(IAuthenticationService authService, IContextUserProvider userProvider)
+        public ProfileViewModel(IAuthenticationService authService)
         {
             _authService = authService;
-            _userProvider = userProvider;
 
             SignOutCmd = new DelegateCommand(_ => SignOut());
 

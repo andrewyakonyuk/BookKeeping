@@ -19,7 +19,7 @@ namespace BookKeeping.App.ViewModels
         readonly ObservableCollection<OrderLineViewModel> _lines = new ObservableCollection<OrderLineViewModel>();
         ObservableCollection<SimpleProductViewModel> _products = new ObservableCollection<SimpleProductViewModel>();
         private Projections.ProductsList.ProductListView _productListView;
-        private readonly Session _session = Context.Current.GetSession();
+        private readonly ISession _session = Context.Current.GetSession();
         private OrderLineViewModel _selectedLine;
 
         public event EventHandler CheckoutCompleted = (sender, e) => { };
@@ -250,10 +250,8 @@ namespace BookKeeping.App.ViewModels
             else
             {
                 if (quantity <= 0)
-                {
-                    Lines.Remove(line);
-                }
-                else line.Quantity += (decimal)quantity;
+                    return;
+                line.Quantity += (decimal)quantity;
             }
         }
 

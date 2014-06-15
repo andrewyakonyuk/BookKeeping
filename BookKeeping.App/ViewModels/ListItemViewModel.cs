@@ -1,4 +1,5 @@
 ﻿using BookKeeping.UI.ViewModels;
+using System.Linq;
 
 namespace BookKeeping.App.ViewModels
 {
@@ -12,10 +13,9 @@ namespace BookKeeping.App.ViewModels
 
         protected virtual void OnItemPropertyChanged(object sender, System.ComponentModel.PropertyChangedEventArgs e)
         {
-            if (e.PropertyName == GetPropertyName(() => HasChanges)
-                || e.PropertyName == GetPropertyName(() => IsHighlight)
-                || e.PropertyName == GetPropertyName(() => IsValid)
-                || e.PropertyName == GetPropertyName(() => IsEdit))
+            var fields = new[] { GetPropertyName(() => HasChanges), GetPropertyName(() => IsHighlight),
+                GetPropertyName(() => IsValid), GetPropertyName(() => IsEdit) };
+            if (fields.Contains(e.PropertyName))
                 return;
             HasChanges = true;
         }

@@ -10,7 +10,7 @@ namespace BookKeeping.App.ViewModels
     public class VendorListViewModel : ListViewModel<VendorViewModel>
     {
         private Projections.VendorList.VendorListView _vendorListView;
-        private Session _session = Context.Current.GetSession();
+        private ISession _session = Context.Current.GetSession();
 
         public VendorListViewModel()
         {

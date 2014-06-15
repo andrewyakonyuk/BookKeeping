@@ -10,7 +10,7 @@ namespace BookKeeping.App.ViewModels
 {
     public class UserListViewModel : ListViewModel<UserViewModel>, ISaveable
     {
-        private Session _session = Context.Current.GetSession();
+        private ISession _session = Context.Current.GetSession();
         private Projections.UserList.UserListView _userListView;
 
         public UserListViewModel()

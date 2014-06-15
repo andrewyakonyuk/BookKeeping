@@ -16,10 +16,10 @@ namespace BookKeeping.App.ViewModels
         private string _password = string.Empty;
         private bool _isSuccessful = true;
         private IAuthenticationService _authService;
-
-        public event EventHandler AuthenticationSuccessful = (sender, e) => { };
         private bool _isValidationMessageVisible = false;
         private string _validationMessage = string.Empty;
+
+        public event EventHandler AuthenticationSuccessful = (sender, e) => { };
 
         public SignInViewModel(IAuthenticationService authService)
         {
