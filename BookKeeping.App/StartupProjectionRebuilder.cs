@@ -1,24 +1,24 @@
-﻿using System;
+﻿using BookKeeping.Domain.Contracts;
+using BookKeeping.Infrastructure;
+using BookKeeping.Persistent.AtomicStorage;
+using BookKeeping.Persistent.Storage;
+using Mono.Cecil;
+using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
+using System.Reflection;
+using System.Reflection.Emit;
 using System.Runtime.Serialization;
 using System.Text;
 using System.Threading;
-using Mono.Cecil;
-using BookKeeping.Persistent.AtomicStorage;
-using BookKeeping.Infrastructure;
-using System.Reflection;
-using System.Reflection.Emit;
-using BookKeeping.Persistent.Storage;
-using BookKeeping.Domain.Contracts;
-using System.Collections.Concurrent;
 
 namespace BookKeeping.App
 {
     public static class StartupProjectionRebuilder
     {
-        public static void Rebuild(CancellationToken token, IDocumentStore targetContainer, IEventStore stream, Func<IDocumentStore, IEnumerable<object>> projectors)
+        public static void Rebuild(CancellationToken token, IDocumentStore targetContainer, IEventStore stream, Func<IDocumentStore, IEnumerable<object>> projectors, Func<bool> needRebuildAction = null)
         {
             var strategy = targetContainer.Strategy;
 
@@ -77,11 +77,17 @@ namespace BookKeeping.App
                 return;
             }
 
+            if (needRebuildAction != null)
+            {
+                if (!needRebuildAction())
+                    return;
+            }
+
 
             var watch = Stopwatch.StartNew();
 
             var wire = new RedirectToDynamicEvent();
-            Array.ForEach(needRebuild,x => wire.WireToWhen(x.projection));
+            Array.ForEach(needRebuild, x => wire.WireToWhen(x.projection));
 
 
             var handlersWatch = Stopwatch.StartNew();
@@ -146,8 +152,6 @@ namespace BookKeeping.App
                 SystemObserver.Notify("[good] Cleaned up obsolete view bucket {0}.{1}", name, bucketName);
             }
         }
-
-
 
         [DataContract]
         public sealed class ProjectionHash

@@ -46,8 +46,6 @@ namespace BookKeeping.App.ViewModels
             MainMenu.Clear();
             BuildMainMenu();
 
-            IsLoading = true;
-
             var cts = new CancellationTokenSource();
             var startupTasks = Task.Factory.StartNew(() =>
             {
@@ -194,7 +192,8 @@ namespace BookKeeping.App.ViewModels
                 Context.Current.Projections,
                 Context.Current.EventStore,
                 projections => DomainBoundedContext.Projections(projections)
-                .Concat(ClientBoundedContext.Projections(projections)));
+                .Concat(ClientBoundedContext.Projections(projections)),
+                () => { IsLoading = true; return true; });
 
             InitUsers();
 

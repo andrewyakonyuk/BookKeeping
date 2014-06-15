@@ -43,7 +43,7 @@ namespace BookKeeping.App.ViewModels
             SearchPopup.OpenCmd = new DelegateCommand(_ =>  SearchPopup.IsVisible = true, _ => CanSearch());
             SearchPopup.Placeholder = T("DoSearch");
 
-            FilterPopup.ActionCmd = new DelegateCommand(_ => DoFilter(FilterPopup.Text), _ => CanFilter());
+            FilterPopup.ActionCmd = new DelegateCommand(_ => Filter(FilterPopup.Text), _ => CanFilter());
             FilterPopup.CloseCmd = new DelegateCommand(_ => { FilterPopup.IsVisible = false; ResetFilter(); });
             FilterPopup.OpenCmd = new DelegateCommand(_ => FilterPopup.IsVisible = true, _ => CanFilter());
             FilterPopup.Placeholder = T("DoFilter");
