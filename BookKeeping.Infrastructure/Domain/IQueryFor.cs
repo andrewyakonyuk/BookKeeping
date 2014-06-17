@@ -1,8 +1,9 @@
-﻿namespace BookKeeping.Domain
+﻿using BookKeeping.Domain.Contracts;
+namespace BookKeeping.Domain
 {
-    public interface IQueryFor<out T>
+    public interface IQueryFor<T>
     {
-        T With<TCriterion>(TCriterion criterion)
+        Maybe<T> Ask<TCriterion>(TCriterion criterion)
             where TCriterion : ICriterion;
     }
 }

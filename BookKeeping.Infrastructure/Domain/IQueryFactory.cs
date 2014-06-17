@@ -1,4 +1,5 @@
-﻿namespace BookKeeping.Domain
+﻿using BookKeeping.Domain.Contracts;
+namespace BookKeeping.Domain
 {
     public interface IQueryFactory
     {

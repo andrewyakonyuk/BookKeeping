@@ -20,7 +20,9 @@ namespace BookKeeping.App.ViewModels
 
         protected override IEnumerable<CustomerViewModel> LoadItems()
         {
-            _customerListView = _session.Query<CustomerListView>().Convert(t => t, new CustomerListView());
+            _customerListView = _session.Query<CustomerListView>()
+                .Ask(unit.it)
+                .Convert(t => t, new CustomerListView());
             return GetCustomers(_customerListView);
         }
 

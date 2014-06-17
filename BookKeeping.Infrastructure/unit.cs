@@ -1,4 +1,6 @@
-﻿using System;
+﻿using BookKeeping.Domain;
+using BookKeeping.Domain.Contracts;
+using System;
 using System.Runtime.InteropServices;
 
 namespace BookKeeping
@@ -9,7 +11,7 @@ namespace BookKeeping
     [ComVisible(true)]
     [Serializable]
     [StructLayout(LayoutKind.Sequential, Size = 1)]
-    public struct unit
+    public struct unit : ICriterion
     {
         public static readonly unit it = default(unit);
     }

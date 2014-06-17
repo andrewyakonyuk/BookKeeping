@@ -20,7 +20,7 @@ namespace BookKeeping.App.ViewModels
 
         protected override IEnumerable<VendorViewModel> LoadItems()
         {
-            _vendorListView = _session.Query<VendorListView>().Convert(t => t, new VendorListView());
+            _vendorListView = _session.Query<VendorListView>().Ask(unit.it).Convert(t => t, new VendorListView());
             return GetVendors(_vendorListView);
         }
 

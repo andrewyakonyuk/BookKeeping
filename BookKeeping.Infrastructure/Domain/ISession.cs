@@ -8,8 +8,6 @@ namespace BookKeeping.Domain
         void Command<TCommand>(TCommand command)
          where TCommand : ICommand;
 
-        Maybe<TView> Query<TKey, TView>(TKey id);
-
-        Maybe<TView> Query<TView>();
+        IQueryFor<TResult> Query<TResult>();
     }
 }

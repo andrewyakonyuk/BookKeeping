@@ -49,6 +49,7 @@
     <Compile Include="CurrencyAmount.cs" />
     <Compile Include="CustomerId.cs" />
     <Compile Include="ICommand.cs" />
+    <Compile Include="ICriterion.cs" />
     <Compile Include="IEvent.cs" />
     <Compile Include="IIdentity.cs" />
     <Compile Include="IndentityBase.cs" />

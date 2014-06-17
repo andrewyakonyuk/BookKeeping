@@ -205,7 +205,7 @@ namespace BookKeeping.App.ViewModels
         {
             using (var session = Context.Current.GetSession())
             {
-                var userIndex = session.Query<UserIndexLookup>();
+                var userIndex = session.Query<UserIndexLookup>().Ask(unit.it);
                 var createAdminCmd = new CreateUser(new UserId(session.GetId()), "Адміністратор", "admin", "qwerty", "admin");
                 var createSellerCmd = new CreateUser(new UserId(session.GetId()), "Продавець 1", "seller", "qwerty", "seller");
                 var createAnotherSellerCmd = new CreateUser(new UserId(session.GetId()), "Продавець 2", "anotherseller", "qwerty", "seller");

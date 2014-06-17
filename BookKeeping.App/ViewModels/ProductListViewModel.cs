@@ -21,7 +21,9 @@ namespace BookKeeping.App.ViewModels
 
         protected override IEnumerable<ProductViewModel> LoadItems()
         {
-            _productListView = _session.Query<ProductListView>().Convert(t => t, new ProductListView());
+            _productListView = _session.Query<ProductListView>()
+                .Ask(unit.it)
+                .Convert(t => t, new ProductListView());
             return GetProducts(_productListView);
         }
 

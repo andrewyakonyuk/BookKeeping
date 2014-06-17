@@ -120,7 +120,6 @@
     <Compile Include="Domain\ICommandHandler.cs" />
     <Compile Include="Domain\ICommandHandlerFactory.cs" />
     <Compile Include="Domain\ICommandHandlerProvider.cs" />
-    <Compile Include="Domain\ICriterion.cs" />
     <Compile Include="Domain\IDocumentIdentityGenerator.cs" />
     <Compile Include="Domain\IEventBus.cs" />
     <Compile Include="Domain\IEventHandler.cs" />

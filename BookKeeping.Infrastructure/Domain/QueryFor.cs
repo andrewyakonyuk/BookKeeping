@@ -1,4 +1,5 @@
-﻿namespace BookKeeping.Domain
+﻿using BookKeeping.Domain.Contracts;
+namespace BookKeeping.Domain
 {
     public class QueryFor<TResult> : IQueryFor<TResult>
     {
@@ -9,7 +10,7 @@
             _factory = factory;
         }
 
-        public TResult With<TCriterion>(TCriterion criterion)
+        public Maybe<TResult> Ask<TCriterion>(TCriterion criterion)
             where TCriterion : ICriterion
         {
             return _factory.Create<TCriterion, TResult>().Ask(criterion);

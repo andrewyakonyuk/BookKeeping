@@ -56,7 +56,9 @@ namespace BookKeeping.App.ViewModels
 
         protected override IEnumerable<UserViewModel> LoadItems()
         {
-            _userListView = _session.Query<UserListView>().Convert(t => t, new UserListView());
+            _userListView = _session.Query<UserListView>()
+                .Ask(unit.it)
+                .Convert(t => t, new UserListView());
             return GetUsers(_userListView);
         }
 

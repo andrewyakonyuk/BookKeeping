@@ -32,14 +32,9 @@ namespace BookKeeping.Domain
             _commandBus.Send(command);
         }
 
-        public Maybe<TView> Query<TKey, TView>(TKey id)
+        public IQueryFor<TResult> Query<TResult>()
         {
-            return _projections.GetReader<TKey, TView>().Get(id);
-        }
-
-        public Maybe<TView> Query<TView>()
-        {
-            return Query<unit, TView>(unit.it);
+            return new QueryFor<TResult>(new ProjectionsQueryFactory(_projections));
         }
 
         public void Commit()
@@ -72,6 +67,37 @@ namespace BookKeeping.Domain
         {
             _innerUnitOfWork.Dispose();
             GC.SuppressFinalize(this);
+        }
+    }
+
+    internal sealed class ProjectionsQueryFactory : IQueryFactory
+    {
+        readonly IDocumentStore _projections;
+
+        public ProjectionsQueryFactory(IDocumentStore projections)
+        {
+            _projections = projections;
+        }
+
+        public IQuery<TCriterion, TResult> Create<TCriterion, TResult>() where TCriterion : ICriterion
+        {
+            return new ProjectionQuery<TCriterion, TResult>(_projections);
+        }
+    }
+
+    internal sealed class ProjectionQuery<TCriterion, TResult> : IQuery<TCriterion, TResult>
+        where TCriterion : ICriterion
+    {
+        readonly IDocumentStore _projections;
+
+        public ProjectionQuery(IDocumentStore projections)
+        {
+            _projections = projections;
+        }
+
+        public Maybe<TResult> Ask(TCriterion criterion)
+        {
+            return _projections.GetReader<TCriterion, TResult>().Load(criterion);
         }
     }
 }

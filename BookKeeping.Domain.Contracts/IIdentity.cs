@@ -11,7 +11,7 @@ namespace BookKeeping.Domain.Contracts
     /// distinct type. It introduces strong-typing and speeds up development
     /// on larger projects. Idea by Jeremie, implementation by Rinat
     /// </summary>
-    public interface IIdentity
+    public interface IIdentity : ICriterion
     {
         /// <summary>
         /// Gets the id, converted to a string. Only alphanumerics and '-' are allowed.
