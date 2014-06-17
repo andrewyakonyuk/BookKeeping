@@ -2,13 +2,12 @@
 using System;
 using System.Collections.Generic;
 
-namespace BookKeeping.Infrastructure.Domain.Impl
+namespace BookKeeping.Domain
 {
     public class EventBus : IEventBus
     {
         private IEventHandlerFactory _eventHandlerFactory;
         Queue<Action> _queue = new Queue<Action>();
-        private bool _isCommited = false;
 
         public EventBus(IEventHandlerFactory eventHandlerFactory)
         {

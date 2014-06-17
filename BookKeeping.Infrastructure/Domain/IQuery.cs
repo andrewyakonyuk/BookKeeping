@@ -1,4 +1,4 @@
-﻿namespace BookKeeping.Infrastructure.Domain
+﻿namespace BookKeeping.Domain
 {
     public interface IQuery<in TCriterion, out TResult>
         where TCriterion : ICriterion

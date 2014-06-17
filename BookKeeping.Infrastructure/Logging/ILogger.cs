@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace BookKeeping.Infrastructure.Logging
+namespace BookKeeping.Logging
 {
     public enum LogLevel
     {
@@ -14,6 +14,6 @@ namespace BookKeeping.Infrastructure.Logging
     public interface ILogger
     {
         bool IsEnabled(LogLevel level);
-        void Log(LogLevel level, Exception exception, string format, params object[] args);
+        void Log(LogLevel level, string format, params object[] args);
     }
 }

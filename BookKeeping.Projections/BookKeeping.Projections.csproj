@@ -61,13 +61,9 @@
       <Project>{c5f2deca-02a4-4069-81ae-611c14f0f9f9}</Project>
       <Name>BookKeeping.Domain.Contracts</Name>
     </ProjectReference>
-    <ProjectReference Include="..\BookKeeping.Infrastructure\BookKeeping.Infrastructure.csproj">
+    <ProjectReference Include="..\BookKeeping.Infrastructure\BookKeeping.csproj">
       <Project>{8da3d35c-eb9b-4126-8bd9-d82e7445a334}</Project>
-      <Name>BookKeeping.Infrastructure</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\BookKeeping.Persistent\BookKeeping.Persistent.csproj">
-      <Project>{5ce597f2-2322-4156-9d18-aa43e95e38d7}</Project>
-      <Name>BookKeeping.Persistent</Name>
+      <Name>BookKeeping</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

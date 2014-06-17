@@ -1,6 +1,6 @@
 ﻿using BookKeeping.Domain.Contracts;
 
-namespace BookKeeping.Infrastructure.Domain.Impl
+namespace BookKeeping.Domain
 {
     public class CommandBus : ICommandBus
     {

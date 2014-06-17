@@ -3,7 +3,7 @@ using System.Diagnostics.Contracts;
 using System.Threading;
 using BookKeeping.Domain.Contracts;
 
-namespace BookKeeping.Infrastructure
+namespace BookKeeping
 {
     public static class Current
     {

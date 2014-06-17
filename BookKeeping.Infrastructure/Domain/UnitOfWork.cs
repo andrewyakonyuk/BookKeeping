@@ -1,11 +1,7 @@
-﻿using BookKeeping.Domain.Aggregates;
-using BookKeeping.Domain.Contracts;
-using BookKeeping.Infrastructure.Domain;
-using BookKeeping.Persistent.Storage;
-using System;
+﻿using BookKeeping.Domain.Contracts;
+using BookKeeping.Persistance.Storage;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 
 namespace BookKeeping.Domain
 {

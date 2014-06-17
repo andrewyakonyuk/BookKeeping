@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using BookKeeping.Domain.Contracts;
-using BookKeeping.Infrastructure.Domain;
+using BookKeeping.Domain;
 
 namespace BookKeeping.Domain.Aggregates
 {

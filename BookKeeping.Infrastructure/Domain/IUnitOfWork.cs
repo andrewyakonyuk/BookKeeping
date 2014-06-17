@@ -1,7 +1,7 @@
 ﻿using BookKeeping.Domain.Contracts;
 using System;
 
-namespace BookKeeping.Infrastructure.Domain
+namespace BookKeeping.Domain
 {
     public interface IUnitOfWork : IDisposable
     {

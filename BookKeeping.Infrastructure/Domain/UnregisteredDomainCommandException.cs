@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace BookKeeping.Infrastructure.Domain
+namespace BookKeeping.Domain
 {
     public class UnregisteredDomainCommandException : Exception
     {

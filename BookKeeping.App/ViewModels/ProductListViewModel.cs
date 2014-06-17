@@ -1,4 +1,5 @@
-﻿using BookKeeping.Domain.Contracts;
+﻿using BookKeeping.Domain;
+using BookKeeping.Domain.Contracts;
 using BookKeeping.Projections.ProductsList;
 using BookKeeping.UI;
 using System;

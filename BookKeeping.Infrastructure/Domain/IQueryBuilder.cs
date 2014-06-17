@@ -1,4 +1,4 @@
-﻿namespace BookKeeping.Infrastructure.Domain
+﻿namespace BookKeeping.Domain
 {
     public interface IQueryBuilder
     {

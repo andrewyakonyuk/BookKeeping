@@ -1,7 +1,7 @@
 ﻿using BookKeeping.Domain.Contracts;
-using BookKeeping.Infrastructure.Domain;
-using BookKeeping.Persistent;
-using BookKeeping.Persistent.AtomicStorage;
+using BookKeeping.Domain;
+using BookKeeping.Persistance;
+using BookKeeping.Persistance.AtomicStorage;
 using System.Linq;
 
 namespace BookKeeping.Projections.OrdersList

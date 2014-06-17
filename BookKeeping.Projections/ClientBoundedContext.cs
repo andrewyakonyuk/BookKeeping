@@ -1,18 +1,19 @@
 ﻿using BookKeeping.Domain.Contracts;
-using BookKeeping.Persistent;
-using BookKeeping.Persistent.AtomicStorage;
+using BookKeeping.Persistance;
+using BookKeeping.Persistance.AtomicStorage;
 using BookKeeping.Projections.CustomerList;
 using BookKeeping.Projections.CustomerTransactions;
 using BookKeeping.Projections.ProductsList;
 using BookKeeping.Projections.UserList;
 using BookKeeping.Projections.VendorList;
 using System.Collections.Generic;
+using BookKeeping.Domain;
 
 namespace BookKeeping.Projections
 {
-    public static class ClientBoundedContext
+    public class ClientBoundedContext : IEventHandlerProvider
     {
-        public static IEnumerable<object> Projections(IDocumentStore docs)
+        public IEnumerable<object> Projections(IDocumentStore docs)
         {
             yield return new CustomerTransactionsProjection(docs.GetWriter<CustomerId, CustomerTransactionsListView>());
             yield return new ProductsProjection(docs.GetWriter<unit, ProductListView>());

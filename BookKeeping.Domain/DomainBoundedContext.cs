@@ -5,17 +5,17 @@ using BookKeeping.Domain.Projections.UserIndex;
 using BookKeeping.Domain.Projections.VendorIndex;
 using BookKeeping.Domain.Repositories;
 using BookKeeping.Domain.Services;
-using BookKeeping.Infrastructure.Domain;
-using BookKeeping.Persistent;
-using BookKeeping.Persistent.AtomicStorage;
-using BookKeeping.Persistent.Storage;
+using BookKeeping.Domain;
+using BookKeeping.Persistance;
+using BookKeeping.Persistance.AtomicStorage;
+using BookKeeping.Persistance.Storage;
 using System.Collections.Generic;
 
 namespace BookKeeping
 {
-    public class DomainBoundedContext
+    public class DomainBoundedContext : ICommandHandlerProvider, IEventHandlerProvider
     {
-        public static IEnumerable<object> Projections(IDocumentStore docs)
+        public IEnumerable<object> Projections(IDocumentStore docs)
         {
             yield return new UserIndexProjection(docs.GetWriter<unit, UserIndexLookup>());
             yield return new ProductIndexProjection(docs.GetWriter<unit, ProductIndexLookup>());
@@ -23,7 +23,7 @@ namespace BookKeeping
             yield return new VendorIndexProjection(docs.GetWriter<unit, VendorIndexLookup>());
         }
 
-        public static IEnumerable<object> EntityApplicationServices(IDocumentStore docs, IEventStore store, IEventBus eventBus, IUnitOfWork unitOfWork)
+        public IEnumerable<object> EntityApplicationServices(IDocumentStore docs, IEventStore store, IEventBus eventBus, IUnitOfWork unitOfWork)
         {
             yield return new CustomerApplicationService(new CustomerRepository(store, unitOfWork, docs.GetReader<unit, CustomerIndexLookup>()), new PricingService());
             yield return new ProductApplicationService(new ProductRepository(store, unitOfWork, docs.GetReader<unit, ProductIndexLookup>()));

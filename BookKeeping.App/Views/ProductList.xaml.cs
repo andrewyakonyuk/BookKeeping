@@ -50,7 +50,7 @@ namespace BookKeeping.App.Views
         private void DataGrid_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             var datagrid = (DataGrid)sender;
-            ((ProductListViewModel)DataContext).SelectedItems = datagrid.SelectedItems;
+            ((ProductListViewModel)DataContext).SelectedItems = datagrid.SelectedItems.Cast<ProductViewModel>().ToList();
         }
     }
 }

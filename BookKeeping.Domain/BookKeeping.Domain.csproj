@@ -134,28 +134,21 @@
     <Compile Include="Aggregates\Vendor.cs" />
     <Compile Include="Base64Extensions.cs" />
     <Compile Include="DomainBoundedContext.cs" />
-    <Compile Include="DomainIdentityGenerator.cs" />
-    <Compile Include="IDocumentIdentityGenerator.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Repositories\IRepository`1.cs" />
     <Compile Include="Repositories\IUserRepository.cs" />
     <Compile Include="Repositories\UserRepository.cs" />
     <Compile Include="Services\Pricing\IPricingService.cs" />
     <Compile Include="Services\Pricing\PricingService.cs" />
-    <Compile Include="UnitOfWork.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\BookKeeping.Domain.Contracts\BookKeeping.Domain.Contracts.csproj">
       <Project>{c5f2deca-02a4-4069-81ae-611c14f0f9f9}</Project>
       <Name>BookKeeping.Domain.Contracts</Name>
     </ProjectReference>
-    <ProjectReference Include="..\BookKeeping.Infrastructure\BookKeeping.Infrastructure.csproj">
+    <ProjectReference Include="..\BookKeeping.Infrastructure\BookKeeping.csproj">
       <Project>{8DA3D35C-EB9B-4126-8BD9-D82E7445A334}</Project>
-      <Name>BookKeeping.Infrastructure</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\BookKeeping.Persistent\BookKeeping.Persistent.csproj">
-      <Project>{5ce597f2-2322-4156-9d18-aa43e95e38d7}</Project>
-      <Name>BookKeeping.Persistent</Name>
+      <Name>BookKeeping</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>

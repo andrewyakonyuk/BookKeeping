@@ -1,17 +1,9 @@
-﻿using BookKeeping.Domain;
-using BookKeeping.Domain.Aggregates;
+﻿using BookKeeping.Caching;
+using BookKeeping.Domain;
 using BookKeeping.Domain.Contracts;
-using BookKeeping.Domain.Projections.UserIndex;
-using BookKeeping.Domain.Repositories;
-using BookKeeping.Infrastructure.Caching;
-using BookKeeping.Infrastructure.Domain;
-using BookKeeping.Infrastructure.Domain.Impl;
-using BookKeeping.Persistent;
-using BookKeeping.Persistent.AtomicStorage;
-using BookKeeping.Persistent.Storage;
-using BookKeeping.Projections;
+using BookKeeping.Persistance.AtomicStorage;
+using BookKeeping.Persistance.Storage;
 using System;
-using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 
@@ -36,7 +28,7 @@ namespace BookKeeping.App
             _eventStore = new EventStore(appendOnlyStore, new DefaultMessageStrategy(LoadMessageContracts()));
             _projections = new FileDocumentStore(pathToStore, new DefaultDocumentStrategy());
 
-            _eventBus = new EventBus(new EventHandlerFactoryImpl(_projections));
+            _eventBus = new EventBus(new EventHandlerFactoryEvil(_projections));
 
             _cacheService = CacheService.Current;
         }
@@ -75,45 +67,6 @@ namespace BookKeeping.App
         public ISession GetSession()
         {
             return new Session(_eventStore, _eventBus, _projections);
-        }
-    }
-
-    internal sealed class CommandHandlerFactoryImpl : ICommandHandlerFactory
-    {
-        private readonly IDocumentStore _documentStore;
-        private readonly IEventBus _eventBus;
-        private readonly IEventStore _eventStore;
-        private readonly IUnitOfWork _unitOfWork;
-
-        public CommandHandlerFactoryImpl(IDocumentStore documentStore, IUnitOfWork unitOfWork, IEventStore eventStore, IEventBus eventBus)
-        {
-            _documentStore = documentStore;
-            _eventBus = eventBus;
-            _eventStore = eventStore;
-            _unitOfWork = unitOfWork;
-        }
-
-        public ICommandHandler<T> GetHandler<T>() where T : ICommand
-        {
-            return (ICommandHandler<T>)DomainBoundedContext.EntityApplicationServices(_documentStore, _eventStore, _eventBus, _unitOfWork)
-                .SingleOrDefault(service => service is ICommandHandler<T>);
-        }
-    }
-
-    internal sealed class EventHandlerFactoryImpl : IEventHandlerFactory
-    {
-        private readonly IDocumentStore _documentStore;
-
-        public EventHandlerFactoryImpl(IDocumentStore documentStore)
-        {
-            _documentStore = documentStore;
-        }
-
-        public IEnumerable<IEventHandler<T>> GetHandlers<T>() where T : IEvent
-        {
-            return DomainBoundedContext.Projections(_documentStore)
-                .Concat(ClientBoundedContext.Projections(_documentStore))
-                .OfType<IEventHandler<T>>();
         }
     }
 }

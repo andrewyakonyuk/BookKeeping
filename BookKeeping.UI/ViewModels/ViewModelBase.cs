@@ -114,13 +114,6 @@ namespace BookKeeping.UI.ViewModels
             }
         }
 
-        private static string GetPropertyName<T>(Expression<Func<T>> action)
-        {
-            var expression = (MemberExpression)action.Body;
-            var propertyName = expression.Member.Name;
-            return propertyName;
-        }
-
         private static string GetPropertyName<T, S>(Expression<Func<T, S>> action)
         {
             var expression = (MemberExpression)action.Body;

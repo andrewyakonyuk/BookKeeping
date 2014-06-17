@@ -1,6 +1,6 @@
 ﻿using BookKeeping.Domain;
 using BookKeeping.Domain.Contracts;
-using BookKeeping.Infrastructure;
+using BookKeeping;
 using BookKeeping.UI;
 using BookKeeping.UI.ViewModels;
 

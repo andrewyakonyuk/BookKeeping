@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Diagnostics.Contracts;
 
-namespace BookKeeping.Infrastructure.Caching
+namespace BookKeeping.Caching
 {
     public static class CacheServiceExtensions
     {

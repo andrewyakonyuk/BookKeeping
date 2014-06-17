@@ -1,6 +1,7 @@
 ﻿using BookKeeping.App.ViewModels;
 using BookKeeping.App.Views;
 using BookKeeping.UI.Localization;
+using Microsoft.Practices.ServiceLocation;
 using System.Windows;
 
 namespace BookKeeping.App
@@ -18,6 +19,8 @@ namespace BookKeeping.App
             System.Threading.Thread.CurrentThread.CurrentUICulture = new System.Globalization.CultureInfo(culture);
 
             ResourceLocalizer.Initialize(BookKeeping.App.Properties.Resources.ResourceManager);
+            //todo:
+            ServiceLocator.SetLocatorProvider(() => new AutofacContrib.CommonServiceLocator.AutofacServiceLocator(null));
 
             //  GenerateProducts();
 

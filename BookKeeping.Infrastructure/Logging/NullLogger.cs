@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace BookKeeping.Infrastructure.Logging
+namespace BookKeeping.Logging
 {
     public class NullLogger : ILogger
     {
@@ -16,7 +16,7 @@ namespace BookKeeping.Infrastructure.Logging
             return false;
         }
 
-        public void Log(LogLevel level, Exception exception, string format, params object[] args)
+        public void Log(LogLevel level, string format, params object[] args)
         {
         }
     }

@@ -1,25 +1,20 @@
-﻿using BookKeeping.Domain;
-using BookKeeping.Domain.Aggregates;
-using BookKeeping.Domain.Contracts;
-using BookKeeping.Domain.Projections.UserIndex;
-using BookKeeping.Domain.Repositories;
-using BookKeeping.Infrastructure.Domain;
-using BookKeeping.Infrastructure.Domain.Impl;
-using BookKeeping.Persistent;
-using BookKeeping.Persistent.AtomicStorage;
-using BookKeeping.Persistent.Storage;
+﻿using BookKeeping.Domain.Contracts;
+using BookKeeping.Persistance.AtomicStorage;
+using BookKeeping.Persistance.Storage;
+using Microsoft.Practices.ServiceLocation;
 using System;
+using System.Linq;
 
-namespace BookKeeping.App
+namespace BookKeeping.Domain
 {
-    public class Session : ISession, IUnitOfWork, IDomainIdentityService
+    public class Session : ISession, IUnitOfWork, IDomainIdentityGenerator
     {
         readonly IEventStore _eventStore;
         readonly IEventBus _eventBus;
         readonly ICommandBus _commandBus;
         readonly IDocumentStore _projections;
         readonly IUnitOfWork _innerUnitOfWork;
-        readonly IDomainIdentityService _identityGenerator;
+        readonly IDomainIdentityGenerator _identityGenerator;
 
         public Session(IEventStore eventStore, IEventBus eventBus, IDocumentStore projections)
         {
@@ -27,7 +22,7 @@ namespace BookKeeping.App
             _eventStore = eventStore;
             _projections = projections;
             _innerUnitOfWork = new UnitOfWork(_eventStore, _eventBus);
-            _commandBus = new CommandBus(new CommandHandlerFactoryImpl(_projections, _innerUnitOfWork, _eventStore, _eventBus));
+            _commandBus = new CommandBus(new CommandHandlerFactoryEvil(_projections, _innerUnitOfWork, _eventStore, _eventBus));
             _identityGenerator = new DomainIdentityGenerator(_projections);
         }
 
@@ -45,19 +40,6 @@ namespace BookKeeping.App
         public Maybe<TView> Query<TView>()
         {
             return Query<unit, TView>(unit.it);
-        }
-
-        [Obsolete]
-        public IRepository<T, TId> GetRepo<T, TId>()
-            where T : AggregateBase
-            where TId : IIdentity
-        {
-            //todo: 
-            if (typeof(T) == typeof(User) && typeof(TId) == typeof(UserId))
-            {
-                return (IRepository<T, TId>)new UserRepository(_eventStore, _innerUnitOfWork, _projections.GetReader<unit, UserIndexLookup>());
-            }
-            return null;
         }
 
         public void Commit()

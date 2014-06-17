@@ -1,10 +1,10 @@
 ﻿using BookKeeping.Domain.Aggregates;
 using BookKeeping.Domain.Contracts;
 using BookKeeping.Domain.Projections.ProductIndex;
-using BookKeeping.Infrastructure.Domain;
-using BookKeeping.Persistent;
-using BookKeeping.Persistent.AtomicStorage;
-using BookKeeping.Persistent.Storage;
+using BookKeeping.Domain;
+using BookKeeping.Persistance;
+using BookKeeping.Persistance.AtomicStorage;
+using BookKeeping.Persistance.Storage;
 using System.Collections.Generic;
 
 namespace BookKeeping.Domain.Repositories

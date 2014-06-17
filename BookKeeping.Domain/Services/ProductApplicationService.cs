@@ -1,9 +1,9 @@
 ﻿using System;
 using BookKeeping.Domain.Aggregates;
 using BookKeeping.Domain.Contracts;
-using BookKeeping.Infrastructure;
-using BookKeeping.Infrastructure.Domain;
-using BookKeeping.Persistent.Storage;
+using BookKeeping;
+using BookKeeping.Domain;
+using BookKeeping.Persistance.Storage;
 using BookKeeping.Domain.Repositories;
 
 namespace BookKeeping.Domain.Services

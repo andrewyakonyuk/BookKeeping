@@ -3,7 +3,7 @@ using System.Diagnostics;
 using System.Globalization;
 using System.Diagnostics.Contracts;
 
-namespace BookKeeping.Infrastructure
+namespace BookKeeping
 {
     /// <summary>
     /// System event representing something that happened

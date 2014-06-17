@@ -1,7 +1,7 @@
 ﻿using BookKeeping.Domain.Contracts;
 using System.Collections.Generic;
 
-namespace BookKeeping.Infrastructure.Domain
+namespace BookKeeping.Domain
 {
     public interface IEventHandlerFactory
     {

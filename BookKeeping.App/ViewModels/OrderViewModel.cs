@@ -11,6 +11,7 @@ using ICommand = System.Windows.Input.ICommand;
 using BookKeeping.UI;
 using System.Collections.Specialized;
 using MahApps.Metro.Controls.Dialogs;
+using BookKeeping.Domain;
 
 namespace BookKeeping.App.ViewModels
 {

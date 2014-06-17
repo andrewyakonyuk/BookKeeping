@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Windows.Data;
 using System;
+using BookKeeping.Domain;
 
 namespace BookKeeping.App.ViewModels
 {

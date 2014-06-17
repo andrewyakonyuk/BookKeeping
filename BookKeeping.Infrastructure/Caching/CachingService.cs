@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Runtime.Caching;
 
-namespace BookKeeping.Infrastructure.Caching
+namespace BookKeeping.Caching
 {
     public class CacheService : ICacheService
     {

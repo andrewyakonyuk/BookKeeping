@@ -1,6 +1,6 @@
 ﻿using BookKeeping.Domain.Contracts;
-using BookKeeping.Infrastructure.Domain;
-using BookKeeping.Persistent.AtomicStorage;
+using BookKeeping.Domain;
+using BookKeeping.Persistance.AtomicStorage;
 
 namespace BookKeeping.Projections.CustomerTransactions
 {

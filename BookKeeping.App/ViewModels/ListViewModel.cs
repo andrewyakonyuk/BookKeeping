@@ -18,7 +18,7 @@ namespace BookKeeping.App.ViewModels
         where TItem : ListItemViewModel
     {
         private object _selectedItem;
-        private IList _selectedItems;
+        private IList<TItem> _selectedItems = new List<TItem>();
         private bool _hasChanges = false;
         private TItem _editingItem;
         private TItem _previousEditingItem;
@@ -30,8 +30,6 @@ namespace BookKeeping.App.ViewModels
 
         protected ListViewModel()
         {
-            CanEdit =  SelectedItems.Count == 1;
-            CanSave = CollectionView == null ? false : HasChanges && IsValid && CollectionView.OfType<ViewModelBase>().All(t => t.IsValid);
             CanSearch = true;
             CanFilter = true;
 
@@ -105,9 +103,9 @@ namespace BookKeeping.App.ViewModels
             }
         }
 
-        public virtual IList SelectedItems
+        public virtual IList<TItem> SelectedItems
         {
-            get { return (IList)_selectedItems; }
+            get { return _selectedItems; }
             set
             {
                 OnPropertyChanging(() => SelectedItems);
@@ -140,9 +138,9 @@ namespace BookKeeping.App.ViewModels
 
         public ListCollectionView CollectionView { get { return (ListCollectionView)CollectionViewSource.GetDefaultView(Source); } }
 
-        public bool CanSave { get; protected set; }
+        public bool CanSave { get { return CollectionView == null ? false : HasChanges && IsValid && CollectionView.OfType<ViewModelBase>().All(t => t.IsValid); } }
 
-        public bool CanEdit { get; protected set; }
+        public bool CanEdit { get { return SelectedItems.Count == 1; } }
 
         public bool CanSearch { get; protected set; }
 

@@ -1,6 +1,6 @@
 ﻿using BookKeeping.Domain.Aggregates;
 using BookKeeping.Domain.Contracts;
-using BookKeeping.Infrastructure.Domain;
+using BookKeeping.Domain;
 using System;
 using System.Collections.Generic;
 using System.Linq;

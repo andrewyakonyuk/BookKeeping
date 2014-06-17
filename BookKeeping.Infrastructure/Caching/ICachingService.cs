@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Diagnostics.Contracts;
-namespace BookKeeping.Infrastructure.Caching
+namespace BookKeeping.Caching
 {
     [ContractClass(typeof(CacheServiceContract))]
     public interface ICacheService

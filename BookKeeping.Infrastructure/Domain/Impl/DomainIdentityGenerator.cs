@@ -1,14 +1,9 @@
-﻿using BookKeeping.Persistent;
-using BookKeeping.Persistent.AtomicStorage;
-using System;
-using System.Collections.Generic;
-using System.Linq;
+﻿using BookKeeping.Persistance.AtomicStorage;
 using System.Runtime.Serialization;
-using System.Text;
 
 namespace BookKeeping.Domain
 {
-    public sealed class DomainIdentityGenerator : IDomainIdentityService
+    public sealed class DomainIdentityGenerator : IDomainIdentityGenerator
     {
         readonly IDocumentStore _storage;
 

@@ -1,11 +1,9 @@
 ﻿using BookKeeping.Domain;
 using BookKeeping.Domain.Contracts;
-using BookKeeping.Infrastructure.Domain;
-using BookKeeping.Persistent;
 
-namespace BookKeeping.App
+namespace BookKeeping.Domain
 {
-    public interface ISession : IUnitOfWork, IDomainIdentityService
+    public interface ISession : IUnitOfWork, IDomainIdentityGenerator
     {
         void Command<TCommand>(TCommand command)
          where TCommand : ICommand;

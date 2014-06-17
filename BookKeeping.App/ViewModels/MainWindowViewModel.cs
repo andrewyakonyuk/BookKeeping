@@ -2,7 +2,7 @@
 using BookKeeping.Domain.Aggregates;
 using BookKeeping.Domain.Contracts;
 using BookKeeping.Domain.Repositories;
-using BookKeeping.Infrastructure;
+using BookKeeping;
 using BookKeeping.Projections;
 using BookKeeping.UI;
 using BookKeeping.UI.ViewModels;
@@ -16,6 +16,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using BookKeeping.Domain.Projections.UserIndex;
 using System.Collections.Generic;
+using BookKeeping.Domain;
 
 namespace BookKeeping.App.ViewModels
 {
@@ -32,7 +33,7 @@ namespace BookKeeping.App.ViewModels
         {
             this.QuitConfirmationEnabled = true;
 
-            var userRepository = (IUserRepository)((Session)_session).GetRepo<User, UserId>();
+            var userRepository = new UserRepository(Context.Current.EventStore, _session, Context.Current.Projections.GetReader<unit, UserIndexLookup>());
             _repostory = userRepository;
 
             var authService = new AuthenticationService(userRepository);
@@ -191,8 +192,8 @@ namespace BookKeeping.App.ViewModels
                 token,
                 Context.Current.Projections,
                 Context.Current.EventStore,
-                projections => DomainBoundedContext.Projections(projections)
-                .Concat(ClientBoundedContext.Projections(projections)),
+                projections => new DomainBoundedContext().Projections(projections)
+                .Concat(new ClientBoundedContext().Projections(projections)),
                 () => { IsLoading = true; return true; });
 
             InitUsers();
@@ -231,37 +232,6 @@ namespace BookKeeping.App.ViewModels
                 }
                 session.Commit();
             }
-        }
-
-        protected void GenerateProducts()
-        {
-            var random = new Random();
-            using (var session = Context.Current.GetSession())
-            {
-                var userRepo = ((Session)session).GetRepo<User, UserId>();
-                var identities = new List<IUserIdentity>();
-
-                foreach (var user in userRepo.All())
-                {
-                    identities.Add(new UserIdentity(new AccountEntry(user), user.Name));
-                }
-
-                for (int i = 0; i < 500; i++)
-                {
-                    BookKeeping.Infrastructure.Current.IdentityIs(identities[random.Next(0, identities.Count - 1)]);
-                    session.Command(new CreateProduct(new ProductId(session.GetId()),
-                        new string("qwertyuiopasdfghjklzxcvbnm".Substring(random.Next(0, 12)).OrderBy(t => Guid.NewGuid()).ToArray()),
-                        "item no. " + (i + 1),
-                        new CurrencyAmount(random.Next(10, 100), Currency.Eur),
-                        random.Next(1, 1000),
-                        "m2",
-                        new VatRate(new decimal(random.NextDouble())),
-                        new Barcode("12342323", BarcodeType.EAN13)
-                        ));
-                }
-                session.Commit();
-            }
-            BookKeeping.Infrastructure.Current.Reset();
         }
     }
 }

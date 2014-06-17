@@ -1,6 +1,6 @@
 ﻿using BookKeeping.Domain.Contracts;
 
-namespace BookKeeping.Infrastructure.Domain
+namespace BookKeeping.Domain
 {
     public interface ICommandHandlerFactory
     {

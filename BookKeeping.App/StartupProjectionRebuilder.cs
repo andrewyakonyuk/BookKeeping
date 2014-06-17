@@ -1,7 +1,7 @@
 ﻿using BookKeeping.Domain.Contracts;
-using BookKeeping.Infrastructure;
-using BookKeeping.Persistent.AtomicStorage;
-using BookKeeping.Persistent.Storage;
+using BookKeeping;
+using BookKeeping.Persistance.AtomicStorage;
+using BookKeeping.Persistance.Storage;
 using Mono.Cecil;
 using System;
 using System.Collections.Concurrent;

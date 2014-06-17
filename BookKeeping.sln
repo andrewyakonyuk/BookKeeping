@@ -13,15 +13,13 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BookKeeping.App", "BookKeep
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BookKeeping.Domain", "BookKeeping.Domain\BookKeeping.Domain.csproj", "{9DBD5C57-7F4A-4C79-BFB1-BA241D21C2C6}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BookKeeping.Infrastructure", "BookKeeping.Infrastructure\BookKeeping.Infrastructure.csproj", "{8DA3D35C-EB9B-4126-8BD9-D82E7445A334}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BookKeeping", "BookKeeping.Infrastructure\BookKeeping.csproj", "{8DA3D35C-EB9B-4126-8BD9-D82E7445A334}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BookKeeping.UI", "BookKeeping.UI\BookKeeping.UI.csproj", "{2E1190C5-9B81-4633-AE3C-8B12144DCE84}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BookKeeping.Auth", "BookKeeping.Auth\BookKeeping.Auth.csproj", "{D2062640-58AF-4198-8153-750D0AA21C8C}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BookKeeping.Domain.Contracts", "BookKeeping.Domain.Contracts\BookKeeping.Domain.Contracts.csproj", "{C5F2DECA-02A4-4069-81AE-611C14F0F9F9}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BookKeeping.Persistent", "BookKeeping.Persistent\BookKeeping.Persistent.csproj", "{5CE597F2-2322-4156-9D18-AA43E95E38D7}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BookKeeping.Projections", "BookKeeping.Projections\BookKeeping.Projections.csproj", "{8DB3B49F-B1C2-45AB-963E-AD6C0E054032}"
 EndProject
@@ -55,10 +53,6 @@ Global
 		{C5F2DECA-02A4-4069-81AE-611C14F0F9F9}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{C5F2DECA-02A4-4069-81AE-611C14F0F9F9}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{C5F2DECA-02A4-4069-81AE-611C14F0F9F9}.Release|Any CPU.Build.0 = Release|Any CPU
-		{5CE597F2-2322-4156-9D18-AA43E95E38D7}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{5CE597F2-2322-4156-9D18-AA43E95E38D7}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{5CE597F2-2322-4156-9D18-AA43E95E38D7}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{5CE597F2-2322-4156-9D18-AA43E95E38D7}.Release|Any CPU.Build.0 = Release|Any CPU
 		{8DB3B49F-B1C2-45AB-963E-AD6C0E054032}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{8DB3B49F-B1C2-45AB-963E-AD6C0E054032}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{8DB3B49F-B1C2-45AB-963E-AD6C0E054032}.Release|Any CPU.ActiveCfg = Release|Any CPU

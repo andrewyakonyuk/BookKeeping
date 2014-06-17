@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace BookKeeping.Infrastructure
+namespace BookKeeping
 {
     public interface IAbstractFactory
     {

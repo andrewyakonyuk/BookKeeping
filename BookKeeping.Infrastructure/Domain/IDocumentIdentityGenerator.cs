@@ -1,7 +1,7 @@
 ﻿
 namespace BookKeeping.Domain
 {
-    public interface IDomainIdentityService
+    public interface IDomainIdentityGenerator
     {
         long GetId();
     }

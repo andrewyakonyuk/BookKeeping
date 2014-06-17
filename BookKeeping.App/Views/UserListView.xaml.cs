@@ -49,7 +49,7 @@ namespace BookKeeping.App.Views
         private void DataGrid_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             var datagrid = (DataGrid)sender;
-            ((UserListViewModel)DataContext).SelectedItems = datagrid.SelectedItems;
+            ((UserListViewModel)DataContext).SelectedItems = datagrid.SelectedItems.Cast<UserViewModel>().ToList();
         }
     }
 }
